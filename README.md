@@ -3,6 +3,13 @@ TGLStackedViewController
 
 A stack layout with gesture-based reordering using UICollectionView -- inspired by Passbook and Reminders apps.
 
+<p align="center" >
+	<img src="https://raw.github.com/gleue/TGLStackedViewController/master/Screenshots/Screenshot-1.png" alt="Stacked layout" title="Stacked layout">
+	<img src="https://raw.github.com/gleue/TGLStackedViewController/master/Screenshots/Screenshot-2.png" alt="Exposed card" title="Exposed card">
+	<img src="https://raw.github.com/gleue/TGLStackedViewController/master/Screenshots/Screenshot-3.png" alt="Reordering" title="Reordering">
+	<img src="https://raw.github.com/gleue/TGLStackedViewController/master/Screenshots/Screenshot-3.png" alt="Reordered layout" title="Reordered layout">
+</p>
+
 Getting Started
 ===============
 
