@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="LGt-Wb-o9x">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="9GN-4B-AdM">
+            <objects>
+                <collectionViewController autoresizesArchivedViewToFullSize="NO" id="LGt-Wb-o9x" customClass="TGLViewController" sceneMemberID="viewController">
+                    <collectionView key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" id="LhB-n9-obi">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <gestureRecognizers/>
+                        <collectionViewLayout key="collectionViewLayout" id="Jfl-KN-Fgn"/>
+                        <cells>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CardCell" id="brs-Q3-DM1" customClass="TGLCollectionViewCell">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="120"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="120"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iSO-uH-Iga">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="120"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sU3-51-3am">
+                                                    <rect key="frame" x="20" y="20" width="280" height="28"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="28" id="q7H-qv-12x"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="20"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                            <constraints>
+                                                <constraint firstItem="sU3-51-3am" firstAttribute="top" secondItem="iSO-uH-Iga" secondAttribute="top" constant="20" id="PZU-fH-0DE"/>
+                                                <constraint firstItem="sU3-51-3am" firstAttribute="leading" secondItem="iSO-uH-Iga" secondAttribute="leading" constant="20" id="hPK-tP-H2b"/>
+                                                <constraint firstAttribute="trailing" secondItem="sU3-51-3am" secondAttribute="trailing" constant="20" id="io6-tz-6KQ"/>
+                                            </constraints>
+                                        </view>
+                                    </subviews>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </view>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="iSO-uH-Iga" secondAttribute="bottom" id="6ud-z2-e1H"/>
+                                    <constraint firstItem="iSO-uH-Iga" firstAttribute="top" secondItem="brs-Q3-DM1" secondAttribute="top" id="cNT-Mi-XiZ"/>
+                                    <constraint firstAttribute="trailing" secondItem="iSO-uH-Iga" secondAttribute="trailing" id="hCK-e6-MxE"/>
+                                    <constraint firstItem="iSO-uH-Iga" firstAttribute="leading" secondItem="brs-Q3-DM1" secondAttribute="leading" id="kUT-2m-PBU"/>
+                                </constraints>
+                                <size key="customSize" width="320" height="120"/>
+                                <connections>
+                                    <outlet property="nameLabel" destination="sU3-51-3am" id="YwG-8s-Pev"/>
+                                    <outlet property="roundedView" destination="iSO-uH-Iga" id="TNY-Yc-PcI"/>
+                                </connections>
+                            </collectionViewCell>
+                        </cells>
+                        <connections>
+                            <outlet property="dataSource" destination="LGt-Wb-o9x" id="pTf-ln-Lax"/>
+                            <outlet property="delegate" destination="LGt-Wb-o9x" id="Hhq-u2-7ZP"/>
+                        </connections>
+                    </collectionView>
+                </collectionViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="HP2-u2-qcW" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="155" y="74"/>
+        </scene>
+    </scenes>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4"/>
+    </simulatedMetricsContainer>
+</document>

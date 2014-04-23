@@ -1,0 +1,414 @@
+//
+//  TGLStackedViewController.m
+//  TGLStackedViewController
+//
+//  Created by Tim Gleue on 07.04.14.
+//  Copyright (c) 2014 Tim Gleue ( http://gleue-interactive.com )
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
+
+#import "TGLStackedViewController.h"
+#import "TGLStackedLayout.h"
+#import "TGLExposedLayout.h"
+
+#define MOVE_ZOOM 0.95
+
+#define SCROLL_PER_FRAME 5.0
+#define SCROLL_ZONE_TOP 100.0
+#define SCROLL_ZONE_BOTTOM 100.0
+
+typedef NS_ENUM(NSInteger, TGLStackedViewControllerScrollDirection) {
+
+    TGLStackedViewControllerScrollDirectionNone = 0,
+    TGLStackedViewControllerScrollDirectionDown,
+    TGLStackedViewControllerScrollDirectionUp
+};
+
+@interface TGLStackedViewController ()
+
+@property (strong, nonatomic) TGLStackedLayout *stackedLayout;
+@property (assign, nonatomic) CGPoint stackedContentOffset;
+
+@property (strong, nonatomic) UIView *movingView;
+@property (strong, nonatomic) NSIndexPath *movingIndexPath;
+@property (strong, nonatomic) UILongPressGestureRecognizer *moveGestureRecognizer;
+
+@property (assign, nonatomic) TGLStackedViewControllerScrollDirection scrollDirection;
+@property (strong, nonatomic) CADisplayLink *scrollDisplayLink;
+
+@property (assign, nonatomic) NSInteger exposedItemIndex;
+
+@end
+
+@implementation TGLStackedViewController
+
+- (void)viewDidLoad {
+    
+    [super viewDidLoad];
+
+    self.stackedLayout = [[TGLStackedLayout alloc] init];
+
+    self.collectionView.collectionViewLayout = self.stackedLayout;
+    
+    self.moveGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
+    self.moveGestureRecognizer.delegate = self;
+
+    [self.collectionView addGestureRecognizer:self.moveGestureRecognizer];
+    
+	self.exposedItemIndex = -1;
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    
+    [self.collectionView.collectionViewLayout invalidateLayout];
+}
+
+#pragma mark - CollectionViewDataSource protocol
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
+    
+    // Currently, only one single section is
+    // supported, therefore MUST NOT be != 1
+    //
+    return 1;
+}
+
+#pragma mark - CollectionViewDelegate protocol
+
+- (BOOL)collectionView:(UICollectionView *)collectionView shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
+    
+    return (indexPath.item == self.exposedItemIndex || self.exposedItemIndex == -1);
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (self.exposedItemIndex) {
+        
+        [collectionView selectItemAtIndexPath:[NSIndexPath indexPathForItem:self.exposedItemIndex inSection:0] animated:NO scrollPosition:UICollectionViewScrollPositionNone];
+    }
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+
+    if (indexPath.item == self.exposedItemIndex) {
+
+        // Collapse currently exposed card
+        //
+        self.exposedItemIndex = -1;
+        
+        [collectionView deselectItemAtIndexPath:indexPath animated:YES];
+        
+        self.stackedLayout.overwriteContentOffset = YES;
+        self.stackedLayout.contentOffset = self.stackedContentOffset;
+
+        [collectionView setCollectionViewLayout:self.stackedLayout animated:YES];
+        [collectionView setContentOffset:self.stackedContentOffset animated:NO];
+
+    } else if (self.exposedItemIndex == -1) {
+
+        // Expose selected card
+        //
+        self.exposedItemIndex = indexPath.item;
+        
+        [collectionView selectItemAtIndexPath:indexPath animated:YES scrollPosition:UICollectionViewScrollPositionNone];
+        
+        self.stackedContentOffset = self.collectionView.contentOffset;
+
+        TGLExposedLayout *exposedLayout = [[TGLExposedLayout alloc] initWithExposedItemIndex:indexPath.item];
+        
+        [collectionView setCollectionViewLayout:exposedLayout animated:YES];
+    }
+}
+
+#pragma mark - GestureRecognizerDelegate protocol
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
+
+    return (self.collectionView.collectionViewLayout == self.stackedLayout);
+}
+
+#pragma mark - Methods
+
+- (void)moveItemAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
+    
+    // Overload method to update collection view data source
+}
+
+#pragma mark - Actions
+
+- (IBAction)handleLongPress:(UILongPressGestureRecognizer *)recognizer {
+    
+    static CGPoint startCenter;
+    static CGPoint startLocation;
+    
+    switch (recognizer.state) {
+            
+        case UIGestureRecognizerStateBegan: {
+            
+            startLocation = [recognizer locationInView:self.collectionView];
+
+            NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:startLocation];
+
+            UICollectionViewCell *movingCell = [self.collectionView cellForItemAtIndexPath:indexPath];
+
+            self.movingView = [[UIView alloc] initWithFrame:movingCell.frame];
+
+            startCenter = self.movingView.center;
+
+            UIImageView *movingImageView = [[UIImageView alloc] initWithImage:[self screenshotImageOfItem:movingCell]];
+
+            movingImageView.alpha = 0.0f;
+            
+            [self.movingView addSubview:movingImageView];
+            [self.collectionView addSubview:self.movingView];
+
+            self.movingIndexPath = indexPath;
+            
+            __weak typeof(self) weakSelf = self;
+
+            [UIView animateWithDuration:0.3
+                                  delay:0.0
+                                options:UIViewAnimationOptionBeginFromCurrentState
+                             animations:^ (void) {
+                                 
+                                 __strong typeof(self) strongSelf = weakSelf;
+                                 
+                                 if (strongSelf) {
+                                     
+                                     strongSelf.movingView.transform = CGAffineTransformMakeScale(MOVE_ZOOM, MOVE_ZOOM);
+                                     movingImageView.alpha = 1.0f;
+                                 }
+                             }
+                             completion:^ (BOOL finished) {
+                             }];
+            
+            self.stackedLayout.movingIndexPath = self.movingIndexPath;
+            [self.stackedLayout invalidateLayout];
+
+            break;
+        }
+
+        case UIGestureRecognizerStateChanged: {
+            
+            if (self.movingIndexPath) {
+
+                CGPoint currentLocation = [recognizer locationInView:self.collectionView];
+                CGPoint currentCenter = startCenter;
+                
+                currentCenter.y += (currentLocation.y - startLocation.y);
+                
+                self.movingView.center = currentCenter;
+
+                if (currentLocation.y < CGRectGetMinY(self.collectionView.bounds) + SCROLL_ZONE_TOP && self.collectionView.contentOffset.y > SCROLL_ZONE_TOP) {
+                    
+                    [self startScrollingUp];
+
+                } else if (currentLocation.y > CGRectGetMaxY(self.collectionView.bounds) - SCROLL_ZONE_BOTTOM && self.collectionView.contentOffset.y < self.collectionView.contentSize.height - CGRectGetHeight(self.collectionView.bounds) - SCROLL_ZONE_BOTTOM) {
+                    
+                    [self startScrollingDown];
+                    
+                } else if (self.scrollDirection != TGLStackedViewControllerScrollDirectionNone) {
+                    
+                    [self stopScrolling];
+                }
+                
+                if (self.scrollDirection == TGLStackedViewControllerScrollDirectionNone) {
+                    
+                    [self updateLayoutAtMovingLocation:currentLocation];
+                }
+            }
+
+            break;
+        }
+
+        case UIGestureRecognizerStateEnded:
+        case UIGestureRecognizerStateCancelled: {
+
+            if (self.movingIndexPath) {
+                
+                [self stopScrolling];
+                
+                UICollectionViewLayoutAttributes *layoutAttributes = [self.stackedLayout layoutAttributesForItemAtIndexPath:self.movingIndexPath];
+                
+                self.movingIndexPath = nil;
+                
+                __weak typeof(self) weakSelf = self;
+                
+                [UIView animateWithDuration:0.3
+                                      delay:0.0
+                                    options:UIViewAnimationOptionBeginFromCurrentState
+                                 animations:^ (void) {
+                                     
+                                     __strong typeof(self) strongSelf = weakSelf;
+                                     
+                                     if (strongSelf) {
+                                         
+                                         strongSelf.movingView.transform = CGAffineTransformMakeScale(1.0f, 1.0f);
+                                         strongSelf.movingView.frame = layoutAttributes.frame;
+                                     }
+                                 }
+                                 completion:^ (BOOL finished) {
+                                     
+                                     __strong typeof(self) strongSelf = weakSelf;
+                                     
+                                     if (strongSelf) {
+                                         
+                                         [strongSelf.movingView removeFromSuperview];
+                                         strongSelf.movingView = nil;
+                                         
+                                         self.stackedLayout.movingIndexPath = nil;
+                                         [strongSelf.stackedLayout invalidateLayout];
+                                     }
+                                 }];
+            }
+            
+            break;
+        }
+            
+        default:
+            
+            break;
+    }
+}
+
+#pragma mark - Scrolling
+
+- (void)startScrollingUp {
+    
+    [self startScrollingInDirection:TGLStackedViewControllerScrollDirectionUp];
+}
+
+- (void)startScrollingDown {
+    
+    [self startScrollingInDirection:TGLStackedViewControllerScrollDirectionDown];
+}
+
+- (void)startScrollingInDirection:(TGLStackedViewControllerScrollDirection)direction {
+
+    if (direction != TGLStackedViewControllerScrollDirectionNone && direction != self.scrollDirection) {
+
+        [self stopScrolling];
+
+        self.scrollDirection = direction;
+        self.scrollDisplayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(handleScrolling:)];
+
+        [self.scrollDisplayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
+    }
+}
+
+- (void)stopScrolling {
+    
+    if (self.scrollDirection != TGLStackedViewControllerScrollDirectionNone) {
+        
+        self.scrollDirection = TGLStackedViewControllerScrollDirectionNone;
+        
+        [self.scrollDisplayLink invalidate];
+        self.scrollDisplayLink = nil;
+    }
+}
+
+- (void)handleScrolling:(CADisplayLink *)displayLink {
+    
+    switch (self.scrollDirection) {
+            
+        case TGLStackedViewControllerScrollDirectionUp: {
+
+            CGPoint offset = self.collectionView.contentOffset;
+
+            offset.y -= SCROLL_PER_FRAME;
+            
+            if (offset.y > 0.0) {
+                
+                self.collectionView.contentOffset = offset;
+                
+                CGPoint center = self.movingView.center;
+
+                center.y -= SCROLL_PER_FRAME;
+                self.movingView.center = center;
+
+            } else {
+
+                [self stopScrolling];
+
+                CGPoint currentLocation = [self.moveGestureRecognizer locationInView:self.collectionView];
+                
+                [self updateLayoutAtMovingLocation:currentLocation];
+            }
+
+            break;
+        }
+            
+        case TGLStackedViewControllerScrollDirectionDown: {
+            
+            CGPoint offset = self.collectionView.contentOffset;
+            
+            offset.y += SCROLL_PER_FRAME;
+            
+            if (offset.y < self.collectionView.contentSize.height - CGRectGetHeight(self.collectionView.bounds)) {
+
+                self.collectionView.contentOffset = offset;
+
+                CGPoint center = self.movingView.center;
+
+                center.y += SCROLL_PER_FRAME;
+                self.movingView.center = center;
+
+            } else {
+                
+                [self stopScrolling];
+                
+                CGPoint currentLocation = [self.moveGestureRecognizer locationInView:self.collectionView];
+                
+                [self updateLayoutAtMovingLocation:currentLocation];
+            }
+            
+            break;
+        }
+            
+        default:
+            break;
+    }
+}
+
+#pragma mark - Helpers
+
+- (UIImage *)screenshotImageOfItem:(UICollectionViewCell *)item {
+    
+    UIGraphicsBeginImageContextWithOptions(item.bounds.size, item.isOpaque, 0.0f);
+    
+    [item.layer renderInContext:UIGraphicsGetCurrentContext()];
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    
+    UIGraphicsEndImageContext();
+
+    return image;
+}
+
+- (void)updateLayoutAtMovingLocation:(CGPoint)movingLocation {
+    
+    [self.stackedLayout invalidateLayoutIfNecessaryWithMovingLocation:movingLocation updateBlock:^ (NSIndexPath *fromIndexPath, NSIndexPath *toIndexPath){
+        
+        [self moveItemAtIndexPath:fromIndexPath toIndexPath:toIndexPath];
+        
+        self.movingIndexPath = toIndexPath;
+    }];
+}
+
+@end
