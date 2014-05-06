@@ -216,10 +216,12 @@
 
 #pragma mark - Methods
 
-- (void)invalidateLayoutIfNecessaryWithMovingLocation:(CGPoint)movingLocation updateBlock:(void (^) (NSIndexPath *fromIndexPath, NSIndexPath *toIndexPath))updateBlock {
+- (void)invalidateLayoutIfNecessaryWithMovingLocation:(CGPoint)movingLocation targetBlock:(NSIndexPath* (^) (NSIndexPath *sourceIndexPath, NSIndexPath *proposedDestinationIndexPath))targetBlock updateBlock:(void (^) (NSIndexPath *fromIndexPath, NSIndexPath *toIndexPath))updateBlock {
 
     NSIndexPath *oldMovingIndexPath = self.movingIndexPath;
     NSIndexPath *newMovingIndexPath = [self.collectionView indexPathForItemAtPoint:movingLocation];
+
+    newMovingIndexPath = targetBlock(oldMovingIndexPath, newMovingIndexPath);
 
     if (newMovingIndexPath != nil && ![newMovingIndexPath isEqual:oldMovingIndexPath]) {
         

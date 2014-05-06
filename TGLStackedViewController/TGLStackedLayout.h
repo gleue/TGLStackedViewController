@@ -51,10 +51,12 @@
  *
  * @param movingLocation Location of item at -movingIndexPath to test
  *        and update layout for if necessary.
- *
- * @param updateBlock Block to be called when movingLocation results in
- *        in a new indexPath for item at -movingIndexPath.
+ * @param targetBlock Block being called to retarget proposed destinationIndexPath
+ *        computed from movingLocation. The block returns the new location, or
+ *        nil if teh item's location should not be updated.
+ * @param updateBlock Block being called when movingLocation results in
+ *        in a new location for item at -movingIndexPath.
  */
-- (void)invalidateLayoutIfNecessaryWithMovingLocation:(CGPoint)movingLocation updateBlock:(void (^) (NSIndexPath *fromIndexPath, NSIndexPath *toIndexPath))updateBlock;
+- (void)invalidateLayoutIfNecessaryWithMovingLocation:(CGPoint)movingLocation targetBlock:(NSIndexPath* (^) (NSIndexPath *sourceIndexPath, NSIndexPath *proposedDestinationIndexPath))targetBlock updateBlock:(void (^) (NSIndexPath *fromIndexPath, NSIndexPath *toIndexPath))updateBlock;
 
 @end
