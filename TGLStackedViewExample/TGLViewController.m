@@ -59,6 +59,13 @@
 
 @synthesize cards = _cards;
 
+- (void)viewDidLoad {
+
+    [super viewDidLoad];
+    
+    self.unexposedItemsAreSelectable = YES;
+}
+
 - (UIStatusBarStyle)preferredStatusBarStyle {
 
     return UIStatusBarStyleLightContent;
