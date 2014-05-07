@@ -68,4 +68,13 @@
     self.roundedView.backgroundColor = self.color;
 }
 
+#pragma mark - Methods
+
+- (void)setSelected:(BOOL)selected {
+
+    [super setSelected:selected];
+    
+    self.roundedView.layer.borderColor = self.selected ? [UIColor whiteColor].CGColor : [UIColor blackColor].CGColor;
+}
+
 @end
