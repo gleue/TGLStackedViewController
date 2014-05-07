@@ -52,8 +52,6 @@ typedef NS_ENUM(NSInteger, TGLStackedViewControllerScrollDirection) {
 @property (assign, nonatomic) TGLStackedViewControllerScrollDirection scrollDirection;
 @property (strong, nonatomic) CADisplayLink *scrollDisplayLink;
 
-@property (assign, nonatomic) NSInteger exposedItemIndex;
-
 @end
 
 @implementation TGLStackedViewController
@@ -70,13 +68,49 @@ typedef NS_ENUM(NSInteger, TGLStackedViewControllerScrollDirection) {
     self.moveGestureRecognizer.delegate = self;
 
     [self.collectionView addGestureRecognizer:self.moveGestureRecognizer];
-    
-	self.exposedItemIndex = -1;
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
     
     [self.collectionView.collectionViewLayout invalidateLayout];
+}
+
+#pragma mark - Accessors
+
+- (void)setExposedItemIndexPath:(NSIndexPath *)exposedItemIndexPath {
+
+    if (![exposedItemIndexPath isEqual:_exposedItemIndexPath]) {
+
+        if (exposedItemIndexPath) {
+
+            // Select newly exposed item, possibly
+            // deslecting the previous selection,
+            // and animate to exposed layout
+            //
+            [self.collectionView selectItemAtIndexPath:exposedItemIndexPath animated:YES scrollPosition:UICollectionViewScrollPositionNone];
+            
+            self.stackedContentOffset = self.collectionView.contentOffset;
+            
+            TGLExposedLayout *exposedLayout = [[TGLExposedLayout alloc] initWithExposedItemIndex:exposedItemIndexPath.item];
+            
+            [self.collectionView setCollectionViewLayout:exposedLayout animated:YES];
+            
+        } else {
+            
+            // Deselect the currently exposed item
+            // and animate back to stacked layout
+            //
+            [self.collectionView deselectItemAtIndexPath:self.exposedItemIndexPath animated:YES];
+            
+            self.stackedLayout.overwriteContentOffset = YES;
+            self.stackedLayout.contentOffset = self.stackedContentOffset;
+            
+            [self.collectionView setCollectionViewLayout:self.stackedLayout animated:YES];
+            [self.collectionView setContentOffset:self.stackedContentOffset animated:NO];
+        }
+        
+        _exposedItemIndexPath = exposedItemIndexPath;
+    }
 }
 
 #pragma mark - CollectionViewDataSource protocol
@@ -93,46 +127,39 @@ typedef NS_ENUM(NSInteger, TGLStackedViewControllerScrollDirection) {
 
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     
-    return (indexPath.item == self.exposedItemIndex || self.exposedItemIndex == -1);
+    // When selecting unexposed items is not allowed,
+    // prevent them from being highlighted and thus
+    // selected by the collection view
+    //
+    return self.unexposedItemsAreSelectable || self.exposedItemIndexPath == nil || [indexPath isEqual:self.exposedItemIndexPath];
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
     
-    if (self.exposedItemIndex) {
+    if (!self.unexposedItemsAreSelectable && self.exposedItemIndexPath) {
         
-        [collectionView selectItemAtIndexPath:[NSIndexPath indexPathForItem:self.exposedItemIndex inSection:0] animated:NO scrollPosition:UICollectionViewScrollPositionNone];
+        // When selecting unexposed items is not allowed
+        // make sure the currently exposed item remains
+        // selected
+        //
+        [collectionView selectItemAtIndexPath:self.exposedItemIndexPath animated:NO scrollPosition:UICollectionViewScrollPositionNone];
     }
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
 
-    if (indexPath.item == self.exposedItemIndex) {
+    if ([indexPath isEqual:self.exposedItemIndexPath]) {
 
-        // Collapse currently exposed card
+        // Collapse currently exposed item
         //
-        self.exposedItemIndex = -1;
+        self.exposedItemIndexPath = nil;
         
-        [collectionView deselectItemAtIndexPath:indexPath animated:YES];
-        
-        self.stackedLayout.overwriteContentOffset = YES;
-        self.stackedLayout.contentOffset = self.stackedContentOffset;
-
-        [collectionView setCollectionViewLayout:self.stackedLayout animated:YES];
-        [collectionView setContentOffset:self.stackedContentOffset animated:NO];
-
-    } else if (self.exposedItemIndex == -1) {
-
-        // Expose selected card
+    } else if (self.unexposedItemsAreSelectable || self.exposedItemIndexPath == nil) {
+            
+        // Expose new item, possibly collapsing
+        // the currently exposed item
         //
-        self.exposedItemIndex = indexPath.item;
-        
-        [collectionView selectItemAtIndexPath:indexPath animated:YES scrollPosition:UICollectionViewScrollPositionNone];
-        
-        self.stackedContentOffset = self.collectionView.contentOffset;
-
-        TGLExposedLayout *exposedLayout = [[TGLExposedLayout alloc] initWithExposedItemIndex:indexPath.item];
-        
-        [collectionView setCollectionViewLayout:exposedLayout animated:YES];
+        self.exposedItemIndexPath = indexPath;
     }
 }
 
@@ -140,6 +167,9 @@ typedef NS_ENUM(NSInteger, TGLStackedViewControllerScrollDirection) {
 
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
 
+    // Long presses, i.e. moving items,
+    // only allowed when stacked
+    //
     return (self.collectionView.collectionViewLayout == self.stackedLayout);
 }
 
@@ -147,17 +177,26 @@ typedef NS_ENUM(NSInteger, TGLStackedViewControllerScrollDirection) {
 
 - (BOOL)canMoveItemAtIndexPath:(NSIndexPath *)indexPath {
     
+    // Overload this method to prevent items
+    // from being dragged to another location
+    //
     return YES;
 }
 
 - (NSIndexPath *)targetIndexPathForMoveFromItemAtIndexPath:(NSIndexPath *)sourceIndexPath toProposedIndexPath:(NSIndexPath *)proposedDestinationIndexPath {
     
+    // Overload this method to modify an item's
+    // target location while being dragged to
+    // another proposed location
+    //
     return proposedDestinationIndexPath;
 }
 
 - (void)moveItemAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
     
-    // Overload method to update collection view data source
+    // Overload method to update collection
+    // view data source when item has been
+    // dragged to another location
 }
 
 #pragma mark - Actions

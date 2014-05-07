@@ -27,6 +27,29 @@
 
 @interface TGLStackedViewController : UICollectionViewController <UIGestureRecognizerDelegate>
 
+/** Index path of currently exposed item.
+ *
+ * The exposed item's selected state is YES.
+ *
+ * When user exposes an item this property
+ * contains the item's index path. The value
+ * is nil if no item is exposed.
+ *
+ * Set this property to a valid item index path
+ * location to expose it, instead of the current
+ * one, or set to nil to collapse all items.
+ */
+@property (strong, nonatomic) NSIndexPath *exposedItemIndexPath;
+
+/** Allow the overlapping parts of unexposed items
+ * to be tapped and thus select another item.
+ *
+ * If set to NO (default), the currently exposed item
+ * has to be tapped to deselect before another item
+ * may be selected.
+ */
+@property (assign, nonatomic) BOOL unexposedItemsAreSelectable;
+
 /** Check whether a given cell can be moved.
  *
  * Overload this method to prevent items from
