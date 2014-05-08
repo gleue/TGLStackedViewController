@@ -42,7 +42,6 @@ typedef NS_ENUM(NSInteger, TGLStackedViewControllerScrollDirection) {
 
 @interface TGLStackedViewController ()
 
-@property (strong, nonatomic) TGLStackedLayout *stackedLayout;
 @property (assign, nonatomic) CGPoint stackedContentOffset;
 
 @property (strong, nonatomic) UIView *movingView;
@@ -56,11 +55,13 @@ typedef NS_ENUM(NSInteger, TGLStackedViewControllerScrollDirection) {
 
 @implementation TGLStackedViewController
 
+@synthesize stackedLayout = _stackedLayout;
+
 - (void)viewDidLoad {
     
     [super viewDidLoad];
 
-    self.stackedLayout = [[TGLStackedLayout alloc] init];
+    _stackedLayout = [[TGLStackedLayout alloc] init];
 
     self.collectionView.collectionViewLayout = self.stackedLayout;
     

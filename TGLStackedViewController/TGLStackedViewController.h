@@ -25,7 +25,12 @@
 
 #import <UIKit/UIKit.h>
 
+#import "TGLStackedLayout.h"
+
 @interface TGLStackedViewController : UICollectionViewController <UIGestureRecognizerDelegate>
+
+/** The collection view layout object used when all items are collapsed. */
+@property (strong, readonly, nonatomic) TGLStackedLayout *stackedLayout;
 
 /** Index path of currently exposed item.
  *
