@@ -90,6 +90,16 @@
     }
 }
 
+- (void)setFillHeight:(BOOL)fillHeight {
+
+    if (fillHeight != self.isFillingHeight) {
+        
+        _fillHeight = fillHeight;
+        
+        [self invalidateLayout];
+    }
+}
+
 #pragma mark - Layout computation
 
 - (BOOL)shouldInvalidateLayoutForBoundsChange:(CGRect)newBounds {
