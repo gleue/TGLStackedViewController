@@ -99,7 +99,14 @@
 
 - (CGSize)collectionViewContentSize {
     
-    return CGSizeMake(CGRectGetWidth(self.collectionView.bounds), self.layoutMargin.top + self.topReveal * [self.collectionView numberOfItemsInSection:0] + self.layoutMargin.bottom);
+    CGSize contentSize = CGSizeMake(CGRectGetWidth(self.collectionView.bounds), self.layoutMargin.top + self.topReveal * [self.collectionView numberOfItemsInSection:0] + self.layoutMargin.bottom);
+    
+    if (self.isFillingHeight && contentSize.height < CGRectGetHeight(self.collectionView.bounds)) {
+    
+        contentSize.height = CGRectGetHeight(self.collectionView.bounds);
+    }
+    
+    return contentSize;
 }
 
 - (void)prepareLayout {
@@ -107,7 +114,7 @@
     CGFloat itemReveal = self.topReveal;
     CGSize contentSize = [self collectionViewContentSize];
 
-    if (self.isFillingHeight && contentSize.height < CGRectGetHeight(self.collectionView.bounds)) {
+    if (self.isFillingHeight && contentSize.height <= CGRectGetHeight(self.collectionView.bounds)) {
     
         itemReveal = floor((CGRectGetHeight(self.collectionView.bounds) - self.layoutMargin.top - self.layoutMargin.bottom) / [self.collectionView numberOfItemsInSection:0]);
     }
