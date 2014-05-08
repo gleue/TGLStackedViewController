@@ -70,11 +70,11 @@
     }
 }
 
-- (void)setTopReveal:(CGFloat)cardReveal {
+- (void)setTopReveal:(CGFloat)topReveal {
     
-    if (cardReveal != self.topReveal) {
+    if (topReveal != self.topReveal) {
         
-        _topReveal = cardReveal;
+        _topReveal = topReveal;
         
         [self invalidateLayout];
     }
@@ -104,6 +104,14 @@
 
 - (void)prepareLayout {
 
+    CGFloat itemReveal = self.topReveal;
+    CGSize contentSize = [self collectionViewContentSize];
+
+    if (self.isFillingHeight && contentSize.height < CGRectGetHeight(self.collectionView.bounds)) {
+    
+        itemReveal = floor((CGRectGetHeight(self.collectionView.bounds) - self.layoutMargin.top - self.layoutMargin.bottom) / [self.collectionView numberOfItemsInSection:0]);
+    }
+    
     CGPoint contentOffset = self.overwriteContentOffset ? self.contentOffset : self.collectionView.contentOffset;
 
     self.overwriteContentOffset = NO;
@@ -133,8 +141,8 @@
         // out evenly with each revealing
         // only top part ...
         //
-        attributes.frame = CGRectMake(self.layoutMargin.left, self.layoutMargin.top + self.topReveal * item, CGRectGetWidth(self.collectionView.bounds) - self.layoutMargin.left - self.layoutMargin.right, CGRectGetHeight(self.collectionView.bounds) - self.layoutMargin.top - self.layoutMargin.bottom);
-
+        attributes.frame = CGRectMake(self.layoutMargin.left, self.layoutMargin.top + itemReveal * item, CGRectGetWidth(self.collectionView.bounds) - self.layoutMargin.left - self.layoutMargin.right, CGRectGetHeight(self.collectionView.bounds) - self.layoutMargin.top - self.layoutMargin.bottom);
+        
         if (contentOffset.y < 0) {
             
             // Expand cells when reaching top
@@ -162,7 +170,7 @@
             
             ++overlappingCount;
 
-        } else if (contentOffset.y + CGRectGetHeight(self.collectionView.bounds) > self.collectionViewContentSize.height) {
+        } else if (self.collectionViewContentSize.height > CGRectGetHeight(self.collectionView.bounds) && contentOffset.y > self.collectionViewContentSize.height - CGRectGetHeight(self.collectionView.bounds)) {
 
             // Compress cells when reaching bottom
             // and user scrolls further up,
