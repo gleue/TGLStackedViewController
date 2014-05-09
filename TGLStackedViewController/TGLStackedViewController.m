@@ -65,6 +65,10 @@ typedef NS_ENUM(NSInteger, TGLStackedViewControllerScrollDirection) {
 
     self.collectionView.collectionViewLayout = self.stackedLayout;
     
+    self.exposedLayoutMargin = UIEdgeInsetsMake(40.0, 0.0, 0.0, 0.0);
+    self.exposedTopOverlap = 20.0;
+    self.exposedBottomOverlap = 20.0;
+    
     self.moveGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
     self.moveGestureRecognizer.delegate = self;
 
@@ -94,6 +98,10 @@ typedef NS_ENUM(NSInteger, TGLStackedViewControllerScrollDirection) {
             
             TGLExposedLayout *exposedLayout = [[TGLExposedLayout alloc] initWithExposedItemIndex:exposedItemIndexPath.item];
             
+            exposedLayout.layoutMargin = self.exposedLayoutMargin;
+            exposedLayout.topOverlap = self.exposedTopOverlap;
+            exposedLayout.bottomOverlap = self.exposedBottomOverlap;
+
             [self.collectionView setCollectionViewLayout:exposedLayout animated:YES];
             
         } else {

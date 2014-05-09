@@ -32,6 +32,33 @@
 /** The collection view layout object used when all items are collapsed. */
 @property (strong, readonly, nonatomic) TGLStackedLayout *stackedLayout;
 
+/** Margins between collection view and items when exposed.
+ *
+ * Changes to this property take effect on next
+ * item being selected, i.e. exposed.
+ *
+ * Default value is UIEdgeInsetsMake(40.0, 0.0, 0.0, 0.0)
+ */
+@property (assign, nonatomic) UIEdgeInsets exposedLayoutMargin;
+
+/** Amount of overlap for items above exposed item.
+ *
+ * Changes to this property take effect on next
+ * item being selected, i.e. exposed.
+ *
+ * Default value is 20.0
+ */
+@property (assign, nonatomic) CGFloat exposedTopOverlap;
+
+/** Amount of overlap for items below exposed item.
+ *
+ * Changes to this property take effect on next
+ * item being selected, i.e. exposed.
+ *
+ * Default value is 20.0
+ */
+@property (assign, nonatomic) CGFloat exposedBottomOverlap;
+
 /** Index path of currently exposed item.
  *
  * The exposed item's selected state is YES.
