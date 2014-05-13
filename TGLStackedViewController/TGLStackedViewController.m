@@ -57,17 +57,58 @@ typedef NS_ENUM(NSInteger, TGLStackedViewControllerScrollDirection) {
 
 @synthesize stackedLayout = _stackedLayout;
 
+- (instancetype)init {
+
+    self = [super init];
+    
+    if (self) [self initController];
+    
+    return self;
+}
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+
+    self = [super initWithCoder:aDecoder];
+    
+    if (self) [self initController];
+    
+    return self;
+}
+
+- (instancetype)initWithCollectionViewLayout:(UICollectionViewLayout *)layout {
+    
+    self = [super initWithCollectionViewLayout:layout];
+
+    if (self) [self initController];
+    
+    return self;
+}
+
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+    
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+
+    if (self) [self initController];
+    
+    return self;
+}
+
+- (void)initController {
+    
+    _stackedLayout = [[TGLStackedLayout alloc] init];
+    
+    _exposedLayoutMargin = UIEdgeInsetsMake(40.0, 0.0, 0.0, 0.0);
+    _exposedTopOverlap = 20.0;
+    _exposedBottomOverlap = 20.0;
+}
+
+#pragma mark - View life cycle
+
 - (void)viewDidLoad {
     
     [super viewDidLoad];
 
-    _stackedLayout = [[TGLStackedLayout alloc] init];
-
     self.collectionView.collectionViewLayout = self.stackedLayout;
-    
-    self.exposedLayoutMargin = UIEdgeInsetsMake(40.0, 0.0, 0.0, 0.0);
-    self.exposedTopOverlap = 20.0;
-    self.exposedBottomOverlap = 20.0;
     
     self.moveGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
     self.moveGestureRecognizer.delegate = self;
