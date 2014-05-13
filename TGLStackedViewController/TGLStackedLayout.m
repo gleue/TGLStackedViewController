@@ -29,6 +29,11 @@
 
 @property (nonatomic, strong) NSDictionary *layoutAttributes;
 
+// Set to YES when layout is currently arranging
+// items so that they evenly fill entire height
+//
+@property (nonatomic, assign) BOOL filling;
+
 @end
 
 @implementation TGLStackedLayout
@@ -100,6 +105,16 @@
     }
 }
 
+- (void)setAlwaysBounce:(BOOL)alwaysBounce {
+    
+    if (alwaysBounce != self.alwaysBounce) {
+        
+        _alwaysBounce = alwaysBounce;
+        
+        [self invalidateLayout];
+    }
+}
+
 #pragma mark - Layout computation
 
 - (BOOL)shouldInvalidateLayoutForBoundsChange:(CGRect)newBounds {
@@ -111,9 +126,20 @@
     
     CGSize contentSize = CGSizeMake(CGRectGetWidth(self.collectionView.bounds), self.layoutMargin.top + self.topReveal * [self.collectionView numberOfItemsInSection:0] + self.layoutMargin.bottom - self.collectionView.contentInset.bottom);
     
-    if (self.isFillingHeight && contentSize.height < CGRectGetHeight(self.collectionView.bounds)) {
-    
+    if (contentSize.height < CGRectGetHeight(self.collectionView.bounds)) {
+
         contentSize.height = CGRectGetHeight(self.collectionView.bounds) - self.collectionView.contentInset.top - self.collectionView.contentInset.bottom;
+
+        // Adding an extra point of content height
+        // enables scrolling/bouncing
+        //
+        if (self.isAlwaysBouncing) contentSize.height += 1.0;
+        
+        self.filling = self.isFillingHeight;
+        
+    } else {
+        
+        self.filling = NO;
     }
     
     return contentSize;
@@ -121,14 +147,23 @@
 
 - (void)prepareLayout {
 
+    // Force update of property -filling
+    // used to decide whether to arrange
+    // items evenly in collection view's
+    // full height
+    //
+    [self collectionViewContentSize];
+
     CGFloat itemReveal = self.topReveal;
-    CGSize contentSize = [self collectionViewContentSize];
-
-    if (self.isFillingHeight && contentSize.height <= CGRectGetHeight(self.collectionView.bounds)) {
-
-        itemReveal = floor((CGRectGetHeight(self.collectionView.bounds) - self.layoutMargin.top - self.layoutMargin.bottom - self.collectionView.contentInset.top - self.collectionView.contentInset.bottom) / [self.collectionView numberOfItemsInSection:0]);
-    }
     
+    if (self.filling) {
+        
+        itemReveal  = floor((CGRectGetHeight(self.collectionView.bounds) - self.layoutMargin.top - self.layoutMargin.bottom - self.collectionView.contentInset.top - self.collectionView.contentInset.bottom) / [self.collectionView numberOfItemsInSection:0]);
+    }
+
+    // Honor overwritten contentOffset
+    // exactly once
+    //
     CGPoint contentOffset = self.overwriteContentOffset ? self.contentOffset : self.collectionView.contentOffset;
 
     self.overwriteContentOffset = NO;

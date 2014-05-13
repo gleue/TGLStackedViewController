@@ -33,8 +33,10 @@
 @property (assign, nonatomic) CGFloat topReveal;
 /** Amount of compression/expansing when scrolling bounces. Default is 0.2 */
 @property (assign, nonatomic) CGFloat bounceFactor;
-/** Set to YES, to ignore -topReveal and arrange items evenly in collection view's bounds, if items do not fill full height. Default is NO. */
+/** Set to YES to ignore -topReveal and arrange items evenly in collection view's bounds, if items do not fill entire height. Default is NO. */
 @property (assign, nonatomic, getter = isFillingHeight) BOOL fillHeight;
+/** Set to YES to enable bouncing even when items do not fill entire height. Default is NO. */
+@property (assign, nonatomic, getter = isAlwaysBouncing) BOOL alwaysBounce;
 
 /** Use -contentOffset instead of collection view's actual content offset for next layout */
 @property (assign, nonatomic) BOOL overwriteContentOffset;
