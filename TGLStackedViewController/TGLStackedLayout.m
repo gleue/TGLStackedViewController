@@ -109,11 +109,11 @@
 
 - (CGSize)collectionViewContentSize {
     
-    CGSize contentSize = CGSizeMake(CGRectGetWidth(self.collectionView.bounds), self.layoutMargin.top + self.topReveal * [self.collectionView numberOfItemsInSection:0] + self.layoutMargin.bottom);
+    CGSize contentSize = CGSizeMake(CGRectGetWidth(self.collectionView.bounds), self.layoutMargin.top + self.topReveal * [self.collectionView numberOfItemsInSection:0] + self.layoutMargin.bottom - self.collectionView.contentInset.bottom);
     
     if (self.isFillingHeight && contentSize.height < CGRectGetHeight(self.collectionView.bounds)) {
     
-        contentSize.height = CGRectGetHeight(self.collectionView.bounds);
+        contentSize.height = CGRectGetHeight(self.collectionView.bounds) - self.collectionView.contentInset.top - self.collectionView.contentInset.bottom;
     }
     
     return contentSize;
@@ -125,8 +125,8 @@
     CGSize contentSize = [self collectionViewContentSize];
 
     if (self.isFillingHeight && contentSize.height <= CGRectGetHeight(self.collectionView.bounds)) {
-    
-        itemReveal = floor((CGRectGetHeight(self.collectionView.bounds) - self.layoutMargin.top - self.layoutMargin.bottom) / [self.collectionView numberOfItemsInSection:0]);
+
+        itemReveal = floor((CGRectGetHeight(self.collectionView.bounds) - self.layoutMargin.top - self.layoutMargin.bottom - self.collectionView.contentInset.top - self.collectionView.contentInset.bottom) / [self.collectionView numberOfItemsInSection:0]);
     }
     
     CGPoint contentOffset = self.overwriteContentOffset ? self.contentOffset : self.collectionView.contentOffset;
@@ -160,15 +160,15 @@
         //
         attributes.frame = CGRectMake(self.layoutMargin.left, self.layoutMargin.top + itemReveal * item, CGRectGetWidth(self.collectionView.bounds) - self.layoutMargin.left - self.layoutMargin.right, CGRectGetHeight(self.collectionView.bounds) - self.layoutMargin.top - self.layoutMargin.bottom);
         
-        if (contentOffset.y < 0) {
-            
+        if (contentOffset.y + self.collectionView.contentInset.top < 0.0) {
+
             // Expand cells when reaching top
             // and user scrolls further down,
             // i.e. when bouncing
             //
             CGRect frame = attributes.frame;
             
-            frame.origin.y -= self.bounceFactor * contentOffset.y * item;
+            frame.origin.y -= self.bounceFactor * (contentOffset.y + self.collectionView.contentInset.top) * item;
             
             attributes.frame = frame;
 

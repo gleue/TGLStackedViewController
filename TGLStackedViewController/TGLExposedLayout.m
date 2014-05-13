@@ -86,13 +86,17 @@
 #pragma mark - Layout computation
 
 - (CGSize)collectionViewContentSize {
+
+    CGSize contentSize = self.collectionView.bounds.size;
     
-    return self.collectionView.bounds.size;
+    contentSize.height -= self.collectionView.contentInset.top + self.collectionView.contentInset.bottom;
+    
+    return contentSize;
 }
 
 - (void)prepareLayout {
 
-    CGSize cardSize = CGSizeMake(CGRectGetWidth(self.collectionView.bounds) - self.layoutMargin.left - self.layoutMargin.right, CGRectGetHeight(self.collectionView.bounds) - self.layoutMargin.top - self.layoutMargin.bottom);
+    CGSize cardSize = CGSizeMake(CGRectGetWidth(self.collectionView.bounds) - self.layoutMargin.left - self.layoutMargin.right, CGRectGetHeight(self.collectionView.bounds) - self.layoutMargin.top - self.layoutMargin.bottom - self.collectionView.contentInset.top - self.collectionView.contentInset.bottom);
 
     NSMutableDictionary *layoutAttributes = [NSMutableDictionary dictionary];
     
