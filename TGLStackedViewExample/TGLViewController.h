@@ -29,4 +29,6 @@
 
 @interface TGLViewController : TGLStackedViewController
 
+@property (nonatomic, assign) BOOL doubleTapToClose;
+
 @end

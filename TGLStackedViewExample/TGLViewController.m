@@ -75,6 +75,16 @@
     // being selectable
     //
     self.unexposedItemsAreSelectable = YES;
+    
+    if (self.doubleTapToClose) {
+        
+        UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap:)];
+        
+        recognizer.delaysTouchesBegan = YES;
+        recognizer.numberOfTapsRequired = 2;
+        
+        [self.collectionView addGestureRecognizer:recognizer];
+    }
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
@@ -103,6 +113,13 @@
     }
     
     return _cards;
+}
+
+#pragma mark - Actions
+
+- (IBAction)handleDoubleTap:(UITapGestureRecognizer *)recognizer {
+    
+    [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - CollectionViewDataSource protocol
