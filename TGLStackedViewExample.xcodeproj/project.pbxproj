@@ -160,7 +160,7 @@
 		3DF68EF218F31B0C00387458 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				CLASSPREFIX = CT;
+				CLASSPREFIX = TGL;
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = "Tim Gleue • interactive software";
 			};
