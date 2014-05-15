@@ -41,6 +41,15 @@
  */
 @property (assign, nonatomic) UIEdgeInsets exposedLayoutMargin;
 
+/** Size of items when exposed if set to value not equal CGSizeZero.
+ *
+ * Changes to this property take effect on next
+ * item being selected, i.e. exposed.
+ *
+ * Default value is CGSizeZero
+ */
+@property (assign, nonatomic) CGSize exposedItemSize;
+
 /** Amount of overlap for items above exposed item.
  *
  * Changes to this property take effect on next

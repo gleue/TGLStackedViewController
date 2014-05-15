@@ -29,17 +29,30 @@
 
 /** Margins between collection view and items. Default is UIEdgeInsetsMake(20.0, 0.0, 0.0, 0.0) */
 @property (assign, nonatomic) UIEdgeInsets layoutMargin;
+
+/** Size of items if set to value not equal CGSizeZero.
+ *
+ * If set to CGSizeZero (default) item sizes are computed
+ * from the collection view's bounds minus the margins defined
+ * in property -layoutMargin.
+ */
+@property (assign, nonatomic) CGSize itemSize;
+
 /** Amount to show of each stacked item. Default is 120.0 */
 @property (assign, nonatomic) CGFloat topReveal;
+
 /** Amount of compression/expansing when scrolling bounces. Default is 0.2 */
 @property (assign, nonatomic) CGFloat bounceFactor;
+
 /** Set to YES to ignore -topReveal and arrange items evenly in collection view's bounds, if items do not fill entire height. Default is NO. */
 @property (assign, nonatomic, getter = isFillingHeight) BOOL fillHeight;
+
 /** Set to YES to enable bouncing even when items do not fill entire height. Default is NO. */
 @property (assign, nonatomic, getter = isAlwaysBouncing) BOOL alwaysBounce;
 
 /** Use -contentOffset instead of collection view's actual content offset for next layout */
 @property (assign, nonatomic) BOOL overwriteContentOffset;
+
 /** Content offset value to replace actual value when -overwriteContentOffset is YES */
 @property (assign, nonatomic) CGPoint contentOffset;
 

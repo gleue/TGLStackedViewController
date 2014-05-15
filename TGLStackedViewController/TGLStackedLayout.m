@@ -85,6 +85,16 @@
     }
 }
 
+- (void)setItemSize:(CGSize)itemSize {
+    
+    if (!CGSizeEqualToSize(itemSize, self.itemSize)) {
+        
+        _itemSize = itemSize;
+        
+        [self invalidateLayout];
+    }
+}
+
 - (void)setBounceFactor:(CGFloat)bounceFactor {
 
     if (bounceFactor != self.bounceFactor) {
@@ -158,7 +168,14 @@
     
     if (self.filling) {
         
-        itemReveal  = floor((CGRectGetHeight(self.collectionView.bounds) - self.layoutMargin.top - self.layoutMargin.bottom - self.collectionView.contentInset.top - self.collectionView.contentInset.bottom) / [self.collectionView numberOfItemsInSection:0]);
+        itemReveal = floor((CGRectGetHeight(self.collectionView.bounds) - self.layoutMargin.top - self.layoutMargin.bottom - self.collectionView.contentInset.top - self.collectionView.contentInset.bottom) / [self.collectionView numberOfItemsInSection:0]);
+    }
+    
+    CGSize itemSize = self.itemSize;
+    
+    if (CGSizeEqualToSize(itemSize, CGSizeZero)) {
+        
+        itemSize = CGSizeMake(CGRectGetWidth(self.collectionView.bounds) - self.layoutMargin.left - self.layoutMargin.right, CGRectGetHeight(self.collectionView.bounds) - self.layoutMargin.top - self.layoutMargin.bottom - self.collectionView.contentInset.top - self.collectionView.contentInset.bottom);
     }
 
     // Honor overwritten contentOffset
@@ -193,8 +210,8 @@
         // out evenly with each revealing
         // only top part ...
         //
-        attributes.frame = CGRectMake(self.layoutMargin.left, self.layoutMargin.top + itemReveal * item, CGRectGetWidth(self.collectionView.bounds) - self.layoutMargin.left - self.layoutMargin.right, CGRectGetHeight(self.collectionView.bounds) - self.layoutMargin.top - self.layoutMargin.bottom);
-        
+        attributes.frame = CGRectMake(self.layoutMargin.left, self.layoutMargin.top + itemReveal * item, itemSize.width, itemSize.height);
+
         if (contentOffset.y + self.collectionView.contentInset.top < 0.0) {
 
             // Expand cells when reaching top

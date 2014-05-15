@@ -98,6 +98,7 @@ typedef NS_ENUM(NSInteger, TGLStackedViewControllerScrollDirection) {
     _stackedLayout = [[TGLStackedLayout alloc] init];
     
     _exposedLayoutMargin = UIEdgeInsetsMake(40.0, 0.0, 0.0, 0.0);
+    _exposedItemSize = CGSizeZero;
     _exposedTopOverlap = 20.0;
     _exposedBottomOverlap = 20.0;
 }
@@ -140,6 +141,7 @@ typedef NS_ENUM(NSInteger, TGLStackedViewControllerScrollDirection) {
             TGLExposedLayout *exposedLayout = [[TGLExposedLayout alloc] initWithExposedItemIndex:exposedItemIndexPath.item];
             
             exposedLayout.layoutMargin = self.exposedLayoutMargin;
+            exposedLayout.itemSize = self.exposedItemSize;
             exposedLayout.topOverlap = self.exposedTopOverlap;
             exposedLayout.bottomOverlap = self.exposedBottomOverlap;
 

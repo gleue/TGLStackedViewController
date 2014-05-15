@@ -37,6 +37,14 @@
 /** Margins between collection view and items. Default is UIEdgeInsetsMake(40.0, 0.0, 0.0, 0.0) */
 @property (assign, nonatomic) UIEdgeInsets layoutMargin;
 
+/** Size of items if set to value not equal CGSizeZero.
+ *
+ * If set to CGSizeZero (default) item sizes are computed
+ * from the collection view's bounds minus the margins defined
+ * in property -layoutMargin.
+ */
+@property (assign, nonatomic) CGSize itemSize;
+
 /** Amount of overlap for items above exposed item. Default 20.0 */
 @property (assign, nonatomic) CGFloat topOverlap;
 

@@ -63,6 +63,16 @@
     }
 }
 
+- (void)setItemSize:(CGSize)itemSize {
+    
+    if (!CGSizeEqualToSize(itemSize, self.itemSize)) {
+        
+        _itemSize = itemSize;
+        
+        [self invalidateLayout];
+    }
+}
+
 - (void)setTopOverlap:(CGFloat)cardOverlapTop {
     
     if (cardOverlapTop != self.topOverlap) {
@@ -96,7 +106,12 @@
 
 - (void)prepareLayout {
 
-    CGSize cardSize = CGSizeMake(CGRectGetWidth(self.collectionView.bounds) - self.layoutMargin.left - self.layoutMargin.right, CGRectGetHeight(self.collectionView.bounds) - self.layoutMargin.top - self.layoutMargin.bottom - self.collectionView.contentInset.top - self.collectionView.contentInset.bottom);
+    CGSize itemSize = self.itemSize;
+    
+    if (CGSizeEqualToSize(itemSize, CGSizeZero)) {
+        
+        itemSize = CGSizeMake(CGRectGetWidth(self.collectionView.bounds) - self.layoutMargin.left - self.layoutMargin.right, CGRectGetHeight(self.collectionView.bounds) - self.layoutMargin.top - self.layoutMargin.bottom - self.collectionView.contentInset.top - self.collectionView.contentInset.bottom);
+    }
 
     NSMutableDictionary *layoutAttributes = [NSMutableDictionary dictionary];
     
@@ -111,23 +126,23 @@
             // are aligned above top with
             // cardTopOverlap
             //
-            attributes.frame = CGRectMake(self.layoutMargin.left, self.layoutMargin.top - self.topOverlap, cardSize.width, cardSize.height);
+            attributes.frame = CGRectMake(self.layoutMargin.left, self.layoutMargin.top - self.topOverlap, itemSize.width, itemSize.height);
             
         } else if (item == self.exposedItemIndex) {
             
             // Exposed item
             //
-            attributes.frame = CGRectMake(self.layoutMargin.left, self.layoutMargin.top, cardSize.width, cardSize.height);
+            attributes.frame = CGRectMake(self.layoutMargin.left, self.layoutMargin.top, itemSize.width, itemSize.height);
 
         } else if (item > self.exposedItemIndex + 1) {
             
-            attributes.frame = CGRectMake(self.layoutMargin.left, self.collectionViewContentSize.height, cardSize.width, cardSize.height);
+            attributes.frame = CGRectMake(self.layoutMargin.left, self.collectionViewContentSize.height, itemSize.width, itemSize.height);
         
         } else {
         
             NSInteger delta = MIN(item - self.exposedItemIndex - 1, 0);
     
-            attributes.frame = CGRectMake(self.layoutMargin.left, self.layoutMargin.top + cardSize.height - (1 - delta) * self.bottomOverlap, cardSize.width, cardSize.height);
+            attributes.frame = CGRectMake(self.layoutMargin.left, self.layoutMargin.top + itemSize.height - (1 - delta) * self.bottomOverlap, itemSize.width, itemSize.height);
         }
 
         attributes.zIndex = item;
