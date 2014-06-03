@@ -40,6 +40,7 @@ Credits
 =======
 
 - Reordering based on [LXReorderableCollectionViewFlowLayout](https://github.com/lxcid/LXReorderableCollectionViewFlowLayout)
+- Podspec by [Pierre Dulac](https://github.com/dulaccc)
 
 License
 =======
