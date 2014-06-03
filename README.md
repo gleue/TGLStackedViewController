@@ -15,7 +15,16 @@ Take a look at sample project `TGLStackedViewExample.xcodeproj`.
 Usage
 =====
 
+Via [CocoaPods](http://cocoapods.org):
+
+* Add `pod 'TGLStackedViewController', '~> 1.0'` to your project's `Podfile`
+
+Or the "classic" way:
+
 * Add files in folder `TGLStackedViewController` to your project
+
+Then in your project:
+
 * Create a derived class from `TGLStackedViewController` and overwrite method `-moveItemAtIndexPath:toIndexPath:`
 * Implement `UICollectionDataSource` (currently only 1 section supported) and `UICollectionViewDelegate` protocols
 * Place `UICollectionViewController` in your storyboard and set its class to your derived class
