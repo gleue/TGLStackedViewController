@@ -9,5 +9,5 @@ Pod::Spec.new do |s|
   s.source_files = 'TGLStackedViewController'
 
   s.requires_arc = true
-  s.platform = :ios, '7.0'
+  s.platform = :ios, '6.0'
 end

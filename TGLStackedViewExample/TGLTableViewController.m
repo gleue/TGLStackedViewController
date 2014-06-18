@@ -9,6 +9,12 @@
 #import "TGLTableViewController.h"
 #import "TGLViewController.h"
 
+@interface TGLTableViewController ()
+
+@property (nonatomic, retain) NSArray *segues;
+
+@end
+
 @implementation TGLTableViewController
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -16,6 +22,36 @@
     [super viewWillAppear:animated];
     
     self.navigationController.toolbarHidden = YES;
+}
+
+#pragma mark - Accessors
+
+- (NSArray *)segues {
+    if (_segues == nil) {
+        if(floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_6_1) {
+            _segues = @[@"Show stand-alone", @"Show in NavigationController", @"Show with Toolbar"];
+        }else {
+            _segues = @[@"Show stand-alone", @"Show in NavigationController", @"Show with Toolbar", @"Show without ExtendedEdges"];
+        }
+    }
+    
+    return _segues;
+}
+
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return self.segues.count;
+}
+
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    //obviously not efficient but we're not doing anything special.
+    UITableViewCell* cell = [[UITableViewCell alloc] init];
+    [cell.textLabel setText:self.segues[indexPath.row]];
+    
+    return cell;
+}
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [self performSegueWithIdentifier:self.segues[indexPath.row] sender:nil];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
