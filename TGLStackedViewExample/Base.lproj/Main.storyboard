@@ -21,7 +21,7 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="Examples" id="ohf-ec-hVA"/>
                     <connections>
-                        <segue destination="LGt-Wb-o9x" kind="push" identifier="Show stand-alone" id="7C5-k4-LcA"/>
+                        <segue destination="LGt-Wb-o9x" kind="modal" identifier="Show stand-alone" id="7C5-k4-LcA"/>
                         <segue destination="LGt-Wb-o9x" kind="push" identifier="Show in NavigationController" id="BwR-hA-wBU"/>
                         <segue destination="LGt-Wb-o9x" kind="push" identifier="Show with Toolbar" id="YPf-Z2-4GJ"/>
                         <segue destination="LGt-Wb-o9x" kind="push" identifier="Show without ExtendedEdges" id="54A-tu-1aL"/>
@@ -57,7 +57,7 @@
                         <collectionViewLayout key="collectionViewLayout" id="Jfl-KN-Fgn"/>
                         <cells>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CardCell" id="brs-Q3-DM1" customClass="TGLCollectionViewCell">
-                                <rect key="frame" x="0.0" y="64" width="320" height="120"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="120"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="120"/>
@@ -119,6 +119,6 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="54A-tu-1aL"/>
+        <segue reference="7C5-k4-LcA"/>
     </inferredMetricsTieBreakers>
 </document>
