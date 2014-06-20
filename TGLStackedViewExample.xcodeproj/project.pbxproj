@@ -313,6 +313,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TGLStackedViewExample/TGLStackedViewExample-Prefix.pch";
 				INFOPLIST_FILE = "$(SRCROOT)/TGLStackedViewExample/TGLStackedViewExample-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = TGLStackedViewExample;
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
@@ -329,6 +330,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TGLStackedViewExample/TGLStackedViewExample-Prefix.pch";
 				INFOPLIST_FILE = "$(SRCROOT)/TGLStackedViewExample/TGLStackedViewExample-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = TGLStackedViewExample;
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
