@@ -33,7 +33,7 @@ Requirements
 ============
 
 * ARC
-* iOS 7
+* iOS >= 6.0
 * Xcode 5
 
 Credits
