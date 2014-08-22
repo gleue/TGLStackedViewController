@@ -59,6 +59,12 @@
 /** Index path of item currently being moved, and thus being hidden */
 @property (strong, nonatomic) NSIndexPath *movingIndexPath;
 
+/** Top visible overlapping height per card in stack. Default is 0.0 */
+@property (assign, nonatomic) CGFloat topVisibleOverlappingHeight;
+
+/** Max number of overlapping cards visible to user. 0 = no limit. This will only take effect if topVisibleOverlappingHeight is not 0. Default is 0 */
+@property (assign, nonatomic) NSInteger maxTopVisibleOverlappingCards;
+
 /** Check if layout needs update for new moving location.
  *
  * This method is called by the view controller, when an item

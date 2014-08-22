@@ -61,6 +61,8 @@
     self.layoutMargin = UIEdgeInsetsMake(20.0, 0.0, 0.0, 0.0);
     self.topReveal = 120.0;
     self.bounceFactor = 0.2;
+    self.topVisibleOverlappingHeight = 0.f;
+    self.maxTopVisibleOverlappingCards = 0;
 }
 
 #pragma mark - Accessors
@@ -233,7 +235,11 @@
             //
             CGRect frame = attributes.frame;
             
-            frame.origin.y = contentOffset.y + self.layoutMargin.top;
+            CGFloat margin = (self.maxTopVisibleOverlappingCards > 0)
+                ? (MIN(overlappingCount, self.maxTopVisibleOverlappingCards+ 1) * self.topVisibleOverlappingHeight)
+                : overlappingCount * self.topVisibleOverlappingHeight;
+            
+            frame.origin.y = contentOffset.y + self.layoutMargin.top + margin;
             
             attributes.frame = frame;
             
