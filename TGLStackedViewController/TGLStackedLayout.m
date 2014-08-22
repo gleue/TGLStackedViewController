@@ -236,7 +236,7 @@
             CGRect frame = attributes.frame;
             
             CGFloat margin = (self.maxTopVisibleOverlappingCards > 0)
-                ? (MIN(overlappingCount, self.maxTopVisibleOverlappingCards+ 1) * self.topVisibleOverlappingHeight)
+                ? (MIN(overlappingCount, self.maxTopVisibleOverlappingCards) * self.topVisibleOverlappingHeight)
                 : overlappingCount * self.topVisibleOverlappingHeight;
             
             frame.origin.y = contentOffset.y + self.layoutMargin.top + margin;

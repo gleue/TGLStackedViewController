@@ -68,7 +68,7 @@
         
         TGLViewController *controller = segue.destinationViewController;
         controller.stackedLayout.topVisibleOverlappingHeight = 2.f;
-        controller.stackedLayout.maxTopVisibleOverlappingCards = 4;
+        controller.stackedLayout.maxTopVisibleOverlappingCards = 3;
         
         controller.doubleTapToClose = YES;
         
