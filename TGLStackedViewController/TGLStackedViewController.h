@@ -91,6 +91,14 @@
  */
 @property (assign, nonatomic) BOOL unexposedItemsAreSelectable;
 
+/** Whether or not to set the moving cell opaque
+ * to be tapped and thus select another item.
+ *
+ * If set to NO (default), the moving cell background
+ * will be transparent.
+ */
+@property (assign, nonatomic) BOOL movingCellOpaque;
+
 /** Check whether a given cell can be moved.
  *
  * Overload this method to prevent items from

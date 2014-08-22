@@ -101,6 +101,8 @@ typedef NS_ENUM(NSInteger, TGLStackedViewControllerScrollDirection) {
     _exposedItemSize = CGSizeZero;
     _exposedTopOverlap = 20.0;
     _exposedBottomOverlap = 20.0;
+    
+    _movingCellOpaque = NO;
 }
 
 #pragma mark - View life cycle
@@ -494,7 +496,7 @@ typedef NS_ENUM(NSInteger, TGLStackedViewControllerScrollDirection) {
 
 - (UIImage *)screenshotImageOfItem:(UICollectionViewCell *)item {
     
-    UIGraphicsBeginImageContextWithOptions(item.bounds.size, item.isOpaque, 0.0f);
+    UIGraphicsBeginImageContextWithOptions(item.bounds.size, _movingCellOpaque, 0.0f);
     
     [item.layer renderInContext:UIGraphicsGetCurrentContext()];
     
