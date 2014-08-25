@@ -43,7 +43,9 @@
         
         self.layoutMargin = UIEdgeInsetsMake(40.0, 0.0, 0.0, 0.0);
         self.topOverlap = 20.0;
+        self.maxTopVisibleItems = 1;
         self.bottomOverlap = 20.0;
+        self.maxBottomVisibleItems = 1;
 
         self.exposedItemIndex = exposedItemIndex;
     }
@@ -115,7 +117,8 @@
 
     NSMutableDictionary *layoutAttributes = [NSMutableDictionary dictionary];
     
-    for (NSInteger item = 0; item < [self.collectionView numberOfItemsInSection:0]; item++) {
+    int totalItems = [self.collectionView numberOfItemsInSection:0];
+    for (NSInteger item = 0; item < totalItems; item++) {
 
         NSIndexPath *indexPath = [NSIndexPath indexPathForItem:item inSection:0];
         UICollectionViewLayoutAttributes *attributes = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];
@@ -126,7 +129,10 @@
             // are aligned above top with
             // cardTopOverlap
             //
-            attributes.frame = CGRectMake(self.layoutMargin.left, self.layoutMargin.top - self.topOverlap, itemSize.width, itemSize.height);
+            CGFloat margin = (self.maxTopVisibleItems > 0)
+            ? MIN(item, self.maxTopVisibleItems) * (self.topOverlap / MIN(self.exposedItemIndex, self.maxTopVisibleItems))
+            : item * (self.topOverlap / MAX(self.exposedItemIndex, 1));
+            attributes.frame = CGRectMake(self.layoutMargin.left, self.layoutMargin.top - self.topOverlap + margin, itemSize.width, itemSize.height);
             
         } else if (item == self.exposedItemIndex) {
             
@@ -134,15 +140,18 @@
             //
             attributes.frame = CGRectMake(self.layoutMargin.left, self.layoutMargin.top, itemSize.width, itemSize.height);
 
-        } else if (item > self.exposedItemIndex + 1) {
+        } else if (item > (self.exposedItemIndex + self.maxBottomVisibleItems) && self.maxBottomVisibleItems != 0) {
             
+            // hide the items
             attributes.frame = CGRectMake(self.layoutMargin.left, self.collectionViewContentSize.height, itemSize.width, itemSize.height);
         
         } else {
         
-            NSInteger delta = MIN(item - self.exposedItemIndex - 1, 0);
+            int displayItems = self.maxBottomVisibleItems > 0 ? self.maxBottomVisibleItems : (totalItems - self.exposedItemIndex - 1);
+            CGFloat eachItemHeight = self.bottomOverlap / displayItems;
+            NSInteger delta = MIN(item - self.exposedItemIndex - 1, displayItems);
     
-            attributes.frame = CGRectMake(self.layoutMargin.left, self.layoutMargin.top + itemSize.height - (1 - delta) * self.bottomOverlap, itemSize.width, itemSize.height);
+            attributes.frame = CGRectMake(self.layoutMargin.left, self.layoutMargin.top + itemSize.height - self.bottomOverlap + (delta * eachItemHeight), itemSize.width, itemSize.height);
         }
 
         attributes.zIndex = item;

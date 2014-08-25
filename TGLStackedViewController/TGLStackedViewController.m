@@ -100,7 +100,9 @@ typedef NS_ENUM(NSInteger, TGLStackedViewControllerScrollDirection) {
     _exposedLayoutMargin = UIEdgeInsetsMake(40.0, 0.0, 0.0, 0.0);
     _exposedItemSize = CGSizeZero;
     _exposedTopOverlap = 20.0;
+    _exposedMaxTopVisibleItems = 1;
     _exposedBottomOverlap = 20.0;
+    _exposedMaxBottomVisibleItems = 1;
     
     _movingCellOpaque = NO;
 }
@@ -146,6 +148,8 @@ typedef NS_ENUM(NSInteger, TGLStackedViewControllerScrollDirection) {
             exposedLayout.itemSize = self.exposedItemSize;
             exposedLayout.topOverlap = self.exposedTopOverlap;
             exposedLayout.bottomOverlap = self.exposedBottomOverlap;
+            exposedLayout.maxTopVisibleItems = self.exposedMaxTopVisibleItems;
+            exposedLayout.maxBottomVisibleItems = self.exposedMaxBottomVisibleItems;
 
             [self.collectionView setCollectionViewLayout:exposedLayout animated:YES];
             

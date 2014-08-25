@@ -70,6 +70,10 @@
         controller.stackedLayout.topVisibleOverlappingHeight = 2.f;
         controller.stackedLayout.maxTopVisibleOverlappingCards = 3;
         
+        controller.exposedMaxTopVisibleItems = 0;
+        controller.exposedMaxBottomVisibleItems = 3;
+        controller.exposedBottomOverlap = 40;
+        
         controller.doubleTapToClose = YES;
         
     } else if ([segue.identifier isEqualToString:@"Show in NavigationController"]) {

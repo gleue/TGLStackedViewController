@@ -59,6 +59,15 @@
  */
 @property (assign, nonatomic) CGFloat exposedTopOverlap;
 
+/** Total number of visible items above exposed item.
+ *
+ * Changes to this property take effect on next
+ * item being selected, i.e. exposed.
+ *
+ * Default value is 1
+ */
+@property (assign, nonatomic) CGFloat exposedMaxTopVisibleItems;
+
 /** Amount of overlap for items below exposed item.
  *
  * Changes to this property take effect on next
@@ -67,6 +76,15 @@
  * Default value is 20.0
  */
 @property (assign, nonatomic) CGFloat exposedBottomOverlap;
+
+/** Total number of visible items below exposed item.
+ *
+ * Changes to this property take effect on next
+ * item being selected, i.e. exposed.
+ *
+ * Default value is 1
+ */
+@property (assign, nonatomic) CGFloat exposedMaxBottomVisibleItems;
 
 /** Index path of currently exposed item.
  *
