@@ -154,11 +154,16 @@ typedef NS_ENUM(NSInteger, TGLStackedViewControllerScrollDirection) {
             exposedLayout.maxTopVisibleItems = self.exposedMaxTopVisibleItems;
             exposedLayout.maxBottomVisibleItems = self.exposedMaxBottomVisibleItems;
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_7_0
             [self.collectionView setCollectionViewLayout:exposedLayout animated:YES completion:^(BOOL finished) {
                 if (finished) {
                     [weakSelf exposeEndedAtIndexPath:exposedItemIndexPath exposed:YES];
                 }
             }];
+#else
+            [self.collectionView setCollectionViewLayout:exposedLayout animated:YES];
+            [self exposeEndedAtIndexPath:exposedItemIndexPath exposed:YES];
+#endif
             
         } else {
             NSIndexPath *lastIndexPath = _exposedItemIndexPath;
@@ -172,11 +177,16 @@ typedef NS_ENUM(NSInteger, TGLStackedViewControllerScrollDirection) {
             self.stackedLayout.overwriteContentOffset = YES;
             self.stackedLayout.contentOffset = self.stackedContentOffset;
             
+#if __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_7_0
             [self.collectionView setCollectionViewLayout:self.stackedLayout animated:YES completion:^(BOOL finished) {
                 if (finished) {
                     [weakSelf exposeEndedAtIndexPath:lastIndexPath exposed:NO];
                 }
             }];
+#else
+            [self.collectionView setCollectionViewLayout:self.stackedLayout animated:YES];
+            [self exposeEndedAtIndexPath:lastIndexPath exposed:NO];
+#endif
             [self.collectionView setContentOffset:self.stackedContentOffset animated:NO];
         }
         
