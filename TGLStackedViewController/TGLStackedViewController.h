@@ -152,4 +152,24 @@
  */
 - (void)moveItemAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath;
 
+/** Action before item expose
+ *
+ * Overload this method to add any action
+ * before the item expose
+ *
+ * @param indexPath Item indexPath
+ * @param exposed YES if is being exposed; NO otherwise
+ */
+- (void)exposeBeginAtIndexPath:(NSIndexPath *)indexPath exposed:(BOOL)exposed;
+
+/** Action after item expose
+ *
+ * Overload this method to add any action
+ * after the item expose
+ *
+ * @param indexPath Item indexPath
+ * @param exposed YES if is being exposed; NO otherwise
+ */
+- (void)exposeEndedAtIndexPath:(NSIndexPath *)indexPath exposed:(BOOL)exposed;
+
 @end

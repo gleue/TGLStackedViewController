@@ -132,7 +132,10 @@ typedef NS_ENUM(NSInteger, TGLStackedViewControllerScrollDirection) {
 
     if (![exposedItemIndexPath isEqual:_exposedItemIndexPath]) {
 
+        typeof(self) weakSelf = self;
+        
         if (exposedItemIndexPath) {
+            [self exposeBeginAtIndexPath:exposedItemIndexPath exposed:YES];
 
             // Select newly exposed item, possibly
             // deslecting the previous selection,
@@ -151,9 +154,15 @@ typedef NS_ENUM(NSInteger, TGLStackedViewControllerScrollDirection) {
             exposedLayout.maxTopVisibleItems = self.exposedMaxTopVisibleItems;
             exposedLayout.maxBottomVisibleItems = self.exposedMaxBottomVisibleItems;
 
-            [self.collectionView setCollectionViewLayout:exposedLayout animated:YES];
+            [self.collectionView setCollectionViewLayout:exposedLayout animated:YES completion:^(BOOL finished) {
+                if (finished) {
+                    [weakSelf exposeEndedAtIndexPath:exposedItemIndexPath exposed:YES];
+                }
+            }];
             
         } else {
+            NSIndexPath *lastIndexPath = _exposedItemIndexPath;
+            [self exposeBeginAtIndexPath:lastIndexPath exposed:NO];
             
             // Deselect the currently exposed item
             // and animate back to stacked layout
@@ -163,7 +172,11 @@ typedef NS_ENUM(NSInteger, TGLStackedViewControllerScrollDirection) {
             self.stackedLayout.overwriteContentOffset = YES;
             self.stackedLayout.contentOffset = self.stackedContentOffset;
             
-            [self.collectionView setCollectionViewLayout:self.stackedLayout animated:YES];
+            [self.collectionView setCollectionViewLayout:self.stackedLayout animated:YES completion:^(BOOL finished) {
+                if (finished) {
+                    [weakSelf exposeEndedAtIndexPath:lastIndexPath exposed:NO];
+                }
+            }];
             [self.collectionView setContentOffset:self.stackedContentOffset animated:NO];
         }
         
@@ -255,6 +268,18 @@ typedef NS_ENUM(NSInteger, TGLStackedViewControllerScrollDirection) {
     // Overload method to update collection
     // view data source when item has been
     // dragged to another location
+}
+
+- (void)exposeBeginAtIndexPath:(NSIndexPath *)indexPath exposed:(BOOL)exposed {
+    
+    // Overload method to add any action
+    // before the item expose
+}
+
+- (void)exposeEndedAtIndexPath:(NSIndexPath *)indexPath exposed:(BOOL)exposed {
+    
+    // Overload method to add any action
+    // after the item expose
 }
 
 #pragma mark - Actions
