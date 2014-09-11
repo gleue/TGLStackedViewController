@@ -51,6 +51,12 @@
 /** Amount of overlap for items below exposed item. Default 20.0 */
 @property (assign, nonatomic) CGFloat bottomOverlap;
 
+/** Max number of top overlapping items visible to user. 0 = no limit. This will depends on topOverlap, e.g. visible height per item = topOverlap ÷ maxTopVisibleItems. Default 1 */
+@property (assign, nonatomic) NSInteger maxTopVisibleItems;
+
+/** Max number of bottom overlapping items visible to user. 0 = no limit. This will depends on bottomOverlap, e.g. visible height per item = bottomOverlap ÷ maxBottomVisibleItems. Default 1 */
+@property (assign, nonatomic) NSInteger maxBottomVisibleItems;
+
 - (instancetype)initWithExposedItemIndex:(NSInteger)exposedItemIndex;
 
 @end

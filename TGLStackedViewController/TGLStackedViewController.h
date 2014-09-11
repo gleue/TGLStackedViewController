@@ -59,6 +59,15 @@
  */
 @property (assign, nonatomic) CGFloat exposedTopOverlap;
 
+/** Total number of visible items above exposed item.
+ *
+ * Changes to this property take effect on next
+ * item being selected, i.e. exposed.
+ *
+ * Default value is 1
+ */
+@property (assign, nonatomic) CGFloat exposedMaxTopVisibleItems;
+
 /** Amount of overlap for items below exposed item.
  *
  * Changes to this property take effect on next
@@ -67,6 +76,15 @@
  * Default value is 20.0
  */
 @property (assign, nonatomic) CGFloat exposedBottomOverlap;
+
+/** Total number of visible items below exposed item.
+ *
+ * Changes to this property take effect on next
+ * item being selected, i.e. exposed.
+ *
+ * Default value is 1
+ */
+@property (assign, nonatomic) CGFloat exposedMaxBottomVisibleItems;
 
 /** Index path of currently exposed item.
  *
@@ -90,6 +108,14 @@
  * may be selected.
  */
 @property (assign, nonatomic) BOOL unexposedItemsAreSelectable;
+
+/** Whether or not to set the moving cell opaque
+ * to be tapped and thus select another item.
+ *
+ * If set to NO (default), the moving cell background
+ * will be transparent.
+ */
+@property (assign, nonatomic) BOOL movingCellOpaque;
 
 /** Check whether a given cell can be moved.
  *
@@ -125,5 +151,25 @@
  * @param toIndexPath New item indexPath
  */
 - (void)moveItemAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath;
+
+/** Action before item expose
+ *
+ * Overload this method to add any action
+ * before the item expose
+ *
+ * @param indexPath Item indexPath
+ * @param exposed YES if is being exposed; NO otherwise
+ */
+- (void)exposeBeginAtIndexPath:(NSIndexPath *)indexPath exposed:(BOOL)exposed;
+
+/** Action after item expose
+ *
+ * Overload this method to add any action
+ * after the item expose
+ *
+ * @param indexPath Item indexPath
+ * @param exposed YES if is being exposed; NO otherwise
+ */
+- (void)exposeEndedAtIndexPath:(NSIndexPath *)indexPath exposed:(BOOL)exposed;
 
 @end

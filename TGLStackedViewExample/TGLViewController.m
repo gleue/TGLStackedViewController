@@ -158,4 +158,16 @@
     [self.cards insertObject:card atIndex:toIndexPath.item];
 }
 
+- (void)exposeBeginAtIndexPath:(NSIndexPath *)indexPath exposed:(BOOL)exposed
+{
+    // before expose
+    NSLog(@"exposeBeginAtIndexPath:exposed:");
+}
+
+- (void)exposeEndedAtIndexPath:(NSIndexPath *)indexPath exposed:(BOOL)exposed
+{
+    // after expose
+    NSLog(@"exposeEndedAtIndexPath:exposed:");
+}
+
 @end
