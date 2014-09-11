@@ -187,6 +187,11 @@ typedef NS_ENUM(NSInteger, TGLStackedViewControllerScrollDirection) {
                 [self.collectionView setCollectionViewLayout:self.stackedLayout animated:YES];
                 [self exposeEndedAtIndexPath:lastIndexPath exposed:NO];
             }
+            
+            // quick fix for iOS 6
+            if ([[UIDevice currentDevice].systemVersion floatValue] < 7) {
+                [self.collectionView reloadItemsAtIndexPaths:[self.collectionView indexPathsForVisibleItems]];
+            }
             [self.collectionView setContentOffset:self.stackedContentOffset animated:NO];
         }
         
