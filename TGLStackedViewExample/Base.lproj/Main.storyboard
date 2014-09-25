@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13D65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="yI3-me-8xs">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="yI3-me-8xs">
     <dependencies>
         <deployment defaultVersion="1536" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
     </dependencies>
     <scenes>
-        <!--Table View Controller - Examples-->
+        <!--Examples-->
         <scene sceneID="VgX-Pu-qpU">
             <objects>
                 <tableViewController id="utu-XS-Tzw" customClass="TGLTableViewController" sceneMemberID="viewController">
@@ -63,41 +63,27 @@
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="120"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iSO-uH-Iga">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="120"/>
-                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                            <subviews>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sU3-51-3am">
-                                                    <rect key="frame" x="20" y="20" width="280" height="28"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="28" id="q7H-qv-12x"/>
-                                                    </constraints>
-                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="20"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CLY-xS-Oa7">
+                                            <rect key="frame" x="20" y="20" width="280" height="28"/>
                                             <constraints>
-                                                <constraint firstItem="sU3-51-3am" firstAttribute="top" secondItem="iSO-uH-Iga" secondAttribute="top" constant="20" id="PZU-fH-0DE"/>
-                                                <constraint firstItem="sU3-51-3am" firstAttribute="leading" secondItem="iSO-uH-Iga" secondAttribute="leading" constant="20" id="hPK-tP-H2b"/>
-                                                <constraint firstAttribute="trailing" secondItem="sU3-51-3am" secondAttribute="trailing" constant="20" id="io6-tz-6KQ"/>
+                                                <constraint firstAttribute="height" constant="28" id="u5a-p5-vQ6"/>
                                             </constraints>
-                                        </view>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="20"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="bottom" secondItem="iSO-uH-Iga" secondAttribute="bottom" id="6ud-z2-e1H"/>
-                                    <constraint firstItem="iSO-uH-Iga" firstAttribute="top" secondItem="brs-Q3-DM1" secondAttribute="top" id="cNT-Mi-XiZ"/>
-                                    <constraint firstAttribute="trailing" secondItem="iSO-uH-Iga" secondAttribute="trailing" id="hCK-e6-MxE"/>
-                                    <constraint firstItem="iSO-uH-Iga" firstAttribute="leading" secondItem="brs-Q3-DM1" secondAttribute="leading" id="kUT-2m-PBU"/>
+                                    <constraint firstItem="CLY-xS-Oa7" firstAttribute="top" secondItem="brs-Q3-DM1" secondAttribute="top" constant="20" id="ksi-ud-W4d"/>
+                                    <constraint firstAttribute="trailing" secondItem="CLY-xS-Oa7" secondAttribute="trailing" constant="20" id="mxc-3x-HMj"/>
+                                    <constraint firstItem="CLY-xS-Oa7" firstAttribute="leading" secondItem="brs-Q3-DM1" secondAttribute="leading" constant="20" id="tDz-h2-OZ2"/>
                                 </constraints>
                                 <size key="customSize" width="320" height="120"/>
                                 <connections>
-                                    <outlet property="nameLabel" destination="sU3-51-3am" id="YwG-8s-Pev"/>
-                                    <outlet property="roundedView" destination="iSO-uH-Iga" id="TNY-Yc-PcI"/>
+                                    <outlet property="nameLabel" destination="CLY-xS-Oa7" id="2aU-VI-QmO"/>
                                 </connections>
                             </collectionViewCell>
                         </cells>

@@ -29,7 +29,6 @@
 
 @interface TGLCollectionViewCell ()
 
-@property (weak, nonatomic) IBOutlet UIView *roundedView;
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 
 @end
@@ -39,15 +38,12 @@
 - (void)awakeFromNib {
     
     [super awakeFromNib];
-
-    self.opaque = NO;
-    self.backgroundColor = [UIColor clearColor];
     
-    self.roundedView.backgroundColor = self.color;
+    self.layer.cornerRadius = 10.0;
+    self.layer.borderWidth = 1.0;
+    self.layer.borderColor = [UIColor blackColor].CGColor;
 
-    self.roundedView.layer.cornerRadius = 10.0;
-    self.roundedView.layer.borderWidth = 1.0;
-    self.roundedView.layer.borderColor = [UIColor blackColor].CGColor;
+    self.backgroundColor = self.color;
     
     self.nameLabel.text = self.title;
 }
@@ -65,7 +61,7 @@
 
     _color = [color copy];
     
-    self.roundedView.backgroundColor = self.color;
+    self.backgroundColor = self.color;
 }
 
 #pragma mark - Methods
@@ -74,7 +70,7 @@
 
     [super setSelected:selected];
     
-    self.roundedView.layer.borderColor = self.selected ? [UIColor whiteColor].CGColor : [UIColor blackColor].CGColor;
+    self.layer.borderColor = self.selected ? [UIColor whiteColor].CGColor : [UIColor blackColor].CGColor;
 }
 
 @end
