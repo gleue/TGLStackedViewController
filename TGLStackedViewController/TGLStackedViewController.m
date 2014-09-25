@@ -156,9 +156,20 @@ typedef NS_ENUM(NSInteger, TGLStackedViewControllerScrollDirection) {
             
             self.stackedLayout.overwriteContentOffset = YES;
             self.stackedLayout.contentOffset = self.stackedContentOffset;
+
+            // Issue #10: Collapsing on iOS 8
+            //
+            // NOTE: This solution produces a warning message
+            //       "trying to load collection view layout
+            //        data when layout is locked" but seems
+            //       to work nevertheless.
+            //
+            [self.collectionView performBatchUpdates:^ {
+                
+                [self.collectionView setContentOffset:self.stackedContentOffset animated:YES];
+                [self.collectionView setCollectionViewLayout:self.stackedLayout animated:YES];
             
-            [self.collectionView setCollectionViewLayout:self.stackedLayout animated:YES];
-            [self.collectionView setContentOffset:self.stackedContentOffset animated:NO];
+            } completion:nil];
         }
         
         _exposedItemIndexPath = exposedItemIndexPath;
