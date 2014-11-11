@@ -5,14 +5,16 @@
       "idiom" : "iphone",
       "extent" : "full-screen",
       "minimum-system-version" : "7.0",
+      "filename" : "iOS Simulator Screen Shot 11.11.2014 11.36.15.png",
       "scale" : "2x"
     },
     {
-      "orientation" : "portrait",
+      "extent" : "full-screen",
       "idiom" : "iphone",
       "subtype" : "retina4",
-      "extent" : "full-screen",
+      "filename" : "iOS Simulator Screen Shot 11.11.2014 11.36.40.png",
       "minimum-system-version" : "7.0",
+      "orientation" : "portrait",
       "scale" : "2x"
     }
   ],

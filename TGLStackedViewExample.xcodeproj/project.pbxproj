@@ -10,6 +10,7 @@
 		3DBF89B2190019980041CB92 /* TGLExposedLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DBF89AD190019980041CB92 /* TGLExposedLayout.m */; };
 		3DBF89B3190019980041CB92 /* TGLStackedLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DBF89AF190019980041CB92 /* TGLStackedLayout.m */; };
 		3DBF89B4190019980041CB92 /* TGLStackedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DBF89B1190019980041CB92 /* TGLStackedViewController.m */; };
+		3DCA5E9A1A121D7D0079EDC9 /* Launch Screen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3DCA5E991A121D7D0079EDC9 /* Launch Screen.xib */; };
 		3DF4FD501921EEE7002BF2E2 /* TGLTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DF4FD4F1921EEE7002BF2E2 /* TGLTableViewController.m */; };
 		3DF68EFE18F31B0C00387458 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DF68EFD18F31B0C00387458 /* Foundation.framework */; };
 		3DF68F0018F31B0C00387458 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DF68EFF18F31B0C00387458 /* CoreGraphics.framework */; };
@@ -30,6 +31,7 @@
 		3DBF89AF190019980041CB92 /* TGLStackedLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGLStackedLayout.m; sourceTree = "<group>"; };
 		3DBF89B0190019980041CB92 /* TGLStackedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGLStackedViewController.h; sourceTree = "<group>"; };
 		3DBF89B1190019980041CB92 /* TGLStackedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGLStackedViewController.m; sourceTree = "<group>"; };
+		3DCA5E991A121D7D0079EDC9 /* Launch Screen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "Launch Screen.xib"; sourceTree = "<group>"; };
 		3DF4FD4E1921EEE7002BF2E2 /* TGLTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGLTableViewController.h; sourceTree = "<group>"; };
 		3DF4FD4F1921EEE7002BF2E2 /* TGLTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGLTableViewController.m; sourceTree = "<group>"; };
 		3DF68EFA18F31B0C00387458 /* TGLStackedViewExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TGLStackedViewExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -126,6 +128,7 @@
 		3DF68F0418F31B0C00387458 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				3DCA5E991A121D7D0079EDC9 /* Launch Screen.xib */,
 				3DF68F0518F31B0C00387458 /* TGLStackedViewExample-Info.plist */,
 				3DF68F0618F31B0C00387458 /* InfoPlist.strings */,
 				3DF68F0918F31B0C00387458 /* main.m */,
@@ -188,6 +191,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3DF68F1618F31B0C00387458 /* Images.xcassets in Resources */,
+				3DCA5E9A1A121D7D0079EDC9 /* Launch Screen.xib in Resources */,
 				3DF68F0818F31B0C00387458 /* InfoPlist.strings in Resources */,
 				3DF68F1118F31B0C00387458 /* Main.storyboard in Resources */,
 			);
