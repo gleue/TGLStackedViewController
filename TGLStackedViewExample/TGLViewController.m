@@ -103,19 +103,18 @@
 - (NSMutableArray *)cards {
 
     if (_cards == nil) {
-    
-        NSArray *cards = @[ @{ @"name" : @"Card #0", @"color" : [UIColor randomColor] },
-                            @{ @"name" : @"Card #1", @"color" : [UIColor randomColor] },
-                            @{ @"name" : @"Card #2", @"color" : [UIColor randomColor] },
-                            @{ @"name" : @"Card #3", @"color" : [UIColor randomColor] },
-                            @{ @"name" : @"Card #4", @"color" : [UIColor randomColor] },
-                            @{ @"name" : @"Card #5", @"color" : [UIColor randomColor] },
-                            @{ @"name" : @"Card #6", @"color" : [UIColor randomColor] },
-                            @{ @"name" : @"Card #7", @"color" : [UIColor randomColor] },
-                            @{ @"name" : @"Card #8", @"color" : [UIColor randomColor] },
-                            @{ @"name" : @"Card #9", @"color" : [UIColor randomColor] }];
-
-        _cards = [NSMutableArray arrayWithArray:cards];
+        
+        _cards = [NSMutableArray array];
+        
+        // Adjust the number of cards here
+        //
+        for (NSInteger i = 1; i <= 10; i++) {
+            
+            NSDictionary *card = @{ @"name" : [NSString stringWithFormat:@"Card #%d", (int)i], @"color" : [UIColor randomColor] };
+            
+            [_cards addObject:card];
+        }
+        
     }
     
     return _cards;
