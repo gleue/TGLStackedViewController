@@ -29,6 +29,7 @@
 
 @interface TGLCollectionViewCell ()
 
+@property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 
 @end
@@ -38,13 +39,12 @@
 - (void)awakeFromNib {
     
     [super awakeFromNib];
-    
-    self.layer.cornerRadius = 10.0;
-    self.layer.borderWidth = 1.0;
-    self.layer.borderColor = [UIColor blackColor].CGColor;
 
-    self.backgroundColor = self.color;
+    UIImage *image = [[UIImage imageNamed:@"Background"] resizableImageWithCapInsets:UIEdgeInsetsMake(10.0, 10.0, 10.0, 10.0)];
     
+    self.imageView.image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    self.imageView.tintColor = self.color;
+
     self.nameLabel.text = self.title;
 }
 
@@ -61,16 +61,7 @@
 
     _color = [color copy];
     
-    self.backgroundColor = self.color;
-}
-
-#pragma mark - Methods
-
-- (void)setSelected:(BOOL)selected {
-
-    [super setSelected:selected];
-    
-    self.layer.borderColor = self.selected ? [UIColor whiteColor].CGColor : [UIColor blackColor].CGColor;
+    self.imageView.tintColor = self.color;
 }
 
 @end

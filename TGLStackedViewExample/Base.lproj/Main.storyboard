@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="yI3-me-8xs">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="14A389" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="yI3-me-8xs">
     <dependencies>
-        <deployment defaultVersion="1536" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
     </dependencies>
     <scenes>
         <!--Examples-->
@@ -63,6 +63,9 @@
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="120"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
+                                        <imageView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="3cu-oD-mtZ">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="120"/>
+                                        </imageView>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CLY-xS-Oa7">
                                             <rect key="frame" x="20" y="20" width="280" height="28"/>
                                             <constraints>
@@ -75,14 +78,19 @@
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="3cu-oD-mtZ" secondAttribute="bottom" id="FcG-qB-sPB"/>
+                                    <constraint firstItem="3cu-oD-mtZ" firstAttribute="top" secondItem="brs-Q3-DM1" secondAttribute="top" id="Wzz-lV-THo"/>
+                                    <constraint firstAttribute="trailing" secondItem="3cu-oD-mtZ" secondAttribute="trailing" id="afi-Ob-u7o"/>
+                                    <constraint firstItem="3cu-oD-mtZ" firstAttribute="leading" secondItem="brs-Q3-DM1" secondAttribute="leading" id="b59-tV-paC"/>
                                     <constraint firstItem="CLY-xS-Oa7" firstAttribute="top" secondItem="brs-Q3-DM1" secondAttribute="top" constant="20" id="ksi-ud-W4d"/>
                                     <constraint firstAttribute="trailing" secondItem="CLY-xS-Oa7" secondAttribute="trailing" constant="20" id="mxc-3x-HMj"/>
                                     <constraint firstItem="CLY-xS-Oa7" firstAttribute="leading" secondItem="brs-Q3-DM1" secondAttribute="leading" constant="20" id="tDz-h2-OZ2"/>
                                 </constraints>
                                 <size key="customSize" width="320" height="120"/>
                                 <connections>
+                                    <outlet property="imageView" destination="3cu-oD-mtZ" id="lLL-Kz-Bo5"/>
                                     <outlet property="nameLabel" destination="CLY-xS-Oa7" id="2aU-VI-QmO"/>
                                 </connections>
                             </collectionViewCell>
