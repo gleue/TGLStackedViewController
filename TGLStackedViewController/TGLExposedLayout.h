@@ -51,6 +51,9 @@
 /** Amount of overlap for items below exposed item. Default 20.0 */
 @property (assign, nonatomic) CGFloat bottomOverlap;
 
+/** Number of cards overlaping below exposed item. Default 2 */
+@property (assign, nonatomic) NSInteger bottomOverlapCount;
+
 - (instancetype)initWithExposedItemIndex:(NSInteger)exposedItemIndex;
 
 @end
