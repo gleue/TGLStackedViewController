@@ -224,21 +224,6 @@
             
             attributes.frame = frame;
 
-        } else if (CGRectGetMinY(attributes.frame) < contentOffset.y + self.layoutMargin.top) {
-
-            // Topmost cells overlap stack, but
-            // are placed directly above each
-            // other such that only one cell
-            // is visible
-            //
-            CGRect frame = attributes.frame;
-            
-            frame.origin.y = contentOffset.y + self.layoutMargin.top;
-            
-            attributes.frame = frame;
-            
-            ++overlappingCount;
-
         } else if (self.collectionViewContentSize.height > CGRectGetHeight(self.collectionView.bounds) && contentOffset.y > self.collectionViewContentSize.height - CGRectGetHeight(self.collectionView.bounds)) {
 
             // Compress cells when reaching bottom
