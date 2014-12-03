@@ -44,6 +44,7 @@
         self.layoutMargin = UIEdgeInsetsMake(40.0, 0.0, 0.0, 0.0);
         self.topOverlap = 20.0;
         self.bottomOverlap = 20.0;
+		self.bottomOverlapCount = 2;
 
         self.exposedItemIndex = exposedItemIndex;
     }
@@ -120,29 +121,25 @@
         NSIndexPath *indexPath = [NSIndexPath indexPathForItem:item inSection:0];
         UICollectionViewLayoutAttributes *attributes = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];
 
-        if (item < self.exposedItemIndex) {
-            
-            // Items before exposed item
-            // are aligned above top with
-            // cardTopOverlap
-            //
-            attributes.frame = CGRectMake(self.layoutMargin.left, self.layoutMargin.top - self.topOverlap, itemSize.width, itemSize.height);
-            
-        } else if (item == self.exposedItemIndex) {
+		if (item == self.exposedItemIndex) {
             
             // Exposed item
             //
             attributes.frame = CGRectMake(self.layoutMargin.left, self.layoutMargin.top, itemSize.width, itemSize.height);
 
-        } else if (item > self.exposedItemIndex + 1) {
-            
-            attributes.frame = CGRectMake(self.layoutMargin.left, self.collectionViewContentSize.height, itemSize.width, itemSize.height);
-        
+		} else if (item == self.exposedItemIndex - 1) {
+
+			attributes.frame = CGRectMake(self.layoutMargin.left, ((-itemSize.height) + self.layoutMargin.top) + self.topOverlap, itemSize.width, itemSize.height);
+
+		} else if ((item > self.exposedItemIndex) && (item <= (self.exposedItemIndex + self.bottomOverlapCount))) {
+
+			NSInteger bottomOverlap = ((self.bottomOverlapCount - (item - self.exposedItemIndex - 1)) * self.bottomOverlap);
+			attributes.frame = CGRectMake(self.layoutMargin.left, self.layoutMargin.top + itemSize.height - bottomOverlap, itemSize.width, itemSize.height);
+
         } else {
-        
-            NSInteger delta = MIN(item - self.exposedItemIndex - 1, 0);
-    
-            attributes.frame = CGRectMake(self.layoutMargin.left, self.layoutMargin.top + itemSize.height - (1 - delta) * self.bottomOverlap, itemSize.width, itemSize.height);
+
+			attributes.frame = CGRectMake(self.layoutMargin.left, (self.layoutMargin.top + itemSize.height), itemSize.width, itemSize.height);
+			attributes.hidden = YES;
         }
 
         attributes.zIndex = item;
