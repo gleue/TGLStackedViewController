@@ -108,7 +108,7 @@
         
         // Adjust the number of cards here
         //
-        for (NSInteger i = 1; i <= 10; i++) {
+        for (NSInteger i = 1; i < 100; i++) {
             
             NSDictionary *card = @{ @"name" : [NSString stringWithFormat:@"Card #%d", (int)i], @"color" : [UIColor randomColor] };
             
