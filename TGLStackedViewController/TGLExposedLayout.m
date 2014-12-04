@@ -74,21 +74,21 @@
     }
 }
 
-- (void)setTopOverlap:(CGFloat)cardOverlapTop {
+- (void)setTopOverlap:(CGFloat)topOverlap {
     
-    if (cardOverlapTop != self.topOverlap) {
+    if (topOverlap != self.topOverlap) {
         
-        _topOverlap = cardOverlapTop;
+        _topOverlap = topOverlap;
         
         [self invalidateLayout];
     }
 }
 
-- (void)setBottomOverlap:(CGFloat)cardOverlapBottom {
+- (void)setBottomOverlap:(CGFloat)bottomOverlap {
     
-    if (cardOverlapBottom != self.bottomOverlap) {
+    if (bottomOverlap != self.bottomOverlap) {
         
-        _bottomOverlap = cardOverlapBottom;
+        _bottomOverlap = bottomOverlap;
         
         [self invalidateLayout];
     }
@@ -136,7 +136,7 @@
             
             // Items before exposed item
             // are aligned above top with
-            // cardTopOverlap
+            // amount -topOverlap
             //
             attributes.frame = CGRectMake(self.layoutMargin.left, self.layoutMargin.top - self.topOverlap, itemSize.width, itemSize.height);
 
