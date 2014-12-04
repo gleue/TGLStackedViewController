@@ -186,12 +186,11 @@
     self.overwriteContentOffset = NO;
 
     NSMutableDictionary *layoutAttributes = [NSMutableDictionary dictionary];
-    
+    UICollectionViewLayoutAttributes *previousTopOverlappingAttributes[2] = { nil, nil };
     NSInteger itemCount = [self.collectionView numberOfItemsInSection:0];
-    NSInteger overlappingCount = 0;
 
     static NSInteger firstCompressingItem = -1;
-
+    
     for (NSInteger item = 0; item < itemCount; item++) {
         
         NSIndexPath *indexPath = [NSIndexPath indexPathForItem:item inSection:0];
@@ -236,8 +235,16 @@
             frame.origin.y = contentOffset.y + self.layoutMargin.top;
             
             attributes.frame = frame;
+
+            // Keep queue of last two items'
+            // attributes and hide any item
+            // below top overlapping item to
+            // improve performance
+            //
+            if (previousTopOverlappingAttributes[1]) previousTopOverlappingAttributes[1].hidden = YES;
             
-            ++overlappingCount;
+            previousTopOverlappingAttributes[1] = previousTopOverlappingAttributes[0];
+            previousTopOverlappingAttributes[0] = attributes;
 
         } else if (self.collectionViewContentSize.height > CGRectGetHeight(self.collectionView.bounds) && contentOffset.y > self.collectionViewContentSize.height - CGRectGetHeight(self.collectionView.bounds)) {
 
