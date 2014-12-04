@@ -68,6 +68,15 @@
  */
 @property (assign, nonatomic) CGFloat exposedBottomOverlap;
 
+/** Number of items overlapping below exposed item.
+ *
+ * Changes to this property take effect on next
+ * item being selected, i.e. exposed.
+ *
+ * Default value is 1
+ */
+@property (assign, nonatomic) NSUInteger exposedBottomOverlapCount;
+
 /** Index path of currently exposed item.
  *
  * The exposed item's selected state is YES.

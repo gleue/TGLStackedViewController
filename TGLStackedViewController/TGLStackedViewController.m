@@ -101,6 +101,7 @@ typedef NS_ENUM(NSInteger, TGLStackedViewControllerScrollDirection) {
     _exposedItemSize = CGSizeZero;
     _exposedTopOverlap = 20.0;
     _exposedBottomOverlap = 20.0;
+    _exposedBottomOverlapCount = 1;
 }
 
 #pragma mark - View life cycle
@@ -144,6 +145,7 @@ typedef NS_ENUM(NSInteger, TGLStackedViewControllerScrollDirection) {
             exposedLayout.itemSize = self.exposedItemSize;
             exposedLayout.topOverlap = self.exposedTopOverlap;
             exposedLayout.bottomOverlap = self.exposedBottomOverlap;
+            exposedLayout.bottomOverlapCount = self.exposedBottomOverlapCount;
 
             [self.collectionView setCollectionViewLayout:exposedLayout animated:YES];
             
