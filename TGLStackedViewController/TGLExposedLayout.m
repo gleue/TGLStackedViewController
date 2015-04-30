@@ -133,7 +133,8 @@
 
     NSMutableDictionary *layoutAttributes = [NSMutableDictionary dictionary];
     NSInteger itemCount = [self.collectionView numberOfItemsInSection:0];
-
+    NSInteger bottomOverlapCount = self.bottomOverlapCount;
+    
     for (NSInteger item = 0; item < itemCount; item++) {
 
         NSIndexPath *indexPath = [NSIndexPath indexPathForItem:item inSection:0];
@@ -159,7 +160,7 @@
             //
             attributes.frame = CGRectMake(self.layoutMargin.left, self.layoutMargin.top, itemSize.width, itemSize.height);
 
-        } else if (item > self.exposedItemIndex + self.bottomOverlapCount) {
+        } else if (item > self.exposedItemIndex + bottomOverlapCount) {
             
             // Items following overlapping
             // items at bottom are hidden
@@ -178,6 +179,17 @@
             NSInteger count = MIN(self.bottomOverlapCount + 1, itemCount - self.exposedItemIndex) - (item - self.exposedItemIndex);
 
             attributes.frame = CGRectMake(self.layoutMargin.left, self.layoutMargin.top + itemSize.height - count * self.bottomOverlap, itemSize.width, itemSize.height);
+            
+            // Issue #21
+            //
+            // Make sure overlapping cards
+            // reach to the bottom before
+            // being hidden
+            //
+            if (item == self.exposedItemIndex + bottomOverlapCount && attributes.frame.origin.y < self.collectionView.bounds.size.height - self.layoutMargin.bottom) {
+
+                ++bottomOverlapCount;
+            }
         }
 
         attributes.zIndex = item;
