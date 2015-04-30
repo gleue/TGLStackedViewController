@@ -106,6 +106,13 @@
 
 #pragma mark - Layout computation
 
+- (CGPoint)targetContentOffsetForProposedContentOffset:(CGPoint)proposedContentOffset {
+    
+    // See http://stackoverflow.com/a/25416243
+    //
+    return CGPointZero;
+}
+
 - (CGSize)collectionViewContentSize {
 
     CGSize contentSize = self.collectionView.bounds.size;

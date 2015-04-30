@@ -127,6 +127,15 @@
 
 #pragma mark - Layout computation
 
+- (CGPoint)targetContentOffsetForProposedContentOffset:(CGPoint)proposedContentOffset {
+    
+    // Honor overwritten contentOffset
+    //
+    // See http://stackoverflow.com/a/25416243
+    //
+    return self.overwriteContentOffset ? self.contentOffset : proposedContentOffset;
+}
+
 - (BOOL)shouldInvalidateLayoutForBoundsChange:(CGRect)newBounds {
     
     return YES;
@@ -179,11 +188,8 @@
     }
 
     // Honor overwritten contentOffset
-    // exactly once
     //
     CGPoint contentOffset = self.overwriteContentOffset ? self.contentOffset : self.collectionView.contentOffset;
-
-    self.overwriteContentOffset = NO;
 
     NSMutableDictionary *layoutAttributes = [NSMutableDictionary dictionary];
     UICollectionViewLayoutAttributes *previousTopOverlappingAttributes[2] = { nil, nil };

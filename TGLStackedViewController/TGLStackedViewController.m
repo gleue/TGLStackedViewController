@@ -137,7 +137,14 @@ typedef NS_ENUM(NSInteger, TGLStackedViewControllerScrollDirection) {
             //
             [self.collectionView selectItemAtIndexPath:exposedItemIndexPath animated:YES scrollPosition:UICollectionViewScrollPositionNone];
             
-            self.stackedContentOffset = self.collectionView.contentOffset;
+            if (self.collectionView.collectionViewLayout == self.stackedLayout) {
+                
+                // Remember current scroll position when transitioning
+                // from stacked to exposed layout, but not when from
+                // exposed to exposed layout
+                //
+                self.stackedContentOffset = self.collectionView.contentOffset;
+            }
             
             TGLExposedLayout *exposedLayout = [[TGLExposedLayout alloc] initWithExposedItemIndex:exposedItemIndexPath.item];
             
@@ -159,19 +166,9 @@ typedef NS_ENUM(NSInteger, TGLStackedViewControllerScrollDirection) {
             self.stackedLayout.overwriteContentOffset = YES;
             self.stackedLayout.contentOffset = self.stackedContentOffset;
 
-            // Issue #10: Collapsing on iOS 8
-            //
-            // NOTE: This solution produces a warning message
-            //       "trying to load collection view layout
-            //        data when layout is locked" but seems
-            //       to work nevertheless.
-            //
-            [self.collectionView performBatchUpdates:^ {
-                
-                [self.collectionView setContentOffset:self.stackedContentOffset animated:YES];
-                [self.collectionView setCollectionViewLayout:self.stackedLayout animated:YES];
-            
-            } completion:nil];
+            [self.collectionView setCollectionViewLayout:self.stackedLayout animated:YES];
+
+            self.stackedLayout.overwriteContentOffset = NO;
         }
         
         _exposedItemIndexPath = exposedItemIndexPath;
