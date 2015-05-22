@@ -173,7 +173,7 @@
         
             // At max -bottomOverlapCount
             // overlapping item(s) at the
-            // botton right below the
+            // bottom right below the
             // exposed item
             //
             NSInteger count = MIN(self.bottomOverlapCount + 1, itemCount - self.exposedItemIndex) - (item - self.exposedItemIndex);
