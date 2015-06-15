@@ -82,6 +82,10 @@
     //
     self.unexposedItemsAreSelectable = YES;
     
+    // Mark: Check
+//    self.exposedLayoutMargin = UIEdgeInsetsMake(140.0, 0.0, 150.0, 0.0);
+    self.exposedCardFloating = YES;
+    
     if (self.doubleTapToClose) {
         
         UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap:)];

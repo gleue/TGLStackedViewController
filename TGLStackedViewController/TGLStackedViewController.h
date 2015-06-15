@@ -41,6 +41,9 @@
  */
 @property (assign, nonatomic) UIEdgeInsets exposedLayoutMargin;
 
+/** The exposed card float from bottom cards by [exposedLayoutMargin bottom]. Default NO */
+@property (assign, nonatomic) Boolean exposedCardFloating;
+
 /** Size of items when exposed if set to value not equal CGSizeZero.
  *
  * Changes to this property take effect on next
