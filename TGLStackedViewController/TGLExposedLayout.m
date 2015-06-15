@@ -137,7 +137,7 @@
 - (void)prepareLayout {
 
     CGSize itemSize = self.itemSize;
-    CGFloat floatingMargin = self.exposedCardFloating ? self.bottomOverlapCount*self.bottomOverlap + 20.0 : 0;
+    CGFloat floatingMargin = self.exposedCardFloating ? self.bottomOverlapCount*self.bottomOverlap + self.topOverlap : 0;
     
     if (CGSizeEqualToSize(itemSize, CGSizeZero)) {
         // To do: count * self.bottomOverlap 와 조합하야함.
