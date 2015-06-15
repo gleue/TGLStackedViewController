@@ -54,6 +54,10 @@
 /** Number of items overlapping below exposed item. Default 1 */
 @property (assign, nonatomic) NSUInteger bottomOverlapCount;
 
+/** The exposed card float from bottom cards by [layoutMargin bottom]. Default NO */
+@property (assign, nonatomic) BOOL exposedCardFloating;
+
+
 - (instancetype)initWithExposedItemIndex:(NSInteger)exposedItemIndex;
 
 @end

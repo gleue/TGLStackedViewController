@@ -45,6 +45,7 @@
         self.topOverlap = 20.0;
         self.bottomOverlap = 20.0;
         self.bottomOverlapCount = 1;
+        self.exposedCardFloating = NO;
 
         self.exposedItemIndex = exposedItemIndex;
     }
@@ -104,6 +105,17 @@
     }
 }
 
+- (void)setExposedCardFloating:(BOOL)exposedCardFloating {
+    
+    if (exposedCardFloating != self.exposedCardFloating) {
+        
+        _exposedCardFloating = exposedCardFloating;
+        
+        [self invalidateLayout];
+    }
+}
+
+
 #pragma mark - Layout computation
 
 - (CGPoint)targetContentOffsetForProposedContentOffset:(CGPoint)proposedContentOffset {
@@ -125,10 +137,11 @@
 - (void)prepareLayout {
 
     CGSize itemSize = self.itemSize;
+    CGFloat floatingMargin = self.exposedCardFloating ? self.bottomOverlapCount*self.bottomOverlap + 20.0 : 0;
     
     if (CGSizeEqualToSize(itemSize, CGSizeZero)) {
-        
-        itemSize = CGSizeMake(CGRectGetWidth(self.collectionView.bounds) - self.layoutMargin.left - self.layoutMargin.right, CGRectGetHeight(self.collectionView.bounds) - self.layoutMargin.top - self.layoutMargin.bottom - self.collectionView.contentInset.top - self.collectionView.contentInset.bottom);
+        // To do: count * self.bottomOverlap 와 조합하야함.
+        itemSize = CGSizeMake(CGRectGetWidth(self.collectionView.bounds) - self.layoutMargin.left - self.layoutMargin.right, CGRectGetHeight(self.collectionView.bounds) - self.layoutMargin.top - self.layoutMargin.bottom - self.collectionView.contentInset.top - self.collectionView.contentInset.bottom - floatingMargin);
     }
 
     NSMutableDictionary *layoutAttributes = [NSMutableDictionary dictionary];
@@ -177,9 +190,9 @@
             // exposed item
             //
             NSInteger count = MIN(self.bottomOverlapCount + 1, itemCount - self.exposedItemIndex) - (item - self.exposedItemIndex);
-
-            attributes.frame = CGRectMake(self.layoutMargin.left, self.layoutMargin.top + itemSize.height - count * self.bottomOverlap, itemSize.width, itemSize.height);
             
+            attributes.frame = CGRectMake(self.layoutMargin.left, floatingMargin + self.layoutMargin.top + itemSize.height - count * self.bottomOverlap, itemSize.width, itemSize.height);
+ 
             // Issue #21
             //
             // Make sure overlapping cards
