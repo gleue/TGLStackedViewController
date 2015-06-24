@@ -17,7 +17,7 @@ Usage
 
 Via [CocoaPods](http://cocoapods.org):
 
-* Add `pod 'TGLStackedViewController', '~> 1.0'` to your project's `Podfile`
+* Add `pod 'TGLStackedViewController', '~> 1.1'` to your project's `Podfile`
 
 Or the "classic" way:
 
