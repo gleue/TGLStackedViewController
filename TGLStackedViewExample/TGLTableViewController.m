@@ -9,12 +9,6 @@
 #import "TGLTableViewController.h"
 #import "TGLViewController.h"
 
-@interface TGLTableViewController ()
-
-@property (nonatomic, retain) NSArray *segues;
-
-@end
-
 @implementation TGLTableViewController
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -24,74 +18,52 @@
     self.navigationController.toolbarHidden = YES;
 }
 
-#pragma mark - Accessors
-
-- (NSArray *)segues {
-    
-    if (_segues == nil) {
-        
-        if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_6_1) {
-            
-            _segues = @[ @"Stand-alone (double tap to close)", @"Show in NavigationController", @"Show with Toolbar" ];
-            
-        } else {
-            
-            _segues = @[ @"Stand-alone (double tap to close)", @"Show in NavigationController", @"Show with Toolbar", @"Show without ExtendedEdges" ];
-        }
-    }
-    
-    return _segues;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    
-    return self.segues.count;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    //obviously not efficient but we're not doing anything special.
-    UITableViewCell* cell = [[UITableViewCell alloc] init];
-    [cell.textLabel setText:self.segues[indexPath.row]];
-    
-    return cell;
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-
-    [self performSegueWithIdentifier:self.segues[indexPath.row] sender:nil];
-}
-
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
-    if ([segue.identifier isEqualToString:@"Stand-alone (double tap to close)"]) {
+    TGLViewController *controller = segue.destinationViewController;
+    
+    controller.exposedBottomOverlapCount = 4;
+    
+    controller.exposedTopPinningCount = 2;
+    controller.exposedBottomPinningCount = 5;
+    
+    if ([segue.identifier rangeOfString:@"LowerPinned"].location != NSNotFound) {
         
-        TGLViewController *controller = segue.destinationViewController;
+        controller.exposedItemSize = controller.stackedLayout.itemSize = CGSizeMake(0.0, 240.0);
+        controller.exposedPinningMode = TGLExposedLayoutPinningModeBelow;
+        controller.exposedTopOverlap = 5.0;
+        controller.exposedBottomOverlap = 5.0;
+        
+    } else if ([segue.identifier rangeOfString:@"AllPinned"].location != NSNotFound) {
+        
+        controller.exposedItemSize = controller.stackedLayout.itemSize = CGSizeMake(0.0, 240.0);
+        controller.exposedPinningMode = TGLExposedLayoutPinningModeAll;
+        controller.exposedBottomOverlap = 5.0;
+
+    } else {
+        
+        controller.exposedTopOverlap = 20.0;
+        controller.exposedBottomOverlap = 20.0;
+    }
+    
+    if ([segue.identifier hasPrefix:@"Modal"]) {
         
         controller.doubleTapToClose = YES;
+        controller.exposedLayoutMargin = UIEdgeInsetsMake(40.0, 0.0, 0.0, 0.0);
         
-    } else if ([segue.identifier isEqualToString:@"Show in NavigationController"]) {
-        
-        TGLViewController *controller = segue.destinationViewController;
+    } else {
         
         controller.stackedLayout.layoutMargin = UIEdgeInsetsZero;
-        controller.exposedLayoutMargin = UIEdgeInsetsMake(20.0, 0.0, 0.0, 0.0);
+        controller.exposedLayoutMargin = controller.exposedPinningMode ? UIEdgeInsetsMake(40.0, 0.0, 0.0, 0.0) : UIEdgeInsetsMake(20.0, 0.0, 0.0, 0.0);
+    }
 
-    } else if ([segue.identifier isEqualToString:@"Show with Toolbar"]) {
+    if ([segue.identifier hasSuffix:@"WithToolbar"]) {
         
         self.navigationController.toolbarHidden = NO;
+    }
+    
+    if ([segue.identifier hasSuffix:@"WithoutExtendedEdges"]) {
         
-        TGLViewController *controller = segue.destinationViewController;
-        
-        controller.stackedLayout.layoutMargin = UIEdgeInsetsZero;
-        controller.exposedLayoutMargin = UIEdgeInsetsMake(20.0, 0.0, 0.0, 0.0);
-
-    } else if ([segue.identifier isEqualToString:@"Show without ExtendedEdges"]) {
-        
-        TGLViewController *controller = segue.destinationViewController;
-        
-        controller.stackedLayout.layoutMargin = UIEdgeInsetsZero;
-        controller.exposedLayoutMargin = UIEdgeInsetsMake(20.0, 0.0, 0.0, 0.0);
         controller.edgesForExtendedLayout = UIRectEdgeNone;
     }
 }
