@@ -30,11 +30,12 @@
 /** Margins between collection view and items. Default is UIEdgeInsetsMake(20.0, 0.0, 0.0, 0.0) */
 @property (assign, nonatomic) UIEdgeInsets layoutMargin;
 
-/** Size of items if set to value not equal CGSizeZero.
+/** Size of items or automatic dimensions when 0.
  *
- * If set to CGSizeZero (default) item sizes are computed
- * from the collection view's bounds minus the margins defined
- * in property -layoutMargin.
+ * If either width or height or both are set to 0 (default)
+ * the respective dimensions ares computed automatically
+ * from the collection view's bounds minus the margins
+ * defined in property -layoutMargin.
  */
 @property (assign, nonatomic) CGSize itemSize;
 

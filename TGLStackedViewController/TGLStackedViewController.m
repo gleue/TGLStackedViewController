@@ -102,6 +102,10 @@ typedef NS_ENUM(NSInteger, TGLStackedViewControllerScrollDirection) {
     _exposedTopOverlap = 20.0;
     _exposedBottomOverlap = 20.0;
     _exposedBottomOverlapCount = 1;
+    
+    _exposedPinningMode = TGLExposedLayoutPinningModeNone;
+    _exposedTopPinningCount = 2;
+    _exposedBottomPinningCount = 2;
 }
 
 #pragma mark - View life cycle
@@ -153,6 +157,10 @@ typedef NS_ENUM(NSInteger, TGLStackedViewControllerScrollDirection) {
             exposedLayout.topOverlap = self.exposedTopOverlap;
             exposedLayout.bottomOverlap = self.exposedBottomOverlap;
             exposedLayout.bottomOverlapCount = self.exposedBottomOverlapCount;
+
+            exposedLayout.pinningMode = self.exposedPinningMode;
+            exposedLayout.topPinningCount = self.exposedTopPinningCount;
+            exposedLayout.bottomPinningCount = self.exposedBottomPinningCount;
 
             [self.collectionView setCollectionViewLayout:exposedLayout animated:YES];
             

@@ -172,20 +172,24 @@
     // full height
     //
     [self collectionViewContentSize];
+    
+    CGSize layoutSize = CGSizeMake(CGRectGetWidth(self.collectionView.bounds) - self.layoutMargin.left - self.layoutMargin.right,
+                                   CGRectGetHeight(self.collectionView.bounds) - self.layoutMargin.top - self.layoutMargin.bottom);
 
     CGFloat itemReveal = self.topReveal;
     
     if (self.filling) {
         
-        itemReveal = floor((CGRectGetHeight(self.collectionView.bounds) - self.layoutMargin.top - self.layoutMargin.bottom - self.collectionView.contentInset.top - self.collectionView.contentInset.bottom) / [self.collectionView numberOfItemsInSection:0]);
+        itemReveal = floor((layoutSize.height - self.collectionView.contentInset.top - self.collectionView.contentInset.bottom) / [self.collectionView numberOfItemsInSection:0]);
     }
-    
+
     CGSize itemSize = self.itemSize;
     
-    if (CGSizeEqualToSize(itemSize, CGSizeZero)) {
-        
-        itemSize = CGSizeMake(CGRectGetWidth(self.collectionView.bounds) - self.layoutMargin.left - self.layoutMargin.right, CGRectGetHeight(self.collectionView.bounds) - self.layoutMargin.top - self.layoutMargin.bottom - self.collectionView.contentInset.top - self.collectionView.contentInset.bottom);
-    }
+    if (itemSize.width == 0.0) itemSize.width = layoutSize.width;
+    if (itemSize.height == 0.0) itemSize.height = layoutSize.height - self.collectionView.contentInset.top - self.collectionView.contentInset.bottom;
+    
+    CGFloat itemHorizontalOffset = 0.5 * (layoutSize.width - itemSize.width);
+    CGPoint itemOrigin = CGPointMake(self.layoutMargin.left + floor(itemHorizontalOffset), 0.0);
 
     // Honor overwritten contentOffset
     //
@@ -215,7 +219,7 @@
         // out evenly with each revealing
         // only top part ...
         //
-        attributes.frame = CGRectMake(self.layoutMargin.left, self.layoutMargin.top + itemReveal * item, itemSize.width, itemSize.height);
+        attributes.frame = CGRectMake(itemOrigin.x, self.layoutMargin.top + itemReveal * item, itemSize.width, itemSize.height);
 
         if (contentOffset.y + self.collectionView.contentInset.top < 0.0) {
 

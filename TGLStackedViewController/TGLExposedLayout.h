@@ -25,6 +25,13 @@
 
 #import <UIKit/UIKit.h>
 
+typedef NS_ENUM(NSInteger, TGLExposedLayoutPinningMode) {
+
+    TGLExposedLayoutPinningModeNone = 0,    /* Do not pin unexpsed items */
+    TGLExposedLayoutPinningModeBelow,       /* Pin items below exposed item */
+    TGLExposedLayoutPinningModeAll          /* Pin all unexposed items */
+};
+
 /** Collection view layout showing a single exposed
  *  item full size and adjacent items collapsed with
  *  configurable overlap.
@@ -37,11 +44,12 @@
 /** Margins between collection view and items. Default is UIEdgeInsetsMake(40.0, 0.0, 0.0, 0.0) */
 @property (assign, nonatomic) UIEdgeInsets layoutMargin;
 
-/** Size of items if set to value not equal CGSizeZero.
+/** Size of items or automatic dimensions when 0.
  *
- * If set to CGSizeZero (default) item sizes are computed
- * from the collection view's bounds minus the margins defined
- * in property -layoutMargin.
+ * If either width or height or both are set to 0 (default)
+ * the respective dimensions are computed automatically
+ * from the collection view's bounds minus the margins
+ * defined in property -layoutMargin.
  */
 @property (assign, nonatomic) CGSize itemSize;
 
@@ -53,6 +61,15 @@
 
 /** Number of items overlapping below exposed item. Default 1 */
 @property (assign, nonatomic) NSUInteger bottomOverlapCount;
+
+/** Layout mode for other than exposed items. Default `TGLExposedLayoutPinningModeNone` */
+@property (assign, nonatomic) TGLExposedLayoutPinningMode pinningMode;
+
+/** The number of items above the exposed item to be pinned. Default 2 */
+@property (assign, nonatomic) NSUInteger topPinningCount;
+
+/** The number of items below the exposed item to be pinned. Default 2 */
+@property (assign, nonatomic) NSUInteger bottomPinningCount;
 
 - (instancetype)initWithExposedItemIndex:(NSInteger)exposedItemIndex;
 

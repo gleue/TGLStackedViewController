@@ -26,6 +26,7 @@
 #import <UIKit/UIKit.h>
 
 #import "TGLStackedLayout.h"
+#import "TGLExposedLayout.h"
 
 @interface TGLStackedViewController : UICollectionViewController <UIGestureRecognizerDelegate>
 
@@ -52,8 +53,10 @@
 
 /** Amount of overlap for items above exposed item.
  *
- * Changes to this property take effect on next
- * item being selected, i.e. exposed.
+ * The value is effective only if `-exposedPinningMode`
+ * is equal to `TGLExposedLayoutPinningModeNone` and
+ * ignored otherwise. Changes to this property take
+ * effect on next item being selected, i.e. exposed.
  *
  * Default value is 20.0
  */
@@ -61,8 +64,10 @@
 
 /** Amount of overlap for items below exposed item.
  *
- * Changes to this property take effect on next
- * item being selected, i.e. exposed.
+ * The value is effective only if `-exposedPinningMode`
+ * is equal to `TGLExposedLayoutPinningModeNone` and
+ * ignored otherwise. Changes to this property take
+ * effect on next item being selected, i.e. exposed.
  *
  * Default value is 20.0
  */
@@ -70,12 +75,58 @@
 
 /** Number of items overlapping below exposed item.
  *
- * Changes to this property take effect on next
- * item being selected, i.e. exposed.
+ * The value is effective only if `-exposedPinningMode`
+ * is equal to `TGLExposedLayoutPinningModeNone` and
+ * ignored otherwise. Changes to this property take
+ * effect on next item being selected, i.e. exposed.
  *
  * Default value is 1
  */
 @property (assign, nonatomic) NSUInteger exposedBottomOverlapCount;
+
+/** Layout mode for other than exposed items.
+ *
+ * Controls how the items surrounding the exposed item
+ * above and below should be layed out. When set to
+ * `TGLExposedLayoutPinningModeNone` items are pushed to
+ * the top and the bottom edges of the exposed item,
+ * overlapping upwards and downwards by `-exposedTopOverlap`
+ * and `-exposedBottomOverlap`. This is the default.
+ *
+ * When set to `TGLExposedLayoutPinningModeBelow` the
+ * items above the exposed item are pushed to the exposed
+ * item's top edge as above, while the items below are pinned
+ * to the collection view's bottom edge, and overlapping upwards.
+ *
+ * When set to `TGLExposedLayoutPinningModeAll` all items but
+ * the exposed item are pinned to the collection view's bottom
+ * edge, and overlapping upwards.
+ *
+ * Default value is `TGLExposedLayoutPinningModeNone`
+ */
+@property (assign, nonatomic) TGLExposedLayoutPinningMode exposedPinningMode;
+
+/** The number of items above the exposed item to be pinned.
+ *
+ * The value is effective only if `-exposedPinningMode`
+ * is not equal to `TGLExposedLayoutPinningModeNone` and
+ * ignored otherwise. Changes to this property take
+ * effect on next item being selected, i.e. exposed.
+ *
+ * Default value is 2
+ */
+@property (assign, nonatomic) NSUInteger exposedTopPinningCount;
+
+/** The number of items below the exposed item to be pinned.
+ *
+ * The value is effective only if `-exposedPinningMode`
+ * is not equal to `TGLExposedLayoutPinningModeNone` and
+ * ignored otherwise. Changes to this property take
+ * effect on next item being selected, i.e. exposed.
+ *
+ * Default value is 2
+ */
+@property (assign, nonatomic) NSUInteger exposedBottomPinningCount;
 
 /** Index path of currently exposed item.
  *
