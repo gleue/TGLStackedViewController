@@ -16,28 +16,6 @@
       "minimum-system-version" : "7.0",
       "orientation" : "portrait",
       "scale" : "2x"
-    },
-    {
-      "orientation" : "portrait",
-      "idiom" : "iphone",
-      "extent" : "full-screen",
-      "filename" : "LaunchImage.png",
-      "scale" : "1x"
-    },
-    {
-      "orientation" : "portrait",
-      "idiom" : "iphone",
-      "extent" : "full-screen",
-      "filename" : "iOS Simulator Screen Shot 11.11.2014 11.36.15-1.png",
-      "scale" : "2x"
-    },
-    {
-      "orientation" : "portrait",
-      "idiom" : "iphone",
-      "extent" : "full-screen",
-      "filename" : "iOS Simulator Screen Shot 11.11.2014 11.36.40-1.png",
-      "subtype" : "retina4",
-      "scale" : "2x"
     }
   ],
   "info" : {
