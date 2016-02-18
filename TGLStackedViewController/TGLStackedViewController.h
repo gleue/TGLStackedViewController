@@ -151,6 +151,12 @@
  */
 @property (assign, nonatomic) BOOL unexposedItemsAreSelectable;
 
+/** Factor used to scale items while moving them.
+ *
+ * Default value is 0.95
+ */
+@property (assign, nonatomic) CGFloat movingItemScaleFactor;
+
 /** Check whether a given cell can be moved.
  *
  * Overload this method to prevent items from

@@ -27,8 +27,6 @@
 #import "TGLStackedLayout.h"
 #import "TGLExposedLayout.h"
 
-#define MOVE_ZOOM 0.95
-
 #define SCROLL_PER_FRAME 5.0
 #define SCROLL_ZONE_TOP 100.0
 #define SCROLL_ZONE_BOTTOM 100.0
@@ -106,6 +104,8 @@ typedef NS_ENUM(NSInteger, TGLStackedViewControllerScrollDirection) {
     _exposedPinningMode = TGLExposedLayoutPinningModeNone;
     _exposedTopPinningCount = 2;
     _exposedBottomPinningCount = 2;
+    
+    _movingItemScaleFactor = 0.95;
 }
 
 #pragma mark - View life cycle
@@ -312,7 +312,7 @@ typedef NS_ENUM(NSInteger, TGLStackedViewControllerScrollDirection) {
                                      
                                      if (strongSelf) {
                                          
-                                         strongSelf.movingView.transform = CGAffineTransformMakeScale(MOVE_ZOOM, MOVE_ZOOM);
+                                         strongSelf.movingView.transform = CGAffineTransformMakeScale(self.movingItemScaleFactor, self.movingItemScaleFactor);
                                          movingImageView.alpha = 1.0f;
                                      }
                                  }
