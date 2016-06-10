@@ -143,11 +143,11 @@
 
 - (CGSize)collectionViewContentSize {
     
-    CGSize contentSize = CGSizeMake(CGRectGetWidth(self.collectionView.bounds), self.layoutMargin.top + self.topReveal * [self.collectionView numberOfItemsInSection:0] + self.layoutMargin.bottom - self.collectionView.contentInset.bottom);
+    CGSize contentSize = CGSizeMake(CGRectGetWidth(self.collectionView.bounds), self.layoutMargin.top + self.topReveal * [self.collectionView numberOfItemsInSection:0] + self.layoutMargin.bottom);
     
     if (contentSize.height < CGRectGetHeight(self.collectionView.bounds)) {
 
-        contentSize.height = CGRectGetHeight(self.collectionView.bounds) - self.collectionView.contentInset.top - self.collectionView.contentInset.bottom;
+        contentSize.height = CGRectGetHeight(self.collectionView.bounds);
 
         // Adding an extra point of content height
         // enables scrolling/bouncing
@@ -180,13 +180,13 @@
     
     if (self.filling) {
         
-        itemReveal = floor((layoutSize.height - self.collectionView.contentInset.top - self.collectionView.contentInset.bottom) / [self.collectionView numberOfItemsInSection:0]);
+        itemReveal = floor(layoutSize.height / [self.collectionView numberOfItemsInSection:0]);
     }
 
     CGSize itemSize = self.itemSize;
     
     if (itemSize.width == 0.0) itemSize.width = layoutSize.width;
-    if (itemSize.height == 0.0) itemSize.height = layoutSize.height - self.collectionView.contentInset.top - self.collectionView.contentInset.bottom;
+    if (itemSize.height == 0.0) itemSize.height = layoutSize.height;
     
     CGFloat itemHorizontalOffset = 0.5 * (layoutSize.width - itemSize.width);
     CGPoint itemOrigin = CGPointMake(self.layoutMargin.left + floor(itemHorizontalOffset), 0.0);
