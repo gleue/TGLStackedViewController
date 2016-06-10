@@ -35,6 +35,7 @@
 @property (nonatomic, strong) UILongPressGestureRecognizer *moveGestureRecognizer;
 @property (nonatomic, strong) NSIndexPath *movingIndexPath;
 
+@property (nonatomic, strong) UIPanGestureRecognizer *unexposeGestureRecognizer;
 
 @end
 
@@ -106,6 +107,8 @@
 
     [self.collectionView addGestureRecognizer:self.moveGestureRecognizer];
     
+    self.unexposeGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleUnexposePan:)];
+    self.unexposeGestureRecognizer.delegate = self;
 }
 
 #pragma mark - Actions
@@ -182,13 +185,86 @@
     }
 }
 
+- (IBAction)handleUnexposePan:(UIPanGestureRecognizer *)recognizer {
     
+    static UICollectionViewTransitionLayout *transitionLayout;
     
+    switch (recognizer.state) {
+            
+        case UIGestureRecognizerStateBegan: {
+            
+            __weak typeof(self) weakSelf = self;
 
+            transitionLayout = [self.collectionView startInteractiveTransitionToCollectionViewLayout:self.stackedLayout completion:^ (BOOL completed, BOOL finish){
 
+                if (finish) {
+                    
+                    UICollectionViewCell *exposedCell = [self.collectionView cellForItemAtIndexPath:weakSelf.exposedItemIndexPath];
+                    
+                    [exposedCell removeGestureRecognizer:self.unexposeGestureRecognizer];
+                    
+                    weakSelf.stackedLayout.overwriteContentOffset = NO;
+                    weakSelf.exposedItemIndexPath = nil;
+                    weakSelf.exposedLayout = nil;
 
+                    transitionLayout = nil;
+                }
+            }];
 
+            break;
+        }
+            
+        case UIGestureRecognizerStateChanged: {
+            
+            CGPoint currentOffset = [recognizer translationInView:self.collectionView];
+            
+            NSLog(@"Pan changed: %@", @(currentOffset.y));
+            
+            if (currentOffset.y >= 0.0) {
+                
+                transitionLayout.transitionProgress = MIN(currentOffset.y, 200.0) / 200.0;
+            }
 
+            break;
+        }
+            
+        case UIGestureRecognizerStateEnded: {
+            
+            CGPoint currentOffset = [recognizer translationInView:self.collectionView];
+            
+            if (currentOffset.y >= 100.0) {
+                
+                NSLog(@"Pan ended -> Finished");
+                
+                [self.collectionView deselectItemAtIndexPath:self.exposedItemIndexPath animated:YES];
+                [self.collectionView finishInteractiveTransition];
+
+            } else {
+                
+                NSLog(@"Pan ended -> Reverted");
+                
+                [self.collectionView cancelInteractiveTransition];
+            }
+
+            transitionLayout = nil;
+            
+            break;
+        }
+            
+        case UIGestureRecognizerStateCancelled: {
+            
+            NSLog(@"Pan cancelled");
+
+            [self.collectionView cancelInteractiveTransition];
+            
+            transitionLayout = nil;
+            
+            break;
+        }
+            
+        default:
+            
+            break;
     }
 }
 
