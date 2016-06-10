@@ -28,6 +28,7 @@
 @interface TGLStackedLayout ()
 
 @property (nonatomic, strong) NSDictionary *layoutAttributes;
+@property (nonatomic, strong) NSIndexPath *movingIndexPath;
 
 // Set to YES when layout is currently arranging
 // items so that they evenly fill entire height
@@ -61,6 +62,7 @@
     self.layoutMargin = UIEdgeInsetsMake(20.0, 0.0, 0.0, 0.0);
     self.topReveal = 120.0;
     self.bounceFactor = 0.2;
+    self.movingItemScaleFactor = 0.95;
 }
 
 #pragma mark - Accessors
@@ -211,9 +213,12 @@
         //
         attributes.zIndex = item;
         
-        // The moving item is hidden
+        // The moving items are scaled
         //
-        attributes.hidden = [attributes.indexPath isEqual:self.movingIndexPath];
+        if (self.movingIndexPath && attributes.indexPath.item == self.movingIndexPath.item) {
+            
+            attributes.transform = CGAffineTransformMakeScale(self.movingItemScaleFactor, self.movingItemScaleFactor);
+        }
 
         // By default all items are layed
         // out evenly with each revealing
@@ -308,30 +313,11 @@
     return self.layoutAttributes[indexPath];
 }
 
-#pragma mark - Methods
-
-- (void)invalidateLayoutIfNecessaryWithMovingLocation:(CGPoint)movingLocation targetBlock:(NSIndexPath* (^) (NSIndexPath *sourceIndexPath, NSIndexPath *proposedDestinationIndexPath))targetBlock updateBlock:(void (^) (NSIndexPath *fromIndexPath, NSIndexPath *toIndexPath))updateBlock {
-
-    NSIndexPath *oldMovingIndexPath = self.movingIndexPath;
-    NSIndexPath *newMovingIndexPath = [self.collectionView indexPathForItemAtPoint:movingLocation];
-
-    newMovingIndexPath = targetBlock(oldMovingIndexPath, newMovingIndexPath);
-
-    if (newMovingIndexPath != nil && ![newMovingIndexPath isEqual:oldMovingIndexPath]) {
-        
-        __weak typeof(self) weakSelf = self;
-        
-        [self.collectionView performBatchUpdates:^ (void) {
-
-                                            [weakSelf.collectionView deleteItemsAtIndexPaths:@[ oldMovingIndexPath ]];
-            
-                                            self.movingIndexPath = newMovingIndexPath;
-                                            updateBlock(oldMovingIndexPath, newMovingIndexPath);
-            
-                                            [weakSelf.collectionView insertItemsAtIndexPaths:@[ newMovingIndexPath ]];
-                                        }
-                                      completion:nil];
-    }
+- (void)invalidateLayoutWithContext:(UICollectionViewLayoutInvalidationContext *)context {
+    
+    [super invalidateLayoutWithContext:context];
+    
+    self.movingIndexPath = context.targetIndexPathsForInteractivelyMovingItems.firstObject;
 }
 
 @end

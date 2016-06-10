@@ -113,7 +113,7 @@
     
     self.stackedLayout = (TGLStackedLayout *)self.collectionViewLayout;
 
-    self.moveGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
+    self.moveGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleMovePressGesture:)];
     self.moveGestureRecognizer.delegate = self;
 
     [self.collectionView addGestureRecognizer:self.moveGestureRecognizer];
@@ -159,7 +159,7 @@
 
 #pragma mark - Actions
 
-- (IBAction)handleLongPress:(UILongPressGestureRecognizer *)recognizer {
+- (IBAction)handleMovePressGesture:(UILongPressGestureRecognizer *)recognizer {
     
     static CGPoint startLocation;
     static CGPoint targetPosition;
@@ -174,11 +174,15 @@
 
             if (indexPath && [self.collectionView beginInteractiveMovementForItemAtIndexPath:indexPath]) {
                 
+                self.stackedLayout.movingItemScaleFactor = self.movingItemScaleFactor;
+
                 UICollectionViewCell *movingCell = [self.collectionView cellForItemAtIndexPath:indexPath];
                 
                 targetPosition = movingCell.center;
                 
                 self.movingIndexPath = indexPath;
+                
+                [self.collectionView updateInteractiveMovementTargetPosition:targetPosition];
             }
 
             break;

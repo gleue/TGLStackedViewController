@@ -28,7 +28,7 @@
 @interface TGLStackedLayout : UICollectionViewLayout
 
 /** Margins between collection view and items. Default is UIEdgeInsetsMake(20.0, 0.0, 0.0, 0.0) */
-@property (assign, nonatomic) IBInspectable UIEdgeInsets layoutMargin;
+@property (nonatomic, assign) IBInspectable UIEdgeInsets layoutMargin;
 
 /** Size of items or automatic dimensions when 0.
  *
@@ -37,44 +37,27 @@
  * from the collection view's bounds minus the margins
  * defined in property -layoutMargin.
  */
-@property (assign, nonatomic) IBInspectable CGSize itemSize;
+@property (nonatomic, assign) IBInspectable CGSize itemSize;
 
 /** Amount to show of each stacked item. Default is 120.0 */
-@property (assign, nonatomic) IBInspectable CGFloat topReveal;
+@property (nonatomic, assign) IBInspectable CGFloat topReveal;
 
 /** Amount of compression/expansing when scrolling bounces. Default is 0.2 */
-@property (assign, nonatomic) IBInspectable CGFloat bounceFactor;
+@property (nonatomic, assign) IBInspectable CGFloat bounceFactor;
 
-/** Set to YES to ignore -topReveal and arrange items evenly in collection view's bounds, if items do not fill entire height. Default is NO. */
-@property (assign, nonatomic, getter = isFillingHeight) IBInspectable BOOL fillHeight;
+/** Scale factor for moving item. Default is 0.95 */
+@property (nonatomic, assign) IBInspectable CGFloat movingItemScaleFactor;
 
-/** Set to YES to enable bouncing even when items do not fill entire height. Default is NO. */
-@property (assign, nonatomic, getter = isAlwaysBouncing) IBInspectable BOOL alwaysBounce;
+/** Set to YES to ignore -topReveal and arrange items evenly in collection view's bounds, if items do not fill entire height. Default is `NO` */
+@property (nonatomic, assign, getter = isFillingHeight) IBInspectable BOOL fillHeight;
+
+/** Set to YES to enable bouncing even when items do not fill entire height. Default is `NO` */
+@property (nonatomic, assign, getter = isAlwaysBouncing) IBInspectable BOOL alwaysBounce;
 
 /** Use -contentOffset instead of collection view's actual content offset for next layout */
-@property (assign, nonatomic) BOOL overwriteContentOffset;
+@property (nonatomic, assign) BOOL overwriteContentOffset;
 
-/** Content offset value to replace actual value when -overwriteContentOffset is YES */
-@property (assign, nonatomic) CGPoint contentOffset;
-
-/** Index path of item currently being moved, and thus being hidden */
-@property (strong, nonatomic) NSIndexPath *movingIndexPath;
-
-/** Check if layout needs update for new moving location.
- *
- * This method is called by the view controller, when an item
- * is moved around interactively by the user, e.g. via a gesture
- * recognizer. Invalidates layout and updates -movingIndexPath
- * if required.
- *
- * @param movingLocation Location of item at -movingIndexPath to test
- *        and update layout for if necessary.
- * @param targetBlock Block being called to retarget proposed destinationIndexPath
- *        computed from movingLocation. The block returns the new location, or
- *        nil if teh item's location should not be updated.
- * @param updateBlock Block being called when movingLocation results in
- *        in a new location for item at -movingIndexPath.
- */
-- (void)invalidateLayoutIfNecessaryWithMovingLocation:(CGPoint)movingLocation targetBlock:(NSIndexPath* (^) (NSIndexPath *sourceIndexPath, NSIndexPath *proposedDestinationIndexPath))targetBlock updateBlock:(void (^) (NSIndexPath *fromIndexPath, NSIndexPath *toIndexPath))updateBlock;
+/** Content offset value to replace actual value when -overwriteContentOffset is `YES` */
+@property (nonatomic, assign) CGPoint contentOffset;
 
 @end
