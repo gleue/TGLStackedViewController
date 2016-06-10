@@ -137,7 +137,7 @@
 
 /** Index path of currently exposed item.
  *
- * The exposed item's selected state is YES.
+ * The exposed item's selected state is `YES`.
  *
  * When user exposes an item this property
  * contains the item's index path. The value
@@ -149,12 +149,26 @@
  */
 @property (nonatomic, strong, nullable) NSIndexPath *exposedItemIndexPath;
 
+/** Allow exposed items to be interactively collapsed by a gesture.
+ *
+ * If `-exposedPinningMode` is set to `TGLExposedLayoutPinningModeNone`
+ * a pinch gesture is used to interactively transition from exposed
+ * to stacked layout. Otherwise a vertical pan gesture is used.
+ *
+ * The respective gesture is effective only if this property is `YES`.
+ * Changes to this property take effect on next item being selected,
+ * i.e. exposed.
+ *
+ * Default value is `YES`
+ */
+@property (nonatomic, assign) IBInspectable BOOL exposedItemsAreCollapsible;
+
 /** Allow the overlapping parts of unexposed items
  * to be tapped and thus select another item.
  *
- * If set to NO (default), the currently exposed item
- * has to be tapped to deselect before another item
- * may be selected.
+ * If set to `NO` (default), the currently exposed item
+ * has to be tapped to deselect or interactively collapesed
+ * before another item may be selected.
  */
 @property (nonatomic, assign) IBInspectable BOOL unexposedItemsAreSelectable;
 
@@ -163,6 +177,28 @@
  * Default value is 0.95
  */
 @property (nonatomic, assign) IBInspectable CGFloat movingItemScaleFactor;
+
+/** Minimum amount of downwards panning at end of gesture to trigger collapse.
+ *
+ * Default value is 120.0
+ */
+@property (nonatomic, assign) IBInspectable CGFloat collapsePanMinimumThreshold;
+
+/** Maximum amount of downwards panning to consider gesture transition to be complete.
+ *
+ * If the property value is less or equal 0.0 the exposed item's height is used.
+ *
+ * Default value is 0.0
+ */
+@property (nonatomic, assign) IBInspectable CGFloat collapsePanMaximumThreshold;
+
+/** Minimum percentage of pinching at end of gesture to trigger collapse.
+ *
+ * Value 1.0 means 100%, i.e. fully pinched, and 0.0 means 0%, i.e. no pinch at all.
+ *
+ * Default value is 0.25
+ */
+@property (nonatomic, assign) IBInspectable CGFloat collapsePinchMinimumThreshold;
 
 /** Returns the class to use when creating the exposed layout.
  *
