@@ -63,23 +63,12 @@
     
     self = [super initWithCoder:aDecoder];
     
-    if (self) [self initController];
+    if (self) {
+        
+        _stackedLayoutMargin = UIEdgeInsetsMake(20.0, 0.0, 0.0, 0.0);
+    }
     
     return self;
-}
-
-- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
-    
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    
-    if (self) [self initController];
-    
-    return self;
-}
-
-- (void)initController {
-    
-    _stackedLayoutMargin = UIEdgeInsetsMake(20.0, 0.0, 0.0, 0.0);
 }
 
 #pragma mark - View life cycle
@@ -107,16 +96,10 @@
     //
     self.unexposedItemsAreSelectable = YES;
     
-    // Set desired item sizes here.
-    // Zero values for width or height
-    // will result in item having full
-    // extent for respective dimension.
-    //
-    self.exposedItemSize = CGSizeMake(0, 320);
-    self.stackedLayout.itemSize = self.exposedItemSize;
-
     // Handle own properties
     //
+    self.exposedItemSize = self.itemSize;
+    self.stackedLayout.itemSize = self.exposedItemSize;
     self.stackedLayout.layoutMargin = self.stackedLayoutMargin;
 
     if (self.doubleTapToClose) {

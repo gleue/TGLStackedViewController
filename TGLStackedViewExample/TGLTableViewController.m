@@ -29,6 +29,7 @@
     
     if ([segue.identifier rangeOfString:@"LowerPinned"].location != NSNotFound) {
         
+        controller.itemSize = CGSizeMake(0, 320);
         controller.exposedItemSize = controller.stackedLayout.itemSize = CGSizeMake(0.0, 240.0);
         controller.exposedPinningMode = TGLExposedLayoutPinningModeBelow;
         controller.exposedTopOverlap = 5.0;
@@ -36,6 +37,7 @@
         
     } else if ([segue.identifier rangeOfString:@"AllPinned"].location != NSNotFound) {
         
+        controller.itemSize = CGSizeMake(0, 320);
         controller.exposedItemSize = controller.stackedLayout.itemSize = CGSizeMake(0.0, 240.0);
         controller.exposedPinningMode = TGLExposedLayoutPinningModeAll;
         controller.exposedBottomOverlap = 5.0;

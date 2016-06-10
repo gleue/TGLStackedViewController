@@ -29,6 +29,7 @@
 
 @interface TGLViewController : TGLStackedViewController
 
+@property (nonatomic, assign) CGSize itemSize;
 @property (nonatomic, assign) UIEdgeInsets stackedLayoutMargin;
 
 @property (nonatomic, assign) BOOL doubleTapToClose;
