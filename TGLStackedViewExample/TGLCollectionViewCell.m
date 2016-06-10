@@ -44,6 +44,7 @@
     
     self.imageView.image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     self.imageView.tintColor = self.color;
+    self.imageView.layer.borderColor = self.nameLabel.highlightedTextColor.CGColor;
 
     self.nameLabel.text = self.title;
 }
@@ -62,6 +63,14 @@
     _color = [color copy];
     
     self.imageView.tintColor = self.color;
+}
+
+- (void)setSelected:(BOOL)selected {
+
+    [super setSelected:selected];
+    
+    self.imageView.layer.borderWidth = self.isSelected ? 2.0 : 0.0;
+    self.imageView.layer.cornerRadius = self.isSelected ? 8.0 : 0.0;
 }
 
 @end

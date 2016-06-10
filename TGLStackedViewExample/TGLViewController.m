@@ -59,10 +59,35 @@
 
 @synthesize cards = _cards;
 
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    
+    self = [super initWithCoder:aDecoder];
+    
+    if (self) [self initController];
+    
+    return self;
+}
+
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+    
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    
+    if (self) [self initController];
+    
+    return self;
+}
+
+- (void)initController {
+    
+    _stackedLayoutMargin = UIEdgeInsetsMake(20.0, 0.0, 0.0, 0.0);
+}
+
+#pragma mark - View life cycle
+
 - (void)viewDidLoad {
 
     [super viewDidLoad];
-    
+
     // Set to NO to prevent a small number
     // of cards from filling the entire
     // view height evenly and only show
@@ -82,6 +107,18 @@
     //
     self.unexposedItemsAreSelectable = YES;
     
+    // Set desired item sizes here.
+    // Zero values for width or height
+    // will result in item having full
+    // extent for respective dimension.
+    //
+    self.exposedItemSize = CGSizeMake(0, 320);
+    self.stackedLayout.itemSize = self.exposedItemSize;
+
+    // Handle own properties
+    //
+    self.stackedLayout.layoutMargin = self.stackedLayoutMargin;
+
     if (self.doubleTapToClose) {
         
         UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap:)];
@@ -108,7 +145,7 @@
         
         // Adjust the number of cards here
         //
-        for (NSInteger i = 1; i < 100; i++) {
+        for (NSInteger i = 1; i < 20; i++) {
             
             NSDictionary *card = @{ @"name" : [NSString stringWithFormat:@"Card #%d", (int)i], @"color" : [UIColor randomColor] };
             
@@ -127,7 +164,7 @@
     [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
-#pragma mark - CollectionViewDataSource protocol
+#pragma mark - UICollectionViewDataSource protocol
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     
@@ -145,16 +182,14 @@
     return cell;
 }
 
-#pragma mark - Overloaded methods
-
-- (void)moveItemAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
+- (void)collectionView:(UICollectionView *)collectionView moveItemAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath {
     
     // Update data source when moving cards around
     //
-    NSDictionary *card = self.cards[fromIndexPath.item];
+    NSDictionary *card = self.cards[sourceIndexPath.item];
     
-    [self.cards removeObjectAtIndex:fromIndexPath.item];
-    [self.cards insertObject:card atIndex:toIndexPath.item];
+    [self.cards removeObjectAtIndex:sourceIndexPath.item];
+    [self.cards insertObject:card atIndex:destinationIndexPath.item];
 }
 
 @end

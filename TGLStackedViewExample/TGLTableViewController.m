@@ -42,6 +42,7 @@
 
     } else {
         
+        controller.exposedPinningMode = TGLExposedLayoutPinningModeNone;
         controller.exposedTopOverlap = 20.0;
         controller.exposedBottomOverlap = 20.0;
     }
@@ -53,7 +54,8 @@
         
     } else {
         
-        controller.stackedLayout.layoutMargin = UIEdgeInsetsZero;
+        controller.automaticallyAdjustsScrollViewInsets = YES;
+        controller.stackedLayoutMargin = UIEdgeInsetsZero;
         controller.exposedLayoutMargin = controller.exposedPinningMode ? UIEdgeInsetsMake(40.0, 0.0, 0.0, 0.0) : UIEdgeInsetsMake(20.0, 0.0, 0.0, 0.0);
     }
 
