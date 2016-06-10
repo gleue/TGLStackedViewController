@@ -28,7 +28,7 @@
 @interface TGLStackedLayout : UICollectionViewLayout
 
 /** Margins between collection view and items. Default is UIEdgeInsetsMake(20.0, 0.0, 0.0, 0.0) */
-@property (assign, nonatomic) UIEdgeInsets layoutMargin;
+@property (assign, nonatomic) IBInspectable UIEdgeInsets layoutMargin;
 
 /** Size of items or automatic dimensions when 0.
  *
@@ -37,19 +37,19 @@
  * from the collection view's bounds minus the margins
  * defined in property -layoutMargin.
  */
-@property (assign, nonatomic) CGSize itemSize;
+@property (assign, nonatomic) IBInspectable CGSize itemSize;
 
 /** Amount to show of each stacked item. Default is 120.0 */
-@property (assign, nonatomic) CGFloat topReveal;
+@property (assign, nonatomic) IBInspectable CGFloat topReveal;
 
 /** Amount of compression/expansing when scrolling bounces. Default is 0.2 */
-@property (assign, nonatomic) CGFloat bounceFactor;
+@property (assign, nonatomic) IBInspectable CGFloat bounceFactor;
 
 /** Set to YES to ignore -topReveal and arrange items evenly in collection view's bounds, if items do not fill entire height. Default is NO. */
-@property (assign, nonatomic, getter = isFillingHeight) BOOL fillHeight;
+@property (assign, nonatomic, getter = isFillingHeight) IBInspectable BOOL fillHeight;
 
 /** Set to YES to enable bouncing even when items do not fill entire height. Default is NO. */
-@property (assign, nonatomic, getter = isAlwaysBouncing) BOOL alwaysBounce;
+@property (assign, nonatomic, getter = isAlwaysBouncing) IBInspectable BOOL alwaysBounce;
 
 /** Use -contentOffset instead of collection view's actual content offset for next layout */
 @property (assign, nonatomic) BOOL overwriteContentOffset;

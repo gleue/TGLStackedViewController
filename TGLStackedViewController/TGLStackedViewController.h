@@ -40,7 +40,7 @@
  *
  * Default value is UIEdgeInsetsMake(40.0, 0.0, 0.0, 0.0)
  */
-@property (assign, nonatomic) UIEdgeInsets exposedLayoutMargin;
+@property (nonatomic, assign) IBInspectable UIEdgeInsets exposedLayoutMargin;
 
 /** Size of items when exposed if set to value not equal CGSizeZero.
  *
@@ -49,7 +49,7 @@
  *
  * Default value is CGSizeZero
  */
-@property (assign, nonatomic) CGSize exposedItemSize;
+@property (nonatomic, assign) IBInspectable CGSize exposedItemSize;
 
 /** Amount of overlap for items above exposed item.
  *
@@ -60,7 +60,7 @@
  *
  * Default value is 20.0
  */
-@property (assign, nonatomic) CGFloat exposedTopOverlap;
+@property (nonatomic, assign) IBInspectable CGFloat exposedTopOverlap;
 
 /** Amount of overlap for items below exposed item.
  *
@@ -71,7 +71,7 @@
  *
  * Default value is 20.0
  */
-@property (assign, nonatomic) CGFloat exposedBottomOverlap;
+@property (nonatomic, assign) IBInspectable CGFloat exposedBottomOverlap;
 
 /** Number of items overlapping below exposed item.
  *
@@ -82,7 +82,7 @@
  *
  * Default value is 1
  */
-@property (assign, nonatomic) NSUInteger exposedBottomOverlapCount;
+@property (nonatomic, assign) IBInspectable NSUInteger exposedBottomOverlapCount;
 
 /** Layout mode for other than exposed items.
  *
@@ -104,7 +104,7 @@
  *
  * Default value is `TGLExposedLayoutPinningModeNone`
  */
-@property (assign, nonatomic) TGLExposedLayoutPinningMode exposedPinningMode;
+@property (nonatomic, assign) TGLExposedLayoutPinningMode exposedPinningMode;
 
 /** The number of items above the exposed item to be pinned.
  *
@@ -115,7 +115,7 @@
  *
  * Default value is 2
  */
-@property (assign, nonatomic) NSUInteger exposedTopPinningCount;
+@property (nonatomic, assign) IBInspectable NSUInteger exposedTopPinningCount;
 
 /** The number of items below the exposed item to be pinned.
  *
@@ -126,7 +126,7 @@
  *
  * Default value is 2
  */
-@property (assign, nonatomic) NSUInteger exposedBottomPinningCount;
+@property (nonatomic, assign) IBInspectable NSUInteger exposedBottomPinningCount;
 
 /** Index path of currently exposed item.
  *
@@ -140,7 +140,7 @@
  * location to expose it, instead of the current
  * one, or set to nil to collapse all items.
  */
-@property (strong, nonatomic) NSIndexPath *exposedItemIndexPath;
+@property (nonatomic, strong, nullable) NSIndexPath *exposedItemIndexPath;
 
 /** Allow the overlapping parts of unexposed items
  * to be tapped and thus select another item.
@@ -149,13 +149,13 @@
  * has to be tapped to deselect before another item
  * may be selected.
  */
-@property (assign, nonatomic) BOOL unexposedItemsAreSelectable;
+@property (nonatomic, assign) IBInspectable BOOL unexposedItemsAreSelectable;
 
 /** Factor used to scale items while moving them.
  *
  * Default value is 0.95
  */
-@property (assign, nonatomic) CGFloat movingItemScaleFactor;
+@property (nonatomic, assign) IBInspectable CGFloat movingItemScaleFactor;
 
 /** Check whether a given cell can be moved.
  *
