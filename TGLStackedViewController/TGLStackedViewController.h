@@ -109,7 +109,7 @@
  * the exposed item are pinned to the collection view's bottom
  * edge, and overlapping upwards.
  *
- * Default value is `TGLExposedLayoutPinningModeNone`
+ * Default value is `TGLExposedLayoutPinningModeAll`
  */
 @property (nonatomic, assign) TGLExposedLayoutPinningMode exposedPinningMode;
 
@@ -120,7 +120,7 @@
  * ignored otherwise. Changes to this property take
  * effect on next item being selected, i.e. exposed.
  *
- * Default value is 2
+ * Default value is -1
  */
 @property (nonatomic, assign) IBInspectable NSUInteger exposedTopPinningCount;
 
@@ -131,7 +131,7 @@
  * ignored otherwise. Changes to this property take
  * effect on next item being selected, i.e. exposed.
  *
- * Default value is 2
+ * Default value is -1
  */
 @property (nonatomic, assign) IBInspectable NSUInteger exposedBottomPinningCount;
 

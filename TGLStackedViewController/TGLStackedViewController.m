@@ -84,9 +84,9 @@
     _exposedBottomOverlap = 20.0;
     _exposedBottomOverlapCount = 1;
     
-    _exposedPinningMode = TGLExposedLayoutPinningModeNone;
-    _exposedTopPinningCount = 2;
-    _exposedBottomPinningCount = 2;
+    _exposedPinningMode = TGLExposedLayoutPinningModeAll;
+    _exposedTopPinningCount = -1;
+    _exposedBottomPinningCount = -1;
     
     _movingItemScaleFactor = 0.95;
 }

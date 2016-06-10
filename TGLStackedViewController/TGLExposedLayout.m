@@ -46,9 +46,9 @@
         self.bottomOverlap = 20.0;
         self.bottomOverlapCount = 1;
 
-        self.pinningMode = TGLExposedLayoutPinningModeNone;
-        self.topPinningCount = 2;
-        self.bottomPinningCount = 2;
+        self.pinningMode = TGLExposedLayoutPinningModeAll;
+        self.topPinningCount = -1;
+        self.bottomPinningCount = -1;
         
         self.exposedItemIndex = exposedItemIndex;
     }
@@ -141,8 +141,14 @@
     
     NSMutableDictionary *layoutAttributes = [NSMutableDictionary dictionary];
     NSInteger itemCount = [self.collectionView numberOfItemsInSection:0];
-    NSUInteger bottomOverlapCount = self.bottomOverlapCount;
-    NSUInteger bottomPinningCount = MIN(itemCount - self.exposedItemIndex - 1, self.bottomPinningCount);
+    NSInteger bottomOverlapCount = self.bottomOverlapCount;
+    NSInteger bottomPinningCount = MIN(itemCount - self.exposedItemIndex - 1, self.bottomPinningCount);
+    
+    if (bottomPinningCount < 0) bottomPinningCount = itemCount - self.exposedItemIndex - 1;
+
+    NSInteger topPinningCount = self.topPinningCount;
+    
+    if (topPinningCount < 0) topPinningCount = self.exposedItemIndex;
 
     for (NSInteger item = 0; item < itemCount; item++) {
 
@@ -155,7 +161,7 @@
                 
                 NSInteger count = self.exposedItemIndex - item;
                 
-                if (count > self.topPinningCount) {
+                if (count > topPinningCount) {
                     
                     attributes.frame = CGRectMake(itemOrigin.x, self.collectionViewContentSize.height, itemSize.width, itemSize.height);
                     attributes.hidden = YES;
@@ -192,14 +198,14 @@
 
             // Pinning lower items to bottom
             //
-            if (item > self.exposedItemIndex + self.bottomPinningCount) {
+            if (item > self.exposedItemIndex + bottomPinningCount) {
 
                 attributes.frame = CGRectMake(itemOrigin.x, self.collectionViewContentSize.height, itemSize.width, itemSize.height);
                 attributes.hidden = YES;
                 
             } else {
                 
-                NSInteger count = MIN(self.bottomPinningCount + 1, itemCount - self.exposedItemIndex) - (item - self.exposedItemIndex);
+                NSInteger count = MIN(bottomPinningCount + 1, itemCount - self.exposedItemIndex) - (item - self.exposedItemIndex);
                 
                 attributes.frame = CGRectMake(itemOrigin.x, self.collectionViewContentSize.height - self.layoutMargin.bottom - count * self.bottomOverlap, itemSize.width, itemSize.height);
             }
@@ -210,7 +216,7 @@
             // items at bottom are hidden
             // to improve performance
             //
-            attributes.frame = CGRectMake(self.layoutMargin.left + itemHorizontalOffset, self.collectionViewContentSize.height, itemSize.width, itemSize.height);
+            attributes.frame = CGRectMake(itemOrigin.x, self.collectionViewContentSize.height, itemSize.width, itemSize.height);
             attributes.hidden = YES;
 
         } else {
@@ -222,7 +228,7 @@
             //
             NSInteger count = MIN(self.bottomOverlapCount + 1, itemCount - self.exposedItemIndex) - (item - self.exposedItemIndex);
 
-            attributes.frame = CGRectMake(self.layoutMargin.left + itemHorizontalOffset, self.layoutMargin.top + itemSize.height - count * self.bottomOverlap, itemSize.width, itemSize.height);
+            attributes.frame = CGRectMake(itemOrigin.x, self.layoutMargin.top + itemSize.height - count * self.bottomOverlap, itemSize.width, itemSize.height);
             
             // Issue #21
             //
