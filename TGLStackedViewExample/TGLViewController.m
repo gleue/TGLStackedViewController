@@ -65,7 +65,14 @@
     
     if (self) {
         
+        _cardCount = 20;
+        _cardSize = CGSizeZero;
+        
         _stackedLayoutMargin = UIEdgeInsetsMake(20.0, 0.0, 0.0, 0.0);
+        _stackedTopReveal = 120.0;
+        _stackedBounceFactor = 0.2;
+        _stackedFillHeight = NO;
+        _stackedAlwaysBounce = NO;
     }
     
     return self;
@@ -98,9 +105,13 @@
     
     // Handle own properties
     //
-    self.exposedItemSize = self.itemSize;
+    self.exposedItemSize = self.cardSize;
     self.stackedLayout.itemSize = self.exposedItemSize;
     self.stackedLayout.layoutMargin = self.stackedLayoutMargin;
+    self.stackedLayout.topReveal = self.stackedTopReveal;
+    self.stackedLayout.bounceFactor = self.stackedBounceFactor;
+    self.stackedLayout.fillHeight = self.stackedFillHeight;
+    self.stackedLayout.alwaysBounce = self.stackedAlwaysBounce;
 
     if (self.doubleTapToClose) {
         
@@ -118,7 +129,45 @@
     return UIStatusBarStyleLightContent;
 }
 
+#pragma mark - Key-Value Coding
+
+- (void)setValue:(id)value forKeyPath:(nonnull NSString *)keyPath {
+
+//    NSLog(@"%s '%@' = '%@'", __PRETTY_FUNCTION__, keyPath, value);
+    
+    if ([keyPath isEqualToString:@"cardSize.width"]) {
+
+        CGSize cardSize = self.cardSize;
+        
+        cardSize.width = [value doubleValue];
+        self.cardSize = cardSize;
+
+    } else if ([keyPath isEqualToString:@"cardSize.height"]) {
+            
+        CGSize cardSize = self.cardSize;
+        
+        cardSize.height = [value doubleValue];
+        self.cardSize = cardSize;
+        
+    } else {
+        
+        [super setValue:value forKeyPath:keyPath];
+    }
+}
+
 #pragma mark - Accessors
+
+- (void)setCardCount:(NSInteger)cardCount {
+
+    if (cardCount != _cardCount) {
+        
+        _cardCount = cardCount;
+        
+        _cards = nil;
+        
+        if (self.isViewLoaded) [self.collectionView reloadData];
+    }
+}
 
 - (NSMutableArray *)cards {
 
@@ -128,7 +177,7 @@
         
         // Adjust the number of cards here
         //
-        for (NSInteger i = 1; i < 20; i++) {
+        for (NSInteger i = 1; i <= self.cardCount; i++) {
             
             NSDictionary *card = @{ @"name" : [NSString stringWithFormat:@"Card #%d", (int)i], @"color" : [UIColor randomColor] };
             
