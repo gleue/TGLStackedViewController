@@ -28,10 +28,17 @@
 #import "TGLStackedLayout.h"
 #import "TGLExposedLayout.h"
 
-@interface TGLStackedViewController : UICollectionViewController <UIGestureRecognizerDelegate>
+@interface TGLStackedViewController : UICollectionViewController
 
-/** The collection view layout object used when all items are collapsed. */
-@property (strong, readonly, nonatomic) TGLStackedLayout *stackedLayout;
+/** The collection view layout object used when all items are collapsed.
+ *
+ * When using storyboards, this property is only intialized in method
+ * `-viewDidLoad`.
+ */
+@property (nonatomic, readonly, nullable) TGLStackedLayout *stackedLayout;
+
+/** The collection view layout object used when a single item is exposed. */
+@property (nonatomic, readonly, nullable) TGLExposedLayout *exposedLayout;
 
 /** Margins between collection view and items when exposed.
  *
@@ -157,39 +164,11 @@
  */
 @property (nonatomic, assign) IBInspectable CGFloat movingItemScaleFactor;
 
-/** Check whether a given cell can be moved.
+/** Returns the class to use when creating the exposed layout.
  *
- * Overload this method to prevent items from
- * being dragged to another location.
- *
- * @param indexPath Index path of item to be moved.
- *
- * @return YES if item can be moved (default); otherwise NO.
+ * If you subclass `TGLExposedLayout` overwrite this method
+ * and return your subclass.
  */
-- (BOOL)canMoveItemAtIndexPath:(NSIndexPath *)indexPath;
-
-/** Retarget a item's proposed index path while being moved.
- *
- * Overload this method to modify an item's target location
- * while being dragged to another location, e.g. to prevent
- * it from being moved to certain locations.
- *
- * @param sourceIndexPath Moving item's original index path.
- * @param proposedDestinationIndexPath The item's proposed index path during move.
- *
- * @return The item's desired index path. Return proposedDestinationIndexPath if
- *         it is suitable (default); or nil if item should not be moved.
- */
-- (NSIndexPath *)targetIndexPathForMoveFromItemAtIndexPath:(NSIndexPath *)sourceIndexPath toProposedIndexPath:(NSIndexPath *)proposedDestinationIndexPath;
-
-/** Move item in data source while dragging.
- *
- * Overload this method to update the collection
- * view's data source.
- *
- * @param fromIndexPath Original item indexPath
- * @param toIndexPath New item indexPath
- */
-- (void)moveItemAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath;
++ (nonnull Class)exposedLayoutClass;
 
 @end

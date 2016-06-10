@@ -24,44 +24,25 @@
 //  THE SOFTWARE.
 
 #import "TGLStackedViewController.h"
-#import "TGLStackedLayout.h"
-#import "TGLExposedLayout.h"
 
-#define SCROLL_PER_FRAME 5.0
-#define SCROLL_ZONE_TOP 100.0
-#define SCROLL_ZONE_BOTTOM 100.0
+@interface TGLStackedViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UIGestureRecognizerDelegate>
 
-typedef NS_ENUM(NSInteger, TGLStackedViewControllerScrollDirection) {
+@property (nonatomic, strong) TGLStackedLayout *stackedLayout;
+@property (nonatomic, strong) TGLExposedLayout *exposedLayout;
 
-    TGLStackedViewControllerScrollDirectionNone = 0,
-    TGLStackedViewControllerScrollDirectionDown,
-    TGLStackedViewControllerScrollDirectionUp
-};
+@property (nonatomic, assign) CGPoint stackedContentOffset;
 
-@interface TGLStackedViewController ()
+@property (nonatomic, strong) UILongPressGestureRecognizer *moveGestureRecognizer;
+@property (nonatomic, strong) NSIndexPath *movingIndexPath;
 
-@property (assign, nonatomic) CGPoint stackedContentOffset;
-
-@property (strong, nonatomic) UIView *movingView;
-@property (strong, nonatomic) NSIndexPath *movingIndexPath;
-@property (strong, nonatomic) UILongPressGestureRecognizer *moveGestureRecognizer;
-
-@property (assign, nonatomic) TGLStackedViewControllerScrollDirection scrollDirection;
-@property (strong, nonatomic) CADisplayLink *scrollDisplayLink;
 
 @end
 
 @implementation TGLStackedViewController
 
-@synthesize stackedLayout = _stackedLayout;
++ (Class)exposedLayoutClass {
 
-- (instancetype)init {
-
-    self = [super init];
-    
-    if (self) [self initController];
-    
-    return self;
+    return TGLExposedLayout.class;
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
@@ -75,6 +56,8 @@ typedef NS_ENUM(NSInteger, TGLStackedViewControllerScrollDirection) {
 
 - (instancetype)initWithCollectionViewLayout:(UICollectionViewLayout *)layout {
     
+    NSAssert([layout isKindOfClass:TGLStackedLayout.class], @"TGLStackedViewController collection view layout is not a TGLStackedLayout");
+
     self = [super initWithCollectionViewLayout:layout];
 
     if (self) [self initController];
@@ -93,8 +76,8 @@ typedef NS_ENUM(NSInteger, TGLStackedViewControllerScrollDirection) {
 
 - (void)initController {
     
-    _stackedLayout = [[TGLStackedLayout alloc] init];
-    
+    self.installsStandardGestureForInteractiveMovement = NO;
+
     _exposedLayoutMargin = UIEdgeInsetsMake(40.0, 0.0, 0.0, 0.0);
     _exposedItemSize = CGSizeZero;
     _exposedTopOverlap = 20.0;
@@ -111,170 +94,26 @@ typedef NS_ENUM(NSInteger, TGLStackedViewControllerScrollDirection) {
 #pragma mark - View life cycle
 
 - (void)viewDidLoad {
-    
-    [super viewDidLoad];
 
-    self.collectionView.collectionViewLayout = self.stackedLayout;
+    [super viewDidLoad];
     
+    NSAssert([self.collectionViewLayout isKindOfClass:TGLStackedLayout.class], @"TGLStackedViewController collection view layout is not a TGLStackedLayout");
+    
+    self.stackedLayout = (TGLStackedLayout *)self.collectionViewLayout;
+
     self.moveGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
     self.moveGestureRecognizer.delegate = self;
 
     [self.collectionView addGestureRecognizer:self.moveGestureRecognizer];
-}
-
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
     
-    [self.collectionView.collectionViewLayout invalidateLayout];
-}
-
-#pragma mark - Accessors
-
-- (void)setExposedItemIndexPath:(NSIndexPath *)exposedItemIndexPath {
-
-    if (![exposedItemIndexPath isEqual:_exposedItemIndexPath]) {
-
-        if (exposedItemIndexPath) {
-
-            // Select newly exposed item, possibly
-            // deslecting the previous selection,
-            // and animate to exposed layout
-            //
-            [self.collectionView selectItemAtIndexPath:exposedItemIndexPath animated:YES scrollPosition:UICollectionViewScrollPositionNone];
-            
-            if (self.collectionView.collectionViewLayout == self.stackedLayout) {
-                
-                // Remember current scroll position when transitioning
-                // from stacked to exposed layout, but not when from
-                // exposed to exposed layout
-                //
-                self.stackedContentOffset = self.collectionView.contentOffset;
-            }
-            
-            TGLExposedLayout *exposedLayout = [[TGLExposedLayout alloc] initWithExposedItemIndex:exposedItemIndexPath.item];
-            
-            exposedLayout.layoutMargin = self.exposedLayoutMargin;
-            exposedLayout.itemSize = self.exposedItemSize;
-            exposedLayout.topOverlap = self.exposedTopOverlap;
-            exposedLayout.bottomOverlap = self.exposedBottomOverlap;
-            exposedLayout.bottomOverlapCount = self.exposedBottomOverlapCount;
-
-            exposedLayout.pinningMode = self.exposedPinningMode;
-            exposedLayout.topPinningCount = self.exposedTopPinningCount;
-            exposedLayout.bottomPinningCount = self.exposedBottomPinningCount;
-
-            [self.collectionView setCollectionViewLayout:exposedLayout animated:YES];
-            
-        } else {
-            
-            // Deselect the currently exposed item
-            // and animate back to stacked layout
-            //
-            [self.collectionView deselectItemAtIndexPath:self.exposedItemIndexPath animated:YES];
-            
-            self.stackedLayout.overwriteContentOffset = YES;
-            self.stackedLayout.contentOffset = self.stackedContentOffset;
-
-            [self.collectionView setCollectionViewLayout:self.stackedLayout animated:YES];
-
-            self.stackedLayout.overwriteContentOffset = NO;
-        }
-        
-        _exposedItemIndexPath = exposedItemIndexPath;
-    }
-}
-
-#pragma mark - CollectionViewDataSource protocol
-
-- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
-    
-    // Currently, only one single section is
-    // supported, therefore MUST NOT be != 1
-    //
-    return 1;
-}
-
-#pragma mark - CollectionViewDelegate protocol
-
-- (BOOL)collectionView:(UICollectionView *)collectionView shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
-    
-    // When selecting unexposed items is not allowed,
-    // prevent them from being highlighted and thus
-    // selected by the collection view
-    //
-    return self.unexposedItemsAreSelectable || self.exposedItemIndexPath == nil || [indexPath isEqual:self.exposedItemIndexPath];
-}
-
-- (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
-    
-    if (!self.unexposedItemsAreSelectable && self.exposedItemIndexPath) {
-        
-        // When selecting unexposed items is not allowed
-        // make sure the currently exposed item remains
-        // selected
-        //
-        [collectionView selectItemAtIndexPath:self.exposedItemIndexPath animated:NO scrollPosition:UICollectionViewScrollPositionNone];
-    }
-}
-
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-
-    if ([indexPath isEqual:self.exposedItemIndexPath]) {
-
-        // Collapse currently exposed item
-        //
-        self.exposedItemIndexPath = nil;
-        
-    } else if (self.unexposedItemsAreSelectable || self.exposedItemIndexPath == nil) {
-            
-        // Expose new item, possibly collapsing
-        // the currently exposed item
-        //
-        self.exposedItemIndexPath = indexPath;
-    }
-}
-
-#pragma mark - GestureRecognizerDelegate protocol
-
-- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
-
-    // Long presses, i.e. moving items,
-    // only allowed when stacked
-    //
-    return (self.collectionView.collectionViewLayout == self.stackedLayout);
-}
-
-#pragma mark - Methods
-
-- (BOOL)canMoveItemAtIndexPath:(NSIndexPath *)indexPath {
-    
-    // Overload this method to prevent items
-    // from being dragged to another location
-    //
-    return YES;
-}
-
-- (NSIndexPath *)targetIndexPathForMoveFromItemAtIndexPath:(NSIndexPath *)sourceIndexPath toProposedIndexPath:(NSIndexPath *)proposedDestinationIndexPath {
-    
-    // Overload this method to modify an item's
-    // target location while being dragged to
-    // another proposed location
-    //
-    return proposedDestinationIndexPath;
-}
-
-- (void)moveItemAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-    
-    // Overload method to update collection
-    // view data source when item has been
-    // dragged to another location
 }
 
 #pragma mark - Actions
 
 - (IBAction)handleLongPress:(UILongPressGestureRecognizer *)recognizer {
     
-    static CGPoint startCenter;
     static CGPoint startLocation;
+    static CGPoint targetPosition;
     
     switch (recognizer.state) {
             
@@ -284,43 +123,13 @@ typedef NS_ENUM(NSInteger, TGLStackedViewControllerScrollDirection) {
 
             NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:startLocation];
 
-            if (indexPath && [self canMoveItemAtIndexPath:indexPath]) {
+            if (indexPath && [self.collectionView beginInteractiveMovementForItemAtIndexPath:indexPath]) {
                 
                 UICollectionViewCell *movingCell = [self.collectionView cellForItemAtIndexPath:indexPath];
                 
-                self.movingView = [[UIView alloc] initWithFrame:movingCell.frame];
-                
-                startCenter = self.movingView.center;
-                
-                UIImageView *movingImageView = [[UIImageView alloc] initWithImage:[self screenshotImageOfItem:movingCell]];
-                
-                movingImageView.alpha = 0.0f;
-                
-                [self.movingView addSubview:movingImageView];
-                [self.collectionView addSubview:self.movingView];
+                targetPosition = movingCell.center;
                 
                 self.movingIndexPath = indexPath;
-                
-                __weak typeof(self) weakSelf = self;
-                
-                [UIView animateWithDuration:0.3
-                                      delay:0.0
-                                    options:UIViewAnimationOptionBeginFromCurrentState
-                                 animations:^ (void) {
-                                     
-                                     __strong typeof(self) strongSelf = weakSelf;
-                                     
-                                     if (strongSelf) {
-                                         
-                                         strongSelf.movingView.transform = CGAffineTransformMakeScale(self.movingItemScaleFactor, self.movingItemScaleFactor);
-                                         movingImageView.alpha = 1.0f;
-                                     }
-                                 }
-                                 completion:^ (BOOL finished) {
-                                 }];
-                
-                self.stackedLayout.movingIndexPath = self.movingIndexPath;
-                [self.stackedLayout invalidateLayout];
             }
 
             break;
@@ -331,73 +140,37 @@ typedef NS_ENUM(NSInteger, TGLStackedViewControllerScrollDirection) {
             if (self.movingIndexPath) {
 
                 CGPoint currentLocation = [recognizer locationInView:self.collectionView];
-                CGPoint currentCenter = startCenter;
+                CGPoint newTargetPosition = targetPosition;
                 
-                currentCenter.y += (currentLocation.y - startLocation.y);
-                
-                self.movingView.center = currentCenter;
+                newTargetPosition.y += (currentLocation.y - startLocation.y);
 
-                if (currentLocation.y < CGRectGetMinY(self.collectionView.bounds) + SCROLL_ZONE_TOP && self.collectionView.contentOffset.y > SCROLL_ZONE_TOP) {
-                    
-                    [self startScrollingUp];
-
-                } else if (currentLocation.y > CGRectGetMaxY(self.collectionView.bounds) - SCROLL_ZONE_BOTTOM && self.collectionView.contentOffset.y < self.collectionView.contentSize.height - CGRectGetHeight(self.collectionView.bounds) - SCROLL_ZONE_BOTTOM) {
-                    
-                    [self startScrollingDown];
-                    
-                } else if (self.scrollDirection != TGLStackedViewControllerScrollDirectionNone) {
-                    
-                    [self stopScrolling];
-                }
-                
-                if (self.scrollDirection == TGLStackedViewControllerScrollDirectionNone) {
-                    
-                    [self updateLayoutAtMovingLocation:currentLocation];
-                }
+                [self.collectionView updateInteractiveMovementTargetPosition:newTargetPosition];
             }
 
             break;
         }
 
-        case UIGestureRecognizerStateEnded:
-        case UIGestureRecognizerStateCancelled: {
+        case UIGestureRecognizerStateEnded: {
 
             if (self.movingIndexPath) {
                 
-                [self stopScrolling];
-                
-                UICollectionViewLayoutAttributes *layoutAttributes = [self.stackedLayout layoutAttributesForItemAtIndexPath:self.movingIndexPath];
+                [self.collectionView endInteractiveMovement];
+                [self.stackedLayout invalidateLayout];
                 
                 self.movingIndexPath = nil;
+            }
+            
+            break;
+        }
+            
+        case UIGestureRecognizerStateCancelled: {
+            
+            if (self.movingIndexPath) {
                 
-                __weak typeof(self) weakSelf = self;
+                [self.collectionView cancelInteractiveMovement];
+                [self.stackedLayout invalidateLayout];
                 
-                [UIView animateWithDuration:0.3
-                                      delay:0.0
-                                    options:UIViewAnimationOptionBeginFromCurrentState
-                                 animations:^ (void) {
-                                     
-                                     __strong typeof(self) strongSelf = weakSelf;
-                                     
-                                     if (strongSelf) {
-                                         
-                                         strongSelf.movingView.transform = CGAffineTransformMakeScale(1.0f, 1.0f);
-                                         strongSelf.movingView.frame = layoutAttributes.frame;
-                                     }
-                                 }
-                                 completion:^ (BOOL finished) {
-                                     
-                                     __strong typeof(self) strongSelf = weakSelf;
-                                     
-                                     if (strongSelf) {
-                                         
-                                         [strongSelf.movingView removeFromSuperview];
-                                         strongSelf.movingView = nil;
-                                         
-                                         self.stackedLayout.movingIndexPath = nil;
-                                         [strongSelf.stackedLayout invalidateLayout];
-                                     }
-                                 }];
+                self.movingIndexPath = nil;
             }
             
             break;
@@ -409,133 +182,146 @@ typedef NS_ENUM(NSInteger, TGLStackedViewControllerScrollDirection) {
     }
 }
 
-#pragma mark - Scrolling
-
-- (void)startScrollingUp {
     
-    [self startScrollingInDirection:TGLStackedViewControllerScrollDirectionUp];
-}
-
-- (void)startScrollingDown {
     
-    [self startScrollingInDirection:TGLStackedViewControllerScrollDirectionDown];
-}
 
-- (void)startScrollingInDirection:(TGLStackedViewControllerScrollDirection)direction {
 
-    if (direction != TGLStackedViewControllerScrollDirectionNone && direction != self.scrollDirection) {
 
-        [self stopScrolling];
 
-        self.scrollDirection = direction;
-        self.scrollDisplayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(handleScrolling:)];
 
-        [self.scrollDisplayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
     }
 }
 
-- (void)stopScrolling {
+#pragma mark - UICollectionViewDelegate protocol
+
+- (BOOL)collectionView:(UICollectionView *)collectionView shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     
-    if (self.scrollDirection != TGLStackedViewControllerScrollDirectionNone) {
+    // When selecting unexposed items is not allowed,
+    // prevent them from being highlighted and thus
+    // selected by the collection view
+    //
+    return (self.exposedLayout == nil || self.unexposedItemsAreSelectable || indexPath.item == self.exposedItemIndexPath.item);
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
+    
+    // When selecting unexposed items is not allowed
+    // make sure the currently exposed item remains
+    // selected
+    //
+    if (indexPath.item == self.exposedItemIndexPath.item) {
         
-        self.scrollDirection = TGLStackedViewControllerScrollDirectionNone;
-        
-        [self.scrollDisplayLink invalidate];
-        self.scrollDisplayLink = nil;
+        [collectionView selectItemAtIndexPath:indexPath animated:NO scrollPosition:UICollectionViewScrollPositionNone];
     }
 }
 
-- (void)handleScrolling:(CADisplayLink *)displayLink {
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     
-    switch (self.scrollDirection) {
+    if (self.exposedLayout == nil) {
+        
+        TGLExposedLayout *exposedLayout = [[[self.class exposedLayoutClass] alloc] initWithExposedItemIndex:indexPath.item];
+        
+        exposedLayout.layoutMargin = self.exposedLayoutMargin;
+        exposedLayout.itemSize = self.exposedItemSize;
+        exposedLayout.topOverlap = self.exposedTopOverlap;
+        exposedLayout.bottomOverlap = self.exposedBottomOverlap;
+        exposedLayout.bottomOverlapCount = self.exposedBottomOverlapCount;
+        
+        exposedLayout.pinningMode = self.exposedPinningMode;
+        exposedLayout.topPinningCount = self.exposedTopPinningCount;
+        exposedLayout.bottomPinningCount = self.exposedBottomPinningCount;
+
+        self.stackedLayout.contentOffset = self.collectionView.contentOffset;
+
+        __weak typeof(self) weakSelf = self;
+
+        [self.collectionView setCollectionViewLayout:exposedLayout animated:YES completion:^ (BOOL finished) {
             
-        case TGLStackedViewControllerScrollDirectionUp: {
-
-            CGPoint offset = self.collectionView.contentOffset;
-
-            offset.y -= SCROLL_PER_FRAME;
+            weakSelf.stackedLayout.overwriteContentOffset = YES;
+            weakSelf.exposedItemIndexPath = indexPath;
+            weakSelf.exposedLayout = exposedLayout;
             
-            if (offset.y > 0.0) {
+            UICollectionViewCell *exposedCell = [weakSelf.collectionView cellForItemAtIndexPath:weakSelf.exposedItemIndexPath];
+            
+            [exposedCell addGestureRecognizer:weakSelf.unexposeGestureRecognizer];
+        }];
+        
+    } else if (self.exposedItemIndexPath) {
+        
+        if (indexPath.item == self.exposedItemIndexPath.item || !self.unexposedItemsAreSelectable) {
+            
+            [self.collectionView deselectItemAtIndexPath:indexPath animated:YES];
+            
+            UICollectionViewCell *exposedCell = [self.collectionView cellForItemAtIndexPath:self.exposedItemIndexPath];
+            
+            [exposedCell removeGestureRecognizer:self.unexposeGestureRecognizer];
+            
+            self.exposedItemIndexPath = nil;
+            self.exposedLayout = nil;
+
+            __weak typeof(self) weakSelf = self;
+
+            [self.collectionView setCollectionViewLayout:self.stackedLayout animated:YES completion:^ (BOOL finished) {
                 
-                self.collectionView.contentOffset = offset;
+                weakSelf.stackedLayout.overwriteContentOffset = NO;
+            }];
+            
+        } else {
+            
+            if (self.exposedItemIndexPath) {
+
+                UICollectionViewCell *exposedCell = [self.collectionView cellForItemAtIndexPath:self.exposedItemIndexPath];
                 
-                CGPoint center = self.movingView.center;
-
-                center.y -= SCROLL_PER_FRAME;
-                self.movingView.center = center;
-
-            } else {
-
-                [self stopScrolling];
-
-                CGPoint currentLocation = [self.moveGestureRecognizer locationInView:self.collectionView];
-                
-                [self updateLayoutAtMovingLocation:currentLocation];
+                [exposedCell removeGestureRecognizer:self.unexposeGestureRecognizer];
             }
 
-            break;
+            TGLExposedLayout *exposedLayout = [[TGLExposedLayout alloc] initWithExposedItemIndex:indexPath.item];
+            
+            exposedLayout.layoutMargin = self.exposedLayout.layoutMargin;
+            exposedLayout.itemSize = self.exposedLayout.itemSize;
+            exposedLayout.topOverlap = self.exposedLayout.topOverlap;
+            exposedLayout.bottomOverlap = self.exposedLayout.bottomOverlap;
+            exposedLayout.bottomOverlapCount = self.exposedLayout.bottomOverlapCount;
+            
+            exposedLayout.pinningMode = self.exposedLayout.pinningMode;
+            exposedLayout.topPinningCount = self.exposedLayout.topPinningCount;
+            exposedLayout.bottomPinningCount = self.exposedLayout.bottomPinningCount;
+            
+            __weak typeof(self) weakSelf = self;
+            
+            [self.collectionView setCollectionViewLayout:exposedLayout animated:YES completion:^ (BOOL finished) {
+
+                weakSelf.exposedItemIndexPath = indexPath;
+                weakSelf.exposedLayout = exposedLayout;
+                
+                UICollectionViewCell *exposedCell = [weakSelf.collectionView cellForItemAtIndexPath:weakSelf.exposedItemIndexPath];
+                
+                [exposedCell addGestureRecognizer:weakSelf.unexposeGestureRecognizer];
+            }];
         }
-            
-        case TGLStackedViewControllerScrollDirectionDown: {
-            
-            CGPoint offset = self.collectionView.contentOffset;
-            
-            offset.y += SCROLL_PER_FRAME;
-            
-            if (offset.y < self.collectionView.contentSize.height - CGRectGetHeight(self.collectionView.bounds)) {
-
-                self.collectionView.contentOffset = offset;
-
-                CGPoint center = self.movingView.center;
-
-                center.y += SCROLL_PER_FRAME;
-                self.movingView.center = center;
-
-            } else {
-                
-                [self stopScrolling];
-                
-                CGPoint currentLocation = [self.moveGestureRecognizer locationInView:self.collectionView];
-                
-                [self updateLayoutAtMovingLocation:currentLocation];
-            }
-            
-            break;
-        }
-            
-        default:
-            break;
     }
 }
 
-#pragma mark - Helpers
-
-- (UIImage *)screenshotImageOfItem:(UICollectionViewCell *)item {
+- (CGPoint)collectionView:(UICollectionView *)collectionView targetContentOffsetForProposedContentOffset:(CGPoint)proposedContentOffset {
     
-    UIGraphicsBeginImageContextWithOptions(item.bounds.size, item.isOpaque, 0.0f);
-    
-    [item.layer renderInContext:UIGraphicsGetCurrentContext()];
-    
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    
-    UIGraphicsEndImageContext();
-
-    return image;
+    // Force original contentOffset when unexposing
+    //
+    return self.exposedLayout == nil ? proposedContentOffset : self.stackedContentOffset;
 }
 
-- (void)updateLayoutAtMovingLocation:(CGPoint)movingLocation {
+#pragma mark - UICollectionViewDataSource protocol
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
     
-    [self.stackedLayout invalidateLayoutIfNecessaryWithMovingLocation:movingLocation
-                                                          targetBlock:^ (NSIndexPath *sourceIndexPath, NSIndexPath *proposedDestinationIndexPath) {
-        
-                                                              return [self targetIndexPathForMoveFromItemAtIndexPath:sourceIndexPath toProposedIndexPath:proposedDestinationIndexPath];
-                                                          }
-                                                          updateBlock:^ (NSIndexPath *fromIndexPath, NSIndexPath *toIndexPath){
-                                                              
-                                                              [self moveItemAtIndexPath:fromIndexPath toIndexPath:toIndexPath];
-                                                              
-                                                              self.movingIndexPath = toIndexPath;
-                                                          }];
+    // Currently, only one single section is
+    // supported, therefore MUST NOT be != 1
+    //
+    return 1;
+}
+
+- (BOOL)collectionView:(UICollectionView *)collectionView canMoveItemAtIndexPath:(NSIndexPath *)indexPath {
+
+    return (self.exposedLayout == nil && [self collectionView:self.collectionView numberOfItemsInSection:0] > 1);
 }
 
 @end
