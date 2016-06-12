@@ -12,6 +12,7 @@
 		3DBF89B3190019980041CB92 /* TGLStackedLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DBF89AF190019980041CB92 /* TGLStackedLayout.m */; };
 		3DBF89B4190019980041CB92 /* TGLStackedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DBF89B1190019980041CB92 /* TGLStackedViewController.m */; };
 		3DCA5E9A1A121D7D0079EDC9 /* Launch Screen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3DCA5E991A121D7D0079EDC9 /* Launch Screen.xib */; };
+		3DE7BA111D0DEE7E0035A3FD /* TGLSettingOptionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DE7BA101D0DEE7E0035A3FD /* TGLSettingOptionsViewController.m */; };
 		3DF68EFE18F31B0C00387458 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DF68EFD18F31B0C00387458 /* Foundation.framework */; };
 		3DF68F0018F31B0C00387458 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DF68EFF18F31B0C00387458 /* CoreGraphics.framework */; };
 		3DF68F0218F31B0C00387458 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DF68F0118F31B0C00387458 /* UIKit.framework */; };
@@ -34,6 +35,8 @@
 		3DBF89B0190019980041CB92 /* TGLStackedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGLStackedViewController.h; sourceTree = "<group>"; };
 		3DBF89B1190019980041CB92 /* TGLStackedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGLStackedViewController.m; sourceTree = "<group>"; };
 		3DCA5E991A121D7D0079EDC9 /* Launch Screen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "Launch Screen.xib"; sourceTree = "<group>"; };
+		3DE7BA101D0DEE7E0035A3FD /* TGLSettingOptionsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGLSettingOptionsViewController.m; sourceTree = "<group>"; };
+		3DE7BA121D0DEE870035A3FD /* TGLSettingOptionsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGLSettingOptionsViewController.h; sourceTree = "<group>"; };
 		3DF68EFA18F31B0C00387458 /* TGLStackedViewExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TGLStackedViewExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3DF68EFD18F31B0C00387458 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		3DF68EFF18F31B0C00387458 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -117,6 +120,8 @@
 				3DF68F3318F31C1300387458 /* TGLCollectionViewCell.m */,
 				3D4FB8321D0AE5EA001F5270 /* TGLSettingsViewController.h */,
 				3D4FB8331D0AE5EA001F5270 /* TGLSettingsViewController.m */,
+				3DE7BA121D0DEE870035A3FD /* TGLSettingOptionsViewController.h */,
+				3DE7BA101D0DEE7E0035A3FD /* TGLSettingOptionsViewController.m */,
 				3DF68F1218F31B0C00387458 /* TGLViewController.h */,
 				3DF68F1318F31B0C00387458 /* TGLViewController.m */,
 				3DF68F1518F31B0C00387458 /* Images.xcassets */,
@@ -205,6 +210,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3DBF89B4190019980041CB92 /* TGLStackedViewController.m in Sources */,
+				3DE7BA111D0DEE7E0035A3FD /* TGLSettingOptionsViewController.m in Sources */,
 				3DF68F0A18F31B0C00387458 /* main.m in Sources */,
 				3DBF89B2190019980041CB92 /* TGLExposedLayout.m in Sources */,
 				3DF68F3418F31C1300387458 /* TGLCollectionViewCell.m in Sources */,

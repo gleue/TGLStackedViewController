@@ -7,6 +7,7 @@
 //
 
 #import "TGLSettingsViewController.h"
+#import "TGLSettingOptionsViewController.h"
 #import "TGLViewController.h"
 
 #pragma mark - TGLSettingsTableViewCell interfaces
@@ -40,14 +41,41 @@
 
 @end
 
+@interface TGLOptionsTableViewCell : TGLSettingsTableViewCell
+
+@end
+
 #pragma mark - TGLSettingsViewController
 
-@interface TGLSettingsViewController ()
+@interface TGLSettingsViewController () <TGLSettingOptionsViewControllerDelegate>
 
 @property (nonatomic, strong) NSArray<NSDictionary*> *sections;
 @property (nonatomic, strong) NSMutableDictionary *values;
 
 @end
+
+static NSString * const TGLSettingsSectionHeaderTitleKey = @"headerTitle";
+static NSString * const TGLSettingsSectionRowArrayKey = @"sectionRows";
+
+static NSString * const TGLSettingsRowTypeKey = @"rowType";
+static NSString * const TGLSettingsRowTypeSwitch = @"switch";
+static NSString * const TGLSettingsRowTypeStepper = @"stepper";
+static NSString * const TGLSettingsRowTypeOptions = @"options";
+static NSString * const TGLSettingsRowDefaultValueKey = @"defaultValue";
+static NSString * const TGLSettingsRowKeyPathKey = @"keyPath";
+
+static NSString * const TGLSettingsSwitchRowTitleKey = @"title";
+
+static NSString * const TGLSettingsStepperRowTitleFormatKey = @"titleFormat";
+static NSString * const TGLSettingsStepperRowNumberStyleKey = @"numberStyle";
+static NSString * const TGLSettingsStepperRowMinValueKey = @"minValue";
+static NSString * const TGLSettingsStepperRowMaxValueKey = @"maxValue";
+static NSString * const TGLSettingsStepperRowValueFactorKey = @"valueFactor";
+
+static NSString * const TGLSettingsOptionsRowTitleKey = @"title";
+static NSString * const TGLSettingsOptionsRowValuesArrayKey = @"optionValues";
+static NSString * const TGLSettingsOptionsRowOptionNameKey = @"name";
+static NSString * const TGLSettingsOptionsRowOptionValueKey = @"value";
 
 @implementation TGLSettingsViewController
 
@@ -57,35 +85,38 @@
 
     [super viewDidLoad];
     
-    NSArray *navigationRows = @[ @{ @"type": @"switch", @"title": @"Hides Navigation Bar", @"defaultValue": @(YES), @"keyPath": @"%N.navigationBarHidden" },
-                                 @{ @"type": @"switch", @"title": @"Hides Toolbar", @"defaultValue": @(YES), @"keyPath": @"%N.toolbarHidden" } ];
+    NSArray *navigationRows = @[ @{ TGLSettingsRowTypeKey: TGLSettingsRowTypeSwitch, TGLSettingsSwitchRowTitleKey: @"Hides Navigation Bar", TGLSettingsRowDefaultValueKey: @(YES), TGLSettingsRowKeyPathKey: @"%N.navigationBarHidden" },
+                                 @{ TGLSettingsRowTypeKey: TGLSettingsRowTypeSwitch, TGLSettingsSwitchRowTitleKey: @"Hides Toolbar", TGLSettingsRowDefaultValueKey: @(YES), TGLSettingsRowKeyPathKey: @"%N.toolbarHidden" } ];
     
-    NSDictionary *navigationSection = @{ @"headerTitle": @"Navigation Controller", @"rows": navigationRows };
+    NSDictionary *navigationSection = @{ TGLSettingsSectionHeaderTitleKey: @"Navigation Controller", TGLSettingsSectionRowArrayKey: navigationRows };
     
-    NSArray *controllerRows = @[ @{ @"type": @"switch",  @"title": @"Adjust Scroll View Insets", @"defaultValue": @(NO), @"keyPath": @"%S.automaticallyAdjustsScrollViewInsets" },
-                                 @{ @"type": @"stepper", @"titleFormat": @"%@ Cards", @"numberStyle": @(kCFNumberFormatterDecimalStyle), @"defaultValue": @(20), @"minValue": @(0), @"maxValue": @(100), @"keyPath": @"%S.cardCount" },
-                                 @{ @"type": @"stepper", @"titleFormat": @"%@ Card Width", @"numberStyle": @(kCFNumberFormatterDecimalStyle), @"defaultValue": @(0), @"minValue": @(0), @"maxValue": @(500), @"keyPath": @"%S.cardSize.width" },
-                                 @{ @"type": @"stepper", @"titleFormat": @"%@ Card Height", @"numberStyle": @(kCFNumberFormatterDecimalStyle), @"defaultValue": @(320), @"minValue": @(0), @"maxValue": @(1000), @"keyPath": @"%S.cardSize.height" } ];
+    NSArray *controllerRows = @[ @{ TGLSettingsRowTypeKey: TGLSettingsRowTypeSwitch,  TGLSettingsSwitchRowTitleKey: @"Adjust Scroll View Insets", TGLSettingsRowDefaultValueKey: @(NO), TGLSettingsRowKeyPathKey: @"%S.automaticallyAdjustsScrollViewInsets" },
+                                 @{ TGLSettingsRowTypeKey: TGLSettingsRowTypeStepper, TGLSettingsStepperRowTitleFormatKey: @"%@ Cards", TGLSettingsStepperRowNumberStyleKey: @(NSNumberFormatterDecimalStyle), TGLSettingsRowDefaultValueKey: @(20), TGLSettingsStepperRowMinValueKey: @(0), TGLSettingsStepperRowMaxValueKey: @(100), TGLSettingsRowKeyPathKey: @"%S.cardCount" },
+                                 @{ TGLSettingsRowTypeKey: TGLSettingsRowTypeStepper, TGLSettingsStepperRowTitleFormatKey: @"%@ Card Width", TGLSettingsStepperRowNumberStyleKey: @(NSNumberFormatterDecimalStyle), TGLSettingsRowDefaultValueKey: @(0), TGLSettingsStepperRowMinValueKey: @(0), TGLSettingsStepperRowMaxValueKey: @(500), TGLSettingsRowKeyPathKey: @"%S.cardSize.width" },
+                                 @{ TGLSettingsRowTypeKey: TGLSettingsRowTypeStepper, TGLSettingsStepperRowTitleFormatKey: @"%@ Card Height", TGLSettingsStepperRowNumberStyleKey: @(NSNumberFormatterDecimalStyle), TGLSettingsRowDefaultValueKey: @(320), TGLSettingsStepperRowMinValueKey: @(0), TGLSettingsStepperRowMaxValueKey: @(1000), TGLSettingsRowKeyPathKey: @"%S.cardSize.height" } ];
     
-    NSDictionary *controllerSection = @{ @"headerTitle": @"Stacked View Controller", @"rows": controllerRows };
+    NSDictionary *controllerSection = @{ TGLSettingsSectionHeaderTitleKey: @"Stacked View Controller", TGLSettingsSectionRowArrayKey: controllerRows };
     
-    NSArray *stackedRows = @[ @{ @"type": @"stepper", @"titleFormat": @"%@ Top Reveal", @"numberStyle": @(NSNumberFormatterDecimalStyle), @"defaultValue": @(120), @"minValue": @(1), @"maxValue": @(500), @"keyPath": @"%S.stackedTopReveal" },
-                              @{ @"type": @"switch",  @"title": @"Fill Height", @"defaultValue": @(YES), @"keyPath": @"%S.stackedFillHeight" },
-                              @{ @"type": @"switch",  @"title": @"Always Bounce", @"defaultValue": @(YES), @"keyPath": @"%S.stackedAlwaysBounce" },
-                              @{ @"type": @"stepper", @"titleFormat": @"%@ Bounce Factor", @"numberStyle": @(NSNumberFormatterPercentStyle), @"defaultValue": @(20), @"minValue": @(0), @"maxValue": @(200), @"valueFactor": @(0.01), @"keyPath": @"%S.stackedBounceFactor" },
-                              @{ @"type": @"stepper", @"titleFormat": @"%@ Moving Scale", @"numberStyle": @(NSNumberFormatterPercentStyle), @"defaultValue": @(95), @"minValue": @(0), @"maxValue": @(200), @"valueFactor": @(0.01), @"keyPath": @"%S.movingItemScaleFactor" } ];
+    NSArray *stackedRows = @[ @{ TGLSettingsRowTypeKey: TGLSettingsRowTypeStepper, TGLSettingsStepperRowTitleFormatKey: @"%@ Top Reveal", TGLSettingsStepperRowNumberStyleKey: @(NSNumberFormatterDecimalStyle), TGLSettingsRowDefaultValueKey: @(120), TGLSettingsStepperRowMinValueKey: @(1), TGLSettingsStepperRowMaxValueKey: @(500), TGLSettingsRowKeyPathKey: @"%S.stackedTopReveal" },
+                              @{ TGLSettingsRowTypeKey: TGLSettingsRowTypeSwitch,  TGLSettingsSwitchRowTitleKey: @"Fill Height", TGLSettingsRowDefaultValueKey: @(YES), TGLSettingsRowKeyPathKey: @"%S.stackedFillHeight" },
+                              @{ TGLSettingsRowTypeKey: TGLSettingsRowTypeSwitch,  TGLSettingsSwitchRowTitleKey: @"Always Bounce", TGLSettingsRowDefaultValueKey: @(YES), TGLSettingsRowKeyPathKey: @"%S.stackedAlwaysBounce" },
+                              @{ TGLSettingsRowTypeKey: TGLSettingsRowTypeStepper, TGLSettingsStepperRowTitleFormatKey: @"%@ Bounce Factor", TGLSettingsStepperRowNumberStyleKey: @(NSNumberFormatterPercentStyle), TGLSettingsRowDefaultValueKey: @(20), TGLSettingsStepperRowMinValueKey: @(0), TGLSettingsStepperRowMaxValueKey: @(200), TGLSettingsStepperRowValueFactorKey: @(0.01), TGLSettingsRowKeyPathKey: @"%S.stackedBounceFactor" },
+                              @{ TGLSettingsRowTypeKey: TGLSettingsRowTypeStepper, TGLSettingsStepperRowTitleFormatKey: @"%@ Moving Scale", TGLSettingsStepperRowNumberStyleKey: @(NSNumberFormatterPercentStyle), TGLSettingsRowDefaultValueKey: @(95), TGLSettingsStepperRowMinValueKey: @(0), TGLSettingsStepperRowMaxValueKey: @(200), TGLSettingsStepperRowValueFactorKey: @(0.01), TGLSettingsRowKeyPathKey: @"%S.movingItemScaleFactor" } ];
     
-    NSDictionary *stackedSection = @{ @"headerTitle": @"Stacked Layout", @"rows": stackedRows };
+    NSDictionary *stackedSection = @{ TGLSettingsSectionHeaderTitleKey: @"Stacked Layout", TGLSettingsSectionRowArrayKey: stackedRows };
 
-    NSArray *exposedRows = @[ @{ @"type": @"switch",  @"title": @"Collapsible Exposed Item", @"defaultValue": @(YES), @"keyPath": @"%S.exposedItemsAreCollapsible" },
-                              @{ @"type": @"switch",  @"title": @"Selectable Unexposed Items", @"defaultValue": @(NO), @"keyPath": @"%S.unexposedItemsAreSelectable" },
-                              @{ @"type": @"stepper", @"titleFormat": @"%@ Top Pinning Count", @"numberStyle": @(NSNumberFormatterDecimalStyle), @"defaultValue": @(-1), @"minValue": @(-1), @"maxValue": @(10), @"keyPath": @"%S.exposedTopPinningCount" },
-                              @{ @"type": @"stepper", @"titleFormat": @"%@ Bottom Pinning Count", @"numberStyle": @(NSNumberFormatterDecimalStyle), @"defaultValue": @(-1), @"minValue": @(-1), @"maxValue": @(10), @"keyPath": @"%S.exposedBottomPinningCount" },
-                              @{ @"type": @"stepper", @"titleFormat": @"%@ Top Overlap", @"numberStyle": @(NSNumberFormatterDecimalStyle), @"defaultValue": @(20), @"minValue": @(0), @"maxValue": @(100), @"keyPath": @"%S.exposedTopOverlap" },
-                              @{ @"type": @"stepper", @"titleFormat": @"%@ Bottom Overlap", @"numberStyle": @(NSNumberFormatterDecimalStyle), @"defaultValue": @(20), @"minValue": @(0), @"maxValue": @(100), @"keyPath": @"%S.exposedBottomOverlap" },
-                              @{ @"type": @"stepper", @"titleFormat": @"%@ Bottom Overlap Count", @"numberStyle": @(NSNumberFormatterDecimalStyle), @"defaultValue": @(1), @"minValue": @(0), @"maxValue": @(10), @"keyPath": @"%S.exposedBottomOverlapCount" } ];
+    NSArray *exposedPinningOptions = @[ @{ TGLSettingsOptionsRowOptionNameKey: @"Pin All", TGLSettingsOptionsRowOptionValueKey: @(2) }, @{ TGLSettingsOptionsRowOptionNameKey: @"Pin Below", TGLSettingsOptionsRowOptionValueKey: @(1) }, @{ TGLSettingsOptionsRowOptionNameKey: @"Pin None", TGLSettingsOptionsRowOptionValueKey: @(0) } ];
     
-    NSDictionary *exposedSection = @{ @"headerTitle": @"Exposed Layout", @"rows": exposedRows };
+    NSArray *exposedRows = @[ @{ TGLSettingsRowTypeKey: TGLSettingsRowTypeSwitch,  TGLSettingsSwitchRowTitleKey: @"Collapsible Exposed Item", TGLSettingsRowDefaultValueKey: @(YES), TGLSettingsRowKeyPathKey: @"%S.exposedItemsAreCollapsible" },
+                              @{ TGLSettingsRowTypeKey: TGLSettingsRowTypeSwitch,  TGLSettingsSwitchRowTitleKey: @"Selectable Unexposed Items", TGLSettingsRowDefaultValueKey: @(NO), TGLSettingsRowKeyPathKey: @"%S.unexposedItemsAreSelectable" },
+                              @{ TGLSettingsRowTypeKey: TGLSettingsRowTypeOptions, TGLSettingsOptionsRowTitleKey: @"Pinning Mode", TGLSettingsRowDefaultValueKey: @(2), TGLSettingsRowKeyPathKey: @"%S.exposedPinningMode", TGLSettingsOptionsRowValuesArrayKey: exposedPinningOptions },
+                              @{ TGLSettingsRowTypeKey: TGLSettingsRowTypeStepper, TGLSettingsStepperRowTitleFormatKey: @"%@ Top Pinning Count", TGLSettingsStepperRowNumberStyleKey: @(NSNumberFormatterDecimalStyle), TGLSettingsRowDefaultValueKey: @(-1), TGLSettingsStepperRowMinValueKey: @(-1), TGLSettingsStepperRowMaxValueKey: @(10), TGLSettingsRowKeyPathKey: @"%S.exposedTopPinningCount" },
+                              @{ TGLSettingsRowTypeKey: TGLSettingsRowTypeStepper, TGLSettingsStepperRowTitleFormatKey: @"%@ Bottom Pinning Count", TGLSettingsStepperRowNumberStyleKey: @(NSNumberFormatterDecimalStyle), TGLSettingsRowDefaultValueKey: @(-1), TGLSettingsStepperRowMinValueKey: @(-1), TGLSettingsStepperRowMaxValueKey: @(10), TGLSettingsRowKeyPathKey: @"%S.exposedBottomPinningCount" },
+                              @{ TGLSettingsRowTypeKey: TGLSettingsRowTypeStepper, TGLSettingsStepperRowTitleFormatKey: @"%@ Top Overlap", TGLSettingsStepperRowNumberStyleKey: @(NSNumberFormatterDecimalStyle), TGLSettingsRowDefaultValueKey: @(20), TGLSettingsStepperRowMinValueKey: @(0), TGLSettingsStepperRowMaxValueKey: @(100), TGLSettingsRowKeyPathKey: @"%S.exposedTopOverlap" },
+                              @{ TGLSettingsRowTypeKey: TGLSettingsRowTypeStepper, TGLSettingsStepperRowTitleFormatKey: @"%@ Bottom Overlap", TGLSettingsStepperRowNumberStyleKey: @(NSNumberFormatterDecimalStyle), TGLSettingsRowDefaultValueKey: @(20), TGLSettingsStepperRowMinValueKey: @(0), TGLSettingsStepperRowMaxValueKey: @(100), TGLSettingsRowKeyPathKey: @"%S.exposedBottomOverlap" },
+                              @{ TGLSettingsRowTypeKey: TGLSettingsRowTypeStepper, TGLSettingsStepperRowTitleFormatKey: @"%@ Bottom Overlap Count", TGLSettingsStepperRowNumberStyleKey: @(NSNumberFormatterDecimalStyle), TGLSettingsRowDefaultValueKey: @(1), TGLSettingsStepperRowMinValueKey: @(0), TGLSettingsStepperRowMaxValueKey: @(10), TGLSettingsRowKeyPathKey: @"%S.exposedBottomOverlapCount" } ];
+    
+    NSDictionary *exposedSection = @{ TGLSettingsSectionHeaderTitleKey: @"Exposed Layout", TGLSettingsSectionRowArrayKey: exposedRows };
     
     self.sections = @[ navigationSection, controllerSection, stackedSection, exposedSection ];
     
@@ -109,6 +140,35 @@
             
             stackedController.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(closeStackedController:)];
         }
+        
+    } else if ([segue.identifier isEqualToString:@"ShowOptions"]) {
+        
+        NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
+        NSDictionary *rowDict = [self rowDictionaryForIndexPath:indexPath fromSections:self.sections];
+        NSArray<NSDictionary*> *optionValues = rowDict[TGLSettingsOptionsRowValuesArrayKey];
+        
+        NSMutableArray<NSString*> *names = [NSMutableArray array];
+        NSMutableArray<NSValue*> *values = [NSMutableArray array];
+        
+        for (NSDictionary *optionDict in optionValues) {
+
+            NSString *optionName = optionDict[TGLSettingsOptionsRowOptionNameKey];
+            
+            [names addObject:optionName];
+            
+            NSValue *optionValue = optionDict[TGLSettingsOptionsRowOptionValueKey];
+
+            [values addObject:optionValue];
+        }
+        
+        TGLSettingOptionsViewController *optionsController = segue.destinationViewController;
+        
+        optionsController.names = names;
+        optionsController.values = values;
+        optionsController.selectedValue = self.values[indexPath];
+        optionsController.optionIndexPath = indexPath;
+
+        optionsController.delegate = self;
     }
 }
 
@@ -136,7 +196,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 
     NSDictionary *sectionDict = self.sections[section];
-    NSArray *sectionRows = sectionDict[@"rows"];
+    NSArray *sectionRows = sectionDict[TGLSettingsSectionRowArrayKey];
 
     return sectionRows.count;
 }
@@ -145,53 +205,78 @@
     
     NSDictionary *sectionDict = self.sections[section];
     
-    return NSLocalizedString(sectionDict[@"headerTitle"], nil);
+    return NSLocalizedString(sectionDict[TGLSettingsSectionHeaderTitleKey], nil);
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    NSDictionary *sectionDict = self.sections[indexPath.section];
-    NSArray *sectionRows = sectionDict[@"rows"];
-    NSDictionary *rowDict = sectionRows[indexPath.row];
+    NSDictionary *rowDict = [self rowDictionaryForIndexPath:indexPath fromSections:self.sections];
 
-    NSString *rowType = rowDict[@"type"];
+    NSString *rowType = rowDict[TGLSettingsRowTypeKey];
     
-    if ([rowType isEqualToString:@"switch"]) {
+    if ([rowType isEqualToString:TGLSettingsRowTypeSwitch]) {
         
         TGLSwitchTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SwitchCell" forIndexPath:indexPath];
+        NSString *title = rowDict[TGLSettingsSwitchRowTitleKey];
         
-        cell.switchLabel.text = rowDict[@"title"];
+        cell.switchLabel.text = NSLocalizedString(title, nil);
         
         [cell setSwitchValue:[self.values[indexPath] boolValue]];
 
-        cell.keyPath = rowDict[@"keyPath"];
+        cell.keyPath = rowDict[TGLSettingsRowKeyPathKey];
         cell.indexPath = indexPath;
         cell.valuesDict = self.values;
         
         return cell;
         
-    } else if ([rowType isEqualToString:@"stepper"]) {
+    } else if ([rowType isEqualToString:TGLSettingsRowTypeStepper]) {
         
         TGLStepperTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"StepperCell" forIndexPath:indexPath];
 
-        cell.labelFormat = rowDict[@"titleFormat"];
-        cell.numberStyle = (NSNumberFormatterStyle)rowDict[@"numberStyle"];
+        cell.labelFormat = rowDict[TGLSettingsStepperRowTitleFormatKey];
+        cell.numberStyle = (NSNumberFormatterStyle)[rowDict[TGLSettingsStepperRowNumberStyleKey] integerValue];
 
-        cell.stepperControl.minimumValue = [rowDict[@"minValue"] doubleValue];
-        cell.stepperControl.maximumValue = [rowDict[@"maxValue"] doubleValue];
+        cell.stepperControl.minimumValue = [rowDict[TGLSettingsStepperRowMinValueKey] doubleValue];
+        cell.stepperControl.maximumValue = [rowDict[TGLSettingsStepperRowMaxValueKey] doubleValue];
         
         [cell setStepperValue:[self.values[indexPath] doubleValue]];
         
-        cell.keyPath = rowDict[@"keyPath"];
+        cell.keyPath = rowDict[TGLSettingsRowKeyPathKey];
         cell.indexPath = indexPath;
         cell.valuesDict = self.values;
 
+        return cell;
+        
+    } else if ([rowType isEqualToString:TGLSettingsRowTypeOptions]) {
+        
+        TGLOptionsTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"OptionsCell" forIndexPath:indexPath];
+        NSString *title = rowDict[TGLSettingsSwitchRowTitleKey];
+        NSString *name = [self nameForOptionWithValue:self.values[indexPath] inOptionValuesArray:rowDict[TGLSettingsOptionsRowValuesArrayKey]];
+
+        cell.textLabel.text = NSLocalizedString(title, nil);
+        cell.detailTextLabel.text = NSLocalizedString(name, nil);
+        
+        cell.keyPath = rowDict[TGLSettingsRowKeyPathKey];
+        cell.indexPath = indexPath;
+        cell.valuesDict = self.values;
+        
         return cell;
         
     } else {
         
         return nil;
     }
+}
+
+#pragma mark - TGLSettingOptionsViewControllerDelegate protocol
+
+- (void)optionsViewController:(TGLSettingOptionsViewController *)controller didSelectValue:(NSValue *)value {
+    
+    NSIndexPath *indexPath = controller.optionIndexPath;
+
+    self.values[indexPath] = value;
+    
+    [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
 }
 
 #pragma mark - Helpers
@@ -206,11 +291,11 @@
         
         NSInteger row = 0;
         
-        for (NSDictionary *rowDict in sectionDict[@"rows"]) {
+        for (NSDictionary *rowDict in sectionDict[TGLSettingsSectionRowArrayKey]) {
             
             NSIndexPath *rowIndexPath = [NSIndexPath indexPathForRow:row inSection:section];
             
-            valuesDict[rowIndexPath] = rowDict[@"defaultValue"];
+            valuesDict[rowIndexPath] = rowDict[TGLSettingsRowDefaultValueKey];
 
             row += 1;
         }
@@ -229,30 +314,34 @@
         
         NSInteger row = 0;
         
-        for (NSDictionary *rowDict in sectionDict[@"rows"]) {
+        for (NSDictionary *rowDict in sectionDict[TGLSettingsSectionRowArrayKey]) {
             
-            NSString *rowType = rowDict[@"type"];
-            NSString *rowKeyPath = rowDict[@"keyPath"];
+            NSString *rowType = rowDict[TGLSettingsRowTypeKey];
+            NSString *rowKeyPath = rowDict[TGLSettingsRowKeyPathKey];
             
             rowKeyPath = [rowKeyPath stringByReplacingOccurrencesOfString:@"%N" withString:@"destinationViewController"];
             rowKeyPath = [rowKeyPath stringByReplacingOccurrencesOfString:@"%S" withString:@"destinationViewController.topViewController"];
             
             NSIndexPath *rowIndexPath = [NSIndexPath indexPathForRow:row inSection:section];
             
-            if ([rowType isEqualToString:@"switch"]) {
+            if ([rowType isEqualToString:TGLSettingsRowTypeSwitch]) {
                 
                 [segue setValue:@([values[rowIndexPath] boolValue]) forKeyPath:rowKeyPath];
                 
-            } else if ([rowType isEqualToString:@"stepper"]) {
+            } else if ([rowType isEqualToString:TGLSettingsRowTypeStepper]) {
                 
                 double value = [values[rowIndexPath] doubleValue];
                 
-                if (rowDict[@"valueFactor"]) {
+                if (rowDict[TGLSettingsStepperRowValueFactorKey]) {
                     
-                    value *= [rowDict[@"valueFactor"] doubleValue];
+                    value *= [rowDict[TGLSettingsStepperRowValueFactorKey] doubleValue];
                 }
 
                 [segue setValue:@(value) forKeyPath:rowKeyPath];
+                
+            } else if ([rowType isEqualToString:TGLSettingsRowTypeOptions]) {
+                
+                [segue setValue:values[rowIndexPath] forKeyPath:rowKeyPath];
             }
             
             row += 1;
@@ -260,6 +349,26 @@
         
         section += 1;
     }
+}
+
+- (NSDictionary *)rowDictionaryForIndexPath:(NSIndexPath *)indexPath fromSections:(NSArray<NSDictionary*> *)sections {
+    
+    NSDictionary *sectionDict = sections[indexPath.section];
+    NSArray *sectionRows = sectionDict[TGLSettingsSectionRowArrayKey];
+    
+    return sectionRows[indexPath.row];
+}
+
+- (NSString *)nameForOptionWithValue:(NSValue *)value inOptionValuesArray:(NSArray<NSDictionary*> *)options {
+    
+    for (NSDictionary *optionDict in options) {
+        
+        NSValue *optionValue = optionDict[TGLSettingsOptionsRowOptionValueKey];
+        
+        if ([optionValue isEqualToValue:value]) return optionDict[TGLSettingsOptionsRowOptionNameKey];
+    }
+    
+    return nil;
 }
 
 @end
@@ -310,4 +419,7 @@
     self.stepperLabel.text = [NSString stringWithFormat:localizedFormat, [NSNumberFormatter localizedStringFromNumber:@(value) numberStyle:self.numberStyle]];
 }
 
+@end
+
+@implementation TGLOptionsTableViewCell
 @end
