@@ -90,29 +90,9 @@
 - (void)viewDidLoad {
 
     [super viewDidLoad];
-
-    // Set to NO to prevent a small number
-    // of cards from filling the entire
-    // view height evenly and only show
-    // their -topReveal amount
-    //
-    self.stackedLayout.fillHeight = YES;
-
-    // Set to NO to prevent a small number
-    // of cards from being scrollable and
-    // bounce
-    //
-    self.stackedLayout.alwaysBounce = YES;
     
-    // Set to NO to prevent unexposed
-    // items at top and bottom from
-    // being selectable
-    //
-    self.unexposedItemsAreSelectable = YES;
-    
-    // Handle own properties
-    //
     self.exposedItemSize = self.cardSize;
+
     self.stackedLayout.itemSize = self.exposedItemSize;
     self.stackedLayout.layoutMargin = self.stackedLayoutMargin;
     self.stackedLayout.topReveal = self.stackedTopReveal;
