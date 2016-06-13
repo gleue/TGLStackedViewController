@@ -51,7 +51,9 @@
 
 @interface TGLViewController ()
 
-@property (strong, readonly, nonatomic) NSMutableArray *cards;
+@property (nonatomic, strong, readonly) NSMutableArray *cards;
+
+@property (nonatomic, strong) NSTimer *dismissTimer;
 
 @end
 
@@ -76,6 +78,11 @@
     }
     
     return self;
+}
+
+- (void)dealloc {
+
+    [self stopDismissTimer];
 }
 
 #pragma mark - View life cycle
@@ -124,35 +131,38 @@
     }
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+
+    [super viewDidAppear:animated];
+    
+    if (self.doubleTapToClose) {
+        
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Double Tap to Close", nil)
+                                                                       message:nil
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+
+        __weak typeof(self) weakSelf = self;
+        
+        UIAlertAction *action = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil)
+                                                         style:UIAlertActionStyleDefault
+                                                       handler:^ (UIAlertAction *action) {
+                                                           
+                                                           [weakSelf.dismissTimer invalidate];
+                                                           weakSelf.dismissTimer = nil;
+                                                       }];
+        
+        [alert addAction:action];
+        
+        [self presentViewController:alert animated:YES completion:^ (void) {
+            
+            self.dismissTimer = [NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(dismissTimerFired:) userInfo:nil repeats:NO];
+        }];
+    }
+}
+
 - (UIStatusBarStyle)preferredStatusBarStyle {
 
     return UIStatusBarStyleLightContent;
-}
-
-#pragma mark - Key-Value Coding
-
-- (void)setValue:(id)value forKeyPath:(nonnull NSString *)keyPath {
-
-//    NSLog(@"%s '%@' = '%@'", __PRETTY_FUNCTION__, keyPath, value);
-    
-    if ([keyPath isEqualToString:@"cardSize.width"]) {
-
-        CGSize cardSize = self.cardSize;
-        
-        cardSize.width = [value doubleValue];
-        self.cardSize = cardSize;
-
-    } else if ([keyPath isEqualToString:@"cardSize.height"]) {
-            
-        CGSize cardSize = self.cardSize;
-        
-        cardSize.height = [value doubleValue];
-        self.cardSize = cardSize;
-        
-    } else {
-        
-        [super setValue:value forKeyPath:keyPath];
-    }
 }
 
 #pragma mark - Accessors
@@ -189,11 +199,69 @@
     return _cards;
 }
 
+#pragma mark - Key-Value Coding
+
+- (void)setValue:(id)value forKeyPath:(nonnull NSString *)keyPath {
+    
+    // Add key-value coding capabilities for some extra properties
+    //
+    if ([keyPath hasPrefix:@"cardSize."]) {
+        
+        CGSize cardSize = self.cardSize;
+        
+        if ([keyPath hasSuffix:@".width"]) {
+            
+            cardSize.width = [value doubleValue];
+            
+        } else if ([keyPath hasSuffix:@".height"]) {
+            
+            cardSize.height = [value doubleValue];
+        }
+        
+        self.cardSize = cardSize;
+        
+    } else if ([keyPath containsString:@"edLayoutMargin."]) {
+        
+        NSString *layoutKey = [keyPath componentsSeparatedByString:@"."].firstObject;
+        UIEdgeInsets layoutMargin = [layoutKey isEqualToString:@"stackedLayoutMargin"] ? self.stackedLayoutMargin : self.exposedLayoutMargin;
+        
+        if ([keyPath hasSuffix:@".top"]) {
+            
+            layoutMargin.top = [value doubleValue];
+            
+        } else if ([keyPath hasSuffix:@".left"]) {
+            
+            layoutMargin.left = [value doubleValue];
+            
+        } else if ([keyPath hasSuffix:@".right"]) {
+            
+            layoutMargin.right = [value doubleValue];
+        }
+        
+        [self setValue:[NSValue valueWithUIEdgeInsets:layoutMargin] forKey:layoutKey];
+        
+    } else {
+        
+        [super setValue:value forKeyPath:keyPath];
+    }
+}
+
 #pragma mark - Actions
 
 - (IBAction)handleDoubleTap:(UITapGestureRecognizer *)recognizer {
     
     [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (IBAction)dismissTimerFired:(NSTimer *)timer {
+    
+    if (timer == self.dismissTimer && self.presentedViewController) {
+
+        [self dismissViewControllerAnimated:YES completion:^ (void) {
+            
+            [self stopDismissTimer];
+        }];
+    }
 }
 
 #pragma mark - UICollectionViewDataSource protocol
@@ -222,6 +290,14 @@
     
     [self.cards removeObjectAtIndex:sourceIndexPath.item];
     [self.cards insertObject:card atIndex:destinationIndexPath.item];
+}
+
+#pragma mark - Helpers
+
+- (void)stopDismissTimer {
+    
+    [self.dismissTimer invalidate];
+    self.dismissTimer = nil;
 }
 
 @end
