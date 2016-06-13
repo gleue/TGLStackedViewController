@@ -86,8 +86,8 @@
 
     _exposedLayoutMargin = UIEdgeInsetsMake(40.0, 0.0, 0.0, 0.0);
     _exposedItemSize = CGSizeZero;
-    _exposedTopOverlap = 20.0;
-    _exposedBottomOverlap = 20.0;
+    _exposedTopOverlap = 10.0;
+    _exposedBottomOverlap = 10.0;
     _exposedBottomOverlapCount = 1;
     
     _exposedPinningMode = TGLExposedLayoutPinningModeAll;

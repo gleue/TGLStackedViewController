@@ -65,7 +65,7 @@
  * ignored otherwise. Changes to this property take
  * effect on next item being selected, i.e. exposed.
  *
- * Default value is 20.0
+ * Default value is 10.0
  */
 @property (nonatomic, assign) IBInspectable CGFloat exposedTopOverlap;
 
@@ -76,7 +76,7 @@
  * ignored otherwise. Changes to this property take
  * effect on next item being selected, i.e. exposed.
  *
- * Default value is 20.0
+ * Default value is 10.0
  */
 @property (nonatomic, assign) IBInspectable CGFloat exposedBottomOverlap;
 

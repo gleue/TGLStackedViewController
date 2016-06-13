@@ -42,8 +42,8 @@
     if (self) {
         
         self.layoutMargin = UIEdgeInsetsMake(40.0, 0.0, 0.0, 0.0);
-        self.topOverlap = 20.0;
-        self.bottomOverlap = 20.0;
+        self.topOverlap = 10.0;
+        self.bottomOverlap = 10.0;
         self.bottomOverlapCount = 1;
 
         self.pinningMode = TGLExposedLayoutPinningModeAll;
