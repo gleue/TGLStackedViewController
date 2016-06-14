@@ -51,6 +51,8 @@
 
 @interface TGLViewController ()
 
+@property (nonatomic, weak) IBOutlet UIBarButtonItem *deselectItem;
+
 @property (nonatomic, strong, readonly) NSMutableArray *cards;
 
 @property (nonatomic, strong) NSTimer *dismissTimer;
@@ -242,6 +244,11 @@
             [self stopDismissTimer];
         }];
     }
+}
+
+- (IBAction)collapseExposedItem:(id)sender {
+    
+    self.exposedItemIndexPath = nil;
 }
 
 #pragma mark - UICollectionViewDataSource protocol

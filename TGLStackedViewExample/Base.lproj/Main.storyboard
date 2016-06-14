@@ -200,7 +200,16 @@
                             <outlet property="delegate" destination="LGt-Wb-o9x" id="Hhq-u2-7ZP"/>
                         </connections>
                     </collectionView>
-                    <navigationItem key="navigationItem" title="Example" id="TeG-6f-3Tq"/>
+                    <navigationItem key="navigationItem" title="Example" id="TeG-6f-3Tq">
+                        <barButtonItem key="leftBarButtonItem" title="Collapse" id="dTa-cg-pti">
+                            <connections>
+                                <action selector="collapseExposedItem:" destination="LGt-Wb-o9x" id="pne-Du-dC7"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="deselectItem" destination="dTa-cg-pti" id="HRC-B4-eSe"/>
+                    </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HP2-u2-qcW" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
