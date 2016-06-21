@@ -40,9 +40,6 @@
     
     [super awakeFromNib];
 
-    UIImage *image = [[UIImage imageNamed:@"Background"] resizableImageWithCapInsets:UIEdgeInsetsMake(10.0, 10.0, 10.0, 10.0)];
-    
-    self.imageView.image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     self.imageView.tintColor = self.color;
     self.imageView.layer.borderColor = self.nameLabel.highlightedTextColor.CGColor;
 
