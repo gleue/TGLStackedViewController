@@ -115,7 +115,6 @@
     //
     TGLBackgroundProxyView *backgroundProxy = [[TGLBackgroundProxyView alloc] init];
     
-    backgroundProxy.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.5];
     backgroundProxy.targetView = self.collectionViewBackground;
     backgroundProxy.hidden = self.collectionViewBackground.hidden;
     
