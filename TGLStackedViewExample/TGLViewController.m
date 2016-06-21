@@ -52,6 +52,7 @@
 @interface TGLViewController ()
 
 @property (nonatomic, weak) IBOutlet UIBarButtonItem *deselectItem;
+@property (nonatomic, strong) IBOutlet UIView *collectionViewBackground;
 
 @property (nonatomic, strong, readonly) NSMutableArray *cards;
 
@@ -92,7 +93,19 @@
 - (void)viewDidLoad {
 
     [super viewDidLoad];
-    
+
+    // KLUDGE: Using the collection view's `-backgroundView`
+    //         results in layout glitches when transitioning
+    //         between stacked and exposed layouts.
+    //         Therefore we add our background in between
+    //         the collection view and the view controller's
+    //         wrapper view.
+    //
+    // TODO: Check for user interaction in background view.
+    //
+    self.collectionViewBackground.hidden = !self.showsBackgroundView;
+    [self.view insertSubview:self.collectionViewBackground belowSubview:self.collectionView];
+
     self.exposedItemSize = self.cardSize;
 
     self.stackedLayout.itemSize = self.exposedItemSize;

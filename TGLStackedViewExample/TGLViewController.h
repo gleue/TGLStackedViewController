@@ -29,6 +29,8 @@
 
 @interface TGLViewController : TGLStackedViewController
 
+@property (nonatomic, assign) BOOL showsBackgroundView;
+
 @property (nonatomic, assign) NSInteger cardCount;
 @property (nonatomic, assign) CGSize cardSize;
 

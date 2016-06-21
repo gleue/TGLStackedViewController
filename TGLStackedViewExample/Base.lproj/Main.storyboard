@@ -153,6 +153,7 @@
                     <collectionView key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" id="LhB-n9-obi">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                         <collectionViewLayout key="collectionViewLayout" id="xYK-TF-mui" customClass="TGLStackedLayout"/>
                         <cells>
@@ -208,10 +209,28 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="collectionViewBackground" destination="Wbh-91-NYz" id="xDm-qJ-Ouk"/>
                         <outlet property="deselectItem" destination="dTa-cg-pti" id="HRC-B4-eSe"/>
                     </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HP2-u2-qcW" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <view contentMode="scaleToFill" id="Wbh-91-NYz">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="120"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Background" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="r6Y-sN-Pee">
+                            <rect key="frame" x="96" y="20" width="129" height="29"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstItem="r6Y-sN-Pee" firstAttribute="centerX" secondItem="Wbh-91-NYz" secondAttribute="centerX" id="AyP-sw-Ao2"/>
+                        <constraint firstItem="r6Y-sN-Pee" firstAttribute="top" secondItem="Wbh-91-NYz" secondAttribute="top" constant="20" id="izb-X2-a2G"/>
+                    </constraints>
+                </view>
             </objects>
             <point key="canvasLocation" x="111" y="74"/>
         </scene>
