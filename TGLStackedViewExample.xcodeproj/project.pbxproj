@@ -23,6 +23,7 @@
 		3DF68F1418F31B0C00387458 /* TGLViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DF68F1318F31B0C00387458 /* TGLViewController.m */; };
 		3DF68F1618F31B0C00387458 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3DF68F1518F31B0C00387458 /* Images.xcassets */; };
 		3DF68F3418F31C1300387458 /* TGLCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DF68F3318F31C1300387458 /* TGLCollectionViewCell.m */; };
+		3DFACA4F1D195E8C005C8F3F /* TGLBackgroundProxyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DFACA4E1D195E8C005C8F3F /* TGLBackgroundProxyView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -53,6 +54,8 @@
 		3DF68F1518F31B0C00387458 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		3DF68F3218F31C1300387458 /* TGLCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGLCollectionViewCell.h; sourceTree = "<group>"; };
 		3DF68F3318F31C1300387458 /* TGLCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGLCollectionViewCell.m; sourceTree = "<group>"; };
+		3DFACA4D1D195E8C005C8F3F /* TGLBackgroundProxyView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGLBackgroundProxyView.h; sourceTree = "<group>"; };
+		3DFACA4E1D195E8C005C8F3F /* TGLBackgroundProxyView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGLBackgroundProxyView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,6 +118,8 @@
 			children = (
 				3DF68F0C18F31B0C00387458 /* TGLAppDelegate.h */,
 				3DF68F0D18F31B0C00387458 /* TGLAppDelegate.m */,
+				3DFACA4D1D195E8C005C8F3F /* TGLBackgroundProxyView.h */,
+				3DFACA4E1D195E8C005C8F3F /* TGLBackgroundProxyView.m */,
 				3DF68F0F18F31B0C00387458 /* Main.storyboard */,
 				3DF68F3218F31C1300387458 /* TGLCollectionViewCell.h */,
 				3DF68F3318F31C1300387458 /* TGLCollectionViewCell.m */,
@@ -210,6 +215,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3DBF89B4190019980041CB92 /* TGLStackedViewController.m in Sources */,
+				3DFACA4F1D195E8C005C8F3F /* TGLBackgroundProxyView.m in Sources */,
 				3DE7BA111D0DEE7E0035A3FD /* TGLSettingOptionsViewController.m in Sources */,
 				3DF68F0A18F31B0C00387458 /* main.m in Sources */,
 				3DBF89B2190019980041CB92 /* TGLExposedLayout.m in Sources */,

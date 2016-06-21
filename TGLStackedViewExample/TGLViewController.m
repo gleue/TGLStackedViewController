@@ -25,6 +25,7 @@
 
 #import "TGLViewController.h"
 #import "TGLCollectionViewCell.h"
+#import "TGLBackgroundProxyView.h"
 
 @interface UIColor (randomColor)
 
@@ -53,6 +54,7 @@
 
 @property (nonatomic, weak) IBOutlet UIBarButtonItem *deselectItem;
 @property (nonatomic, strong) IBOutlet UIView *collectionViewBackground;
+@property (nonatomic, weak) IBOutlet UIButton *backgroundButton;
 
 @property (nonatomic, strong, readonly) NSMutableArray *cards;
 
@@ -101,11 +103,24 @@
     //         the collection view and the view controller's
     //         wrapper view.
     //
-    // TODO: Check for user interaction in background view.
-    //
     self.collectionViewBackground.hidden = !self.showsBackgroundView;
     [self.view insertSubview:self.collectionViewBackground belowSubview:self.collectionView];
 
+    // KLUDGE: Since our background is below the collection
+    //         view it won't receive any touch events.
+    //         Therefore we install an invisible/empty proxy
+    //         view as the collection view's `-backgroundView`
+    //         with the sole purpose to forward events to
+    //         our background view.
+    //
+    TGLBackgroundProxyView *backgroundProxy = [[TGLBackgroundProxyView alloc] init];
+    
+    backgroundProxy.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.5];
+    backgroundProxy.targetView = self.collectionViewBackground;
+    backgroundProxy.hidden = self.collectionViewBackground.hidden;
+    
+    self.collectionView.backgroundView = backgroundProxy;
+    
     self.exposedItemSize = self.cardSize;
 
     self.stackedLayout.itemSize = self.exposedItemSize;
@@ -242,6 +257,21 @@
 }
 
 #pragma mark - Actions
+
+- (IBAction)backgroundButtonTapped:(id)sender {
+    
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Background Button Tapped", nil)
+                                                                   message:nil
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction *action = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil)
+                                                     style:UIAlertActionStyleDefault
+                                                   handler: nil];
+    
+    [alert addAction:action];
+    
+    [self presentViewController:alert animated:YES completion:nil];
+}
 
 - (IBAction)handleDoubleTap:(UITapGestureRecognizer *)recognizer {
     

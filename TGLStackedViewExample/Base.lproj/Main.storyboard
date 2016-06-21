@@ -209,6 +209,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="backgroundButton" destination="Gj3-Av-Q7P" id="2yc-qe-8Kq"/>
                         <outlet property="collectionViewBackground" destination="Wbh-91-NYz" id="xDm-qJ-Ouk"/>
                         <outlet property="deselectItem" destination="dTa-cg-pti" id="HRC-B4-eSe"/>
                     </connections>
@@ -218,17 +219,18 @@
                     <rect key="frame" x="0.0" y="0.0" width="320" height="120"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Background" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="r6Y-sN-Pee">
-                            <rect key="frame" x="96" y="20" width="129" height="29"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="24"/>
-                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            <nil key="highlightedColor"/>
-                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gj3-Av-Q7P">
+                            <rect key="frame" x="133" y="20" width="55" height="30"/>
+                            <state key="normal" title="Tap me!"/>
+                            <connections>
+                                <action selector="backgroundButtonTapped:" destination="LGt-Wb-o9x" eventType="touchUpInside" id="pZ1-O8-aZS"/>
+                            </connections>
+                        </button>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstItem="r6Y-sN-Pee" firstAttribute="centerX" secondItem="Wbh-91-NYz" secondAttribute="centerX" id="AyP-sw-Ao2"/>
-                        <constraint firstItem="r6Y-sN-Pee" firstAttribute="top" secondItem="Wbh-91-NYz" secondAttribute="top" constant="20" id="izb-X2-a2G"/>
+                        <constraint firstItem="Gj3-Av-Q7P" firstAttribute="top" secondItem="Wbh-91-NYz" secondAttribute="top" constant="20" id="SGV-uZ-DcZ"/>
+                        <constraint firstItem="Gj3-Av-Q7P" firstAttribute="centerX" secondItem="Wbh-91-NYz" secondAttribute="centerX" id="bCq-lu-kma"/>
                     </constraints>
                 </view>
             </objects>
