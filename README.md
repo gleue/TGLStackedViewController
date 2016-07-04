@@ -3,7 +3,7 @@ TGLStackedViewController
 
 A stack layout with gesture-based reordering using UICollectionView -- inspired by Passbook and Reminders apps.
 
-Whats's new in 2.0
+What's new in 2.0
 ------------------
 
 * Uses iOS 9 collection view reordering API instead of own implementation, therefore minimum deployment target is iOS 9.0
