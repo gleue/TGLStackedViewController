@@ -420,7 +420,12 @@
     }
 }
 
-- (void)setExposedItemIndexPath:(NSIndexPath *)exposedItemIndexPath {
+- (void)setExposedItemIndexPath:(nullable NSIndexPath *)exposedItemIndexPath {
+    
+    [self setExposedItemIndexPath:exposedItemIndexPath animated:YES];
+}
+
+- (void)setExposedItemIndexPath:(nullable NSIndexPath *)exposedItemIndexPath animated:(BOOL)animated {
 
     if (self.exposedItemIndexPath == nil && exposedItemIndexPath) {
 
@@ -442,7 +447,7 @@
 
         __weak typeof(self) weakSelf = self;
 
-        [self.collectionView setCollectionViewLayout:exposedLayout animated:YES completion:^ (BOOL finished) {
+        void (^completion) (BOOL) = ^ (BOOL finished) {
             
             weakSelf.stackedLayout.overwriteContentOffset = YES;
             weakSelf.exposedLayout = exposedLayout;
@@ -452,7 +457,19 @@
             UICollectionViewCell *exposedCell = [weakSelf.collectionView cellForItemAtIndexPath:weakSelf.exposedItemIndexPath];
             
             [weakSelf addCollapseGestureRecognizerToView:exposedCell];
-        }];
+        };
+
+        if (animated) {
+            
+            [self.collectionView setCollectionViewLayout:exposedLayout animated:YES completion:completion];
+            
+        } else {
+            
+            self.collectionView.collectionViewLayout = exposedLayout;
+            
+            completion(YES);
+        }
+        
         
     } else if (self.exposedItemIndexPath && exposedItemIndexPath && (exposedItemIndexPath.item != self.exposedItemIndexPath.item || self.unexposedItemsAreSelectable)) {
         
@@ -476,7 +493,7 @@
         
         __weak typeof(self) weakSelf = self;
         
-        [self.collectionView setCollectionViewLayout:exposedLayout animated:YES completion:^ (BOOL finished) {
+        void (^completion) (BOOL) = ^ (BOOL finished) {
             
             weakSelf.exposedLayout = exposedLayout;
             
@@ -485,7 +502,18 @@
             UICollectionViewCell *exposedCell = [weakSelf.collectionView cellForItemAtIndexPath:weakSelf.exposedItemIndexPath];
             
             [weakSelf addCollapseGestureRecognizerToView:exposedCell];
-        }];
+        };
+
+        if (animated) {
+            
+            [self.collectionView setCollectionViewLayout:exposedLayout animated:YES completion:completion];
+            
+        } else {
+            
+            self.collectionView.collectionViewLayout = exposedLayout;
+            
+            completion(YES);
+        }
         
     } else if (self.exposedItemIndexPath) {
         
@@ -506,10 +534,21 @@
         
         __weak typeof(self) weakSelf = self;
         
-        [self.collectionView setCollectionViewLayout:self.stackedLayout animated:YES completion:^ (BOOL finished) {
+        void (^completion) (BOOL) = ^ (BOOL finished) {
             
             weakSelf.stackedLayout.overwriteContentOffset = NO;
-        }];
+        };
+
+        if (animated) {
+            
+            [self.collectionView setCollectionViewLayout:self.stackedLayout animated:YES completion:completion];
+
+        } else {
+
+            self.collectionView.collectionViewLayout = self.stackedLayout;
+            
+            completion(YES);
+        }
     }
 }
 
