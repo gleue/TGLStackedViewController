@@ -40,7 +40,7 @@ Then in your project:
     * *Currently only 1 section is supported* therefore your implementation of `-numberOfSectionsInCollectionView` *has to* return `1`. `TGLStackedViewController` provides a suitable implementation for you -- no need to overwrite.
     * Implement methods `-numberOfSectionsInCollectionView:` and `-collectionView:cellForItemAtIndexPath` as usual.
     * **New in 2.0**: `TGLStackedViewController`'s implementation of method `-collectionView:canMoveItemAtIndexPath:` checks for stacked layout and a minimum number of 2 items before allowing reordering. Make sure to call `super` in your implementation and honor it's result.
-    * **New in 2.0**: Implement method `-- (void)collectionView:moveItemAtIndexPath:toIndexPath:` to update your data model after items have been reordered
+    * **New in 2.0**: Implement method `-collectionView:moveItemAtIndexPath:toIndexPath:` to update your data model after items have been reordered
 * Implement the `UICollectionViewDelegate` protocol in your subclass
     * `TGLStackedViewController` already implements methods `-collectionView:shouldHighlightItemAtIndexPath:`, `-collectionView:didDeselectItemAtIndexPath`, and `-collectionView:didSelectItemAtIndexPath:` internally, so make sure to call `super` in your implementation.
     * Method `-collectionView:targetContentOffsetForProposedContentOffset:` is crucuial for properly transitioning betwenn exposed and stacked layout, so make sure to call `super` in your implementation.
