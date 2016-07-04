@@ -30,8 +30,6 @@
 @property (nonatomic, strong) TGLStackedLayout *stackedLayout;
 @property (nonatomic, strong) TGLExposedLayout *exposedLayout;
 
-@property (nonatomic, assign) CGPoint stackedContentOffset;
-
 @property (nonatomic, strong) UILongPressGestureRecognizer *moveGestureRecognizer;
 @property (nonatomic, strong) NSIndexPath *movingIndexPath;
 
@@ -525,13 +523,6 @@
         
         self.exposedItemIndexPath = indexPath;
     }
-}
-
-- (CGPoint)collectionView:(UICollectionView *)collectionView targetContentOffsetForProposedContentOffset:(CGPoint)proposedContentOffset {
-    
-    // Force original contentOffset when unexposing
-    //
-    return self.exposedLayout == nil ? proposedContentOffset : self.stackedContentOffset;
 }
 
 #pragma mark - UICollectionViewDataSource protocol
