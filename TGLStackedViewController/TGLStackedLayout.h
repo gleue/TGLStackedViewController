@@ -51,6 +51,9 @@
 /** Set to YES to ignore -topReveal and arrange items evenly in collection view's bounds, if items do not fill entire height. Default is `NO` */
 @property (nonatomic, assign, getter = isFillingHeight) IBInspectable BOOL fillHeight;
 
+/** Set to YES to center a single item vertically, honoring -layoutMargin. When multiple items are present this property is ignored. Defualt is `NO` */ 
+@property (nonatomic, assign, getter = isCenteringSingleItem) IBInspectable BOOL centerSingleItem;
+
 /** Set to YES to enable bouncing even when items do not fill entire height. Default is `NO` */
 @property (nonatomic, assign, getter = isAlwaysBouncing) IBInspectable BOOL alwaysBounce;
 

@@ -226,7 +226,17 @@
         //
         attributes.frame = CGRectMake(itemOrigin.x, self.layoutMargin.top + itemReveal * item, itemSize.width, itemSize.height);
 
-        if (contentOffset.y + self.collectionView.contentInset.top < 0.0) {
+        if (itemCount == 1 && self.isCenteringSingleItem) {
+            
+            // Center single item if necessary
+            //
+            CGRect frame = attributes.frame;
+
+            frame.origin.y = self.layoutMargin.top + 0.5 * (layoutSize.height - itemSize.height);
+
+            attributes.frame = frame;
+            
+        } else if (contentOffset.y + self.collectionView.contentInset.top < 0.0) {
 
             // Expand cells when reaching top
             // and user scrolls further down,
