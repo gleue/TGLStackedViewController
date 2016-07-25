@@ -144,6 +144,16 @@
 
     [super viewDidAppear:animated];
     
+    if (!self.collectionViewBackground.hidden) {
+
+        // KLUDGE: Make collection view transparent
+        //         to let background view show through
+        //
+        // See also: -viewDidLoad
+        //
+        self.collectionView.backgroundColor = [UIColor clearColor];
+    }
+    
     if (self.doubleTapToClose) {
         
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Double Tap to Close", nil)
