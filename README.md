@@ -1,7 +1,7 @@
-[![Platform](https://img.shields.io/cocoapods/p/TGLStackedViewController.svg?maxAge=2592000)]()
-[![Tag](https://img.shields.io/github/tag/gleue/TGLStackedViewController.svg?maxAge=2592000)]()
-[![License](https://img.shields.io/github/license/gleue/TGLStackedViewController.svg?maxAge=2592000)]()
-[![Downloads](https://img.shields.io/cocoapods/dt/TGLStackedViewController.svg?maxAge=2592000)]()
+[![Platform](https://img.shields.io/cocoapods/p/TGLStackedViewController.svg?maxAge=86400)]()
+[![Tag](https://img.shields.io/github/tag/gleue/TGLStackedViewController.svg?maxAge=86400)]()
+[![License](https://img.shields.io/github/license/gleue/TGLStackedViewController.svg?maxAge=86400)]()
+[![Downloads](https://img.shields.io/cocoapods/dt/TGLStackedViewController.svg?maxAge=86400)]()
 
 TGLStackedViewController
 ========================
