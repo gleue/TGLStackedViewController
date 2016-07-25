@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name     = 'TGLStackedViewController'
-  s.version  = '2.0.3'
+  s.version  = '2.0.4'
   s.license  = 'MIT'
   s.summary  = 'A stacked view layout with gesture-based reordering using a UICollectionView -- inspired by Passbook and Reminders apps.'
   s.homepage = 'https://github.com/gleue/TGLStackedViewController'
