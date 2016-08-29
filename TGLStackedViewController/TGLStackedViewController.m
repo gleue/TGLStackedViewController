@@ -37,6 +37,8 @@
 @property (nonatomic, readonly) UIPanGestureRecognizer *collapsePanGestureRecognizer;
 @property (nonatomic, readonly) UIPinchGestureRecognizer *collapsePinchGestureRecognizer;
 
+@property (nonatomic, assign) BOOL interactiveTransitionInProgress;
+
 @end
 
 @implementation TGLStackedViewController
@@ -256,14 +258,20 @@
                     weakSelf.stackedLayout.overwriteContentOffset = NO;
                     weakSelf.exposedItemIndexPath = nil;
                     weakSelf.exposedLayout = nil;
-
-                    transitionLayout = nil;
                 }
+                
+                weakSelf.interactiveTransitionInProgress = NO;
+                
+                transitionLayout = nil;
             }];
             
             transitionMaxThreshold = (self.collapsePanMaximumThreshold > 0.0) ? self.collapsePanMaximumThreshold : CGRectGetHeight(exposedCell.bounds);
             transitionMinThreshold = MAX(self.collapsePanMinimumThreshold, 0.0);
             
+            // Issue #37: Prevent item selection while interactive transition in progress
+            //
+            self.interactiveTransitionInProgress = YES;
+
             break;
         }
             
@@ -293,8 +301,6 @@
                 
                 [self.collectionView cancelInteractiveTransition];
             }
-
-            transitionLayout = nil;
             
             break;
         }
@@ -302,8 +308,6 @@
         case UIGestureRecognizerStateCancelled: {
 
             [self.collectionView cancelInteractiveTransition];
-            
-            transitionLayout = nil;
             
             break;
         }
@@ -326,7 +330,7 @@
             __weak typeof(self) weakSelf = self;
             
             transitionLayout = [self.collectionView startInteractiveTransitionToCollectionViewLayout:self.stackedLayout completion:^ (BOOL completed, BOOL finish) {
-                
+
                 if (finish) {
                     
                     UICollectionViewCell *exposedCell = [self.collectionView cellForItemAtIndexPath:weakSelf.exposedItemIndexPath];
@@ -336,9 +340,11 @@
                     weakSelf.stackedLayout.overwriteContentOffset = NO;
                     weakSelf.exposedItemIndexPath = nil;
                     weakSelf.exposedLayout = nil;
-                    
-                    transitionLayout = nil;
                 }
+                
+                transitionLayout = nil;
+                
+                weakSelf.interactiveTransitionInProgress = NO;
             }];
             
             transitionMinThreshold = weakSelf.collapsePinchMinimumThreshold;
@@ -346,6 +352,10 @@
             if (transitionMinThreshold < 0.0) transitionMinThreshold = 0.0; else if (transitionMinThreshold > 1.0) transitionMinThreshold = 1.0;
 
             transitionMinThreshold = 1.0 - transitionMinThreshold;
+            
+            // Issue #37: Prevent item selection while interactive transition in progress
+            //
+            self.interactiveTransitionInProgress = YES;
             
             break;
         }
@@ -377,16 +387,12 @@
                 [self.collectionView cancelInteractiveTransition];
             }
             
-            transitionLayout = nil;
-            
             break;
         }
             
         case UIGestureRecognizerStateCancelled: {
             
             [self.collectionView cancelInteractiveTransition];
-            
-            transitionLayout = nil;
             
             break;
         }
@@ -400,12 +406,14 @@
 #pragma mark - UICollectionViewDelegate protocol
 
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
-    
+
     // When selecting unexposed items is not allowed,
     // prevent them from being highlighted and thus
     // selected by the collection view
     //
-    return (self.exposedItemIndexPath == nil || indexPath.item == self.exposedItemIndexPath.item || self.unexposedItemsAreSelectable);
+    // Issue #37: Prevent selection, too, while interactive transition is still in progress.
+    //
+    return (self.exposedItemIndexPath == nil || indexPath.item == self.exposedItemIndexPath.item || self.unexposedItemsAreSelectable) && !self.interactiveTransitionInProgress;
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
