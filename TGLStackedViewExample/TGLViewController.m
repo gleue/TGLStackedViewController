@@ -120,7 +120,8 @@
     backgroundProxy.hidden = self.collectionViewBackground.hidden;
     
     self.collectionView.backgroundView = backgroundProxy;
-    
+    self.collectionView.showsVerticalScrollIndicator = self.showsVerticalScrollIndicator;
+
     self.exposedItemSize = self.cardSize;
 
     self.stackedLayout.itemSize = self.exposedItemSize;
