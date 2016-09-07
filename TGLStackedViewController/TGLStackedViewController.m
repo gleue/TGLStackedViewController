@@ -97,6 +97,7 @@
     _exposedItemsAreCollapsible = YES;
     
     _movingItemScaleFactor = 0.95;
+    _movingItemOnTop = YES;
 
     _collapsePanMinimumThreshold = 120.0;
     _collapsePanMaximumThreshold = 0.0;
@@ -175,14 +176,15 @@
             if (indexPath && [self.collectionView beginInteractiveMovementForItemAtIndexPath:indexPath]) {
                 
                 self.stackedLayout.movingItemScaleFactor = self.movingItemScaleFactor;
+                self.stackedLayout.movingItemOnTop = self.movingItemOnTop;
 
                 UICollectionViewCell *movingCell = [self.collectionView cellForItemAtIndexPath:indexPath];
                 
                 targetPosition = movingCell.center;
                 
-                self.movingIndexPath = indexPath;
-                
                 [self.collectionView updateInteractiveMovementTargetPosition:targetPosition];
+                
+                self.movingIndexPath = indexPath;
             }
 
             break;

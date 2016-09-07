@@ -178,11 +178,17 @@
  */
 @property (nonatomic, assign) IBInspectable BOOL unexposedItemsAreSelectable;
 
-/** Factor used to scale items while moving them.
+/** Factor used to scale items while being moved interactively.
  *
  * Default value is 0.95
  */
 @property (nonatomic, assign) IBInspectable CGFloat movingItemScaleFactor;
+
+/** Allow item being moved interactively to float above of all other items.
+ *
+ * Default value is `YES`
+ */
+@property (nonatomic, assign) IBInspectable BOOL movingItemOnTop;
 
 /** Minimum amount of downwards panning at end of gesture to trigger collapse.
  *

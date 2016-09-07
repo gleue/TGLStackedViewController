@@ -28,7 +28,6 @@
 @interface TGLStackedLayout ()
 
 @property (nonatomic, strong) NSDictionary *layoutAttributes;
-@property (nonatomic, strong) NSIndexPath *movingIndexPath;
 
 // Set to YES when layout is currently arranging
 // items so that they evenly fill entire height
@@ -63,6 +62,7 @@
     self.topReveal = 120.0;
     self.bounceFactor = 0.2;
     self.movingItemScaleFactor = 0.95;
+    self.movingItemOnTop = YES;
 }
 
 #pragma mark - Accessors
@@ -207,24 +207,20 @@
         
         NSIndexPath *indexPath = [NSIndexPath indexPathForItem:item inSection:0];
         UICollectionViewLayoutAttributes *attributes = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];
-
-        // Cards overlap each other
-        // via z depth
-        //
-        attributes.zIndex = item;
         
-        // The moving items are scaled
-        //
-        if (self.movingIndexPath && attributes.indexPath.item == self.movingIndexPath.item) {
-            
-            attributes.transform = CGAffineTransformMakeScale(self.movingItemScaleFactor, self.movingItemScaleFactor);
-        }
-
         // By default all items are layed
         // out evenly with each revealing
         // only top part ...
         //
         attributes.frame = CGRectMake(itemOrigin.x, self.layoutMargin.top + itemReveal * item, itemSize.width, itemSize.height);
+
+        // Cards overlap each other
+        // via z depth AND transform
+        //
+        // See http://stackoverflow.com/questions/12659301/uicollectionview-setlayoutanimated-not-preserving-zindex
+        //
+        attributes.zIndex = item;
+        attributes.transform3D = CATransform3DMakeTranslation(0, 0, item);
 
         if (itemCount == 1 && self.isCenteringSingleItem) {
             
@@ -303,6 +299,26 @@
     self.layoutAttributes = layoutAttributes;
 }
 
+- (UICollectionViewLayoutAttributes *)layoutAttributesForInteractivelyMovingItemAtIndexPath:(NSIndexPath *)indexPath withTargetPosition:(CGPoint)position {
+    
+    UICollectionViewLayoutAttributes *attributes = [super layoutAttributesForInteractivelyMovingItemAtIndexPath:indexPath withTargetPosition:position];
+    
+    if (self.movingItemOnTop) {
+        
+        // If moving item should float above
+        // other items change z ordering
+        //
+        attributes.zIndex = NSIntegerMax;
+        attributes.transform3D = CATransform3DMakeTranslation(0.0, 0.0, [self.collectionView numberOfItemsInSection:0]);
+    }
+
+    // Apply scale factor in addition to z transform
+    //
+    attributes.transform3D = CATransform3DScale(attributes.transform3D, self.movingItemScaleFactor, self.movingItemScaleFactor, 1.0);
+    
+    return attributes;
+}
+
 - (NSArray *)layoutAttributesForElementsInRect:(CGRect)rect {
 
     NSMutableArray *layoutAttributes = [NSMutableArray array];
@@ -321,13 +337,6 @@
 - (UICollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath {
     
     return self.layoutAttributes[indexPath];
-}
-
-- (void)invalidateLayoutWithContext:(UICollectionViewLayoutInvalidationContext *)context {
-    
-    [super invalidateLayoutWithContext:context];
-    
-    self.movingIndexPath = context.targetIndexPathsForInteractivelyMovingItems.firstObject;
 }
 
 @end

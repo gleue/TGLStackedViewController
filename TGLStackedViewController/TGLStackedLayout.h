@@ -27,7 +27,7 @@
 
 @interface TGLStackedLayout : UICollectionViewLayout
 
-/** Margins between collection view and items. Default is UIEdgeInsetsMake(20.0, 0.0, 0.0, 0.0) */
+/** Margins between collection view and items. Default is `UIEdgeInsetsMake(20.0, 0.0, 0.0, 0.0)` */
 @property (nonatomic, assign) IBInspectable UIEdgeInsets layoutMargin;
 
 /** Size of items or automatic dimensions when 0.
@@ -35,7 +35,7 @@
  * If either width or height or both are set to 0 (default)
  * the respective dimensions ares computed automatically
  * from the collection view's bounds minus the margins
- * defined in property -layoutMargin.
+ * defined in property `-layoutMargin`.
  */
 @property (nonatomic, assign) IBInspectable CGSize itemSize;
 
@@ -47,6 +47,9 @@
 
 /** Scale factor for moving item. Default is 0.95 */
 @property (nonatomic, assign) IBInspectable CGFloat movingItemScaleFactor;
+
+/** Allow moving item to float above of all other items. Default value is `YES` */
+@property (nonatomic, assign) IBInspectable BOOL movingItemOnTop;
 
 /** Set to YES to ignore -topReveal and arrange items evenly in collection view's bounds, if items do not fill entire height. Default is `NO` */
 @property (nonatomic, assign, getter = isFillingHeight) IBInspectable BOOL fillHeight;

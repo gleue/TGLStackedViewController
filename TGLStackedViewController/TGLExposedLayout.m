@@ -154,6 +154,14 @@
 
         NSIndexPath *indexPath = [NSIndexPath indexPathForItem:item inSection:0];
         UICollectionViewLayoutAttributes *attributes = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];
+        
+        // Cards overlap each other
+        // via z depth AND transform
+        //
+        // See http://stackoverflow.com/questions/12659301/uicollectionview-setlayoutanimated-not-preserving-zindex
+        //
+        attributes.zIndex = item;
+        attributes.transform3D = CATransform3DMakeTranslation(0, 0, item);
 
         if (item < self.exposedItemIndex) {
             
@@ -241,8 +249,6 @@
                 ++bottomOverlapCount;
             }
         }
-
-        attributes.zIndex = item;
 
         layoutAttributes[indexPath] = attributes;
     }
