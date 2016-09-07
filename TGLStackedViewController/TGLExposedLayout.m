@@ -160,8 +160,12 @@
         //
         // See http://stackoverflow.com/questions/12659301/uicollectionview-setlayoutanimated-not-preserving-zindex
         //
+        // KLUDGE: translation is along negative
+        //         z axis as not to block scroll
+        //         indicators
+        //
         attributes.zIndex = item;
-        attributes.transform3D = CATransform3DMakeTranslation(0, 0, item);
+        attributes.transform3D = CATransform3DMakeTranslation(0, 0, item - itemCount);
 
         if (item < self.exposedItemIndex) {
             

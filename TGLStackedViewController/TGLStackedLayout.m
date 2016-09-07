@@ -219,8 +219,12 @@
         //
         // See http://stackoverflow.com/questions/12659301/uicollectionview-setlayoutanimated-not-preserving-zindex
         //
+        // KLUDGE: translation is along negative
+        //         z axis as not to block scroll
+        //         indicators
+        //
         attributes.zIndex = item;
-        attributes.transform3D = CATransform3DMakeTranslation(0, 0, item);
+        attributes.transform3D = CATransform3DMakeTranslation(0, 0, item - itemCount);
 
         if (itemCount == 1 && self.isCenteringSingleItem) {
             
@@ -308,8 +312,11 @@
         // If moving item should float above
         // other items change z ordering
         //
+        // NOTE: Since z transform is from -#items to 0.0
+        //       we place floating item at +1
+        //
         attributes.zIndex = NSIntegerMax;
-        attributes.transform3D = CATransform3DMakeTranslation(0.0, 0.0, [self.collectionView numberOfItemsInSection:0]);
+        attributes.transform3D = CATransform3DMakeTranslation(0.0, 0.0, 1.0);
     }
 
     // Apply scale factor in addition to z transform
