@@ -158,6 +158,158 @@
     return _collapsePinchGestureRecognizer;
 }
 
+- (void)setExposedItemIndexPath:(nullable NSIndexPath *)exposedItemIndexPath {
+    
+    [self setExposedItemIndexPath:exposedItemIndexPath animated:YES];
+}
+
+- (void)setExposedItemIndexPath:(nullable NSIndexPath *)exposedItemIndexPath animated:(BOOL)animated {
+
+    if (self.exposedItemIndexPath == nil && exposedItemIndexPath) {
+        
+        // Exposed item while none is exposed yet
+        //
+        self.stackedLayout.contentOffset = self.collectionView.contentOffset;
+        
+        TGLExposedLayout *exposedLayout = [[[self.class exposedLayoutClass] alloc] initWithExposedItemIndex:exposedItemIndexPath.item];
+        
+        exposedLayout.layoutMargin = self.exposedLayoutMargin;
+        exposedLayout.itemSize = self.exposedItemSize;
+        exposedLayout.topOverlap = self.exposedTopOverlap;
+        exposedLayout.bottomOverlap = self.exposedBottomOverlap;
+        exposedLayout.bottomOverlapCount = self.exposedBottomOverlapCount;
+        
+        exposedLayout.pinningMode = self.exposedPinningMode;
+        exposedLayout.topPinningCount = self.exposedTopPinningCount;
+        exposedLayout.bottomPinningCount = self.exposedBottomPinningCount;
+        
+        __weak typeof(self) weakSelf = self;
+        
+        void (^completion) (BOOL) = ^ (BOOL finished) {
+            
+            weakSelf.stackedLayout.overwriteContentOffset = YES;
+            weakSelf.exposedLayout = exposedLayout;
+            
+            _exposedItemIndexPath = exposedItemIndexPath;
+            
+            UICollectionViewCell *exposedCell = [weakSelf.collectionView cellForItemAtIndexPath:weakSelf.exposedItemIndexPath];
+            
+            [weakSelf addCollapseGestureRecognizerToView:exposedCell];
+            
+            [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+        };
+        
+        [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+
+        if (animated) {
+            
+            [self.collectionView setCollectionViewLayout:exposedLayout animated:YES completion:completion];
+            
+        } else {
+            
+            self.collectionView.collectionViewLayout = exposedLayout;
+            
+            completion(YES);
+        }
+        
+        
+    } else if (self.exposedItemIndexPath && exposedItemIndexPath && (exposedItemIndexPath.item != self.exposedItemIndexPath.item || self.unexposedItemsAreSelectable)) {
+        
+        // We have another exposed item and we expose the new one instead
+        //
+        UICollectionViewCell *exposedCell = [self.collectionView cellForItemAtIndexPath:self.exposedItemIndexPath];
+        
+        [self removeCollapseGestureRecognizersFromView:exposedCell];
+        
+        TGLExposedLayout *exposedLayout = [[TGLExposedLayout alloc] initWithExposedItemIndex:exposedItemIndexPath.item];
+        
+        exposedLayout.layoutMargin = self.exposedLayout.layoutMargin;
+        exposedLayout.itemSize = self.exposedLayout.itemSize;
+        exposedLayout.topOverlap = self.exposedLayout.topOverlap;
+        exposedLayout.bottomOverlap = self.exposedLayout.bottomOverlap;
+        exposedLayout.bottomOverlapCount = self.exposedLayout.bottomOverlapCount;
+        
+        exposedLayout.pinningMode = self.exposedLayout.pinningMode;
+        exposedLayout.topPinningCount = self.exposedLayout.topPinningCount;
+        exposedLayout.bottomPinningCount = self.exposedLayout.bottomPinningCount;
+        
+        __weak typeof(self) weakSelf = self;
+        
+        void (^completion) (BOOL) = ^ (BOOL finished) {
+            
+            weakSelf.exposedLayout = exposedLayout;
+            
+            _exposedItemIndexPath = exposedItemIndexPath;
+            
+            UICollectionViewCell *exposedCell = [weakSelf.collectionView cellForItemAtIndexPath:weakSelf.exposedItemIndexPath];
+            
+            [weakSelf addCollapseGestureRecognizerToView:exposedCell];
+            
+            [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+        };
+        
+        [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+
+        if (animated) {
+            
+            [self.collectionView setCollectionViewLayout:exposedLayout animated:YES completion:completion];
+            
+        } else {
+            
+            self.collectionView.collectionViewLayout = exposedLayout;
+            
+            completion(YES);
+        }
+        
+    } else if (self.exposedItemIndexPath) {
+        
+        // We collapse the currently exposed item because
+        //
+        // 1. -exposedItemIndexPath has been set to nil or
+        // 2. we're not allowed to collapse by selecting a new item
+        //
+        [self.collectionView deselectItemAtIndexPath:self.exposedItemIndexPath animated:YES];
+        
+        UICollectionViewCell *exposedCell = [self.collectionView cellForItemAtIndexPath:self.exposedItemIndexPath];
+        
+        [self removeCollapseGestureRecognizersFromView:exposedCell];
+        
+        self.exposedLayout = nil;
+        
+        _exposedItemIndexPath = nil;
+        
+        __weak typeof(self) weakSelf = self;
+        
+        void (^completion) (BOOL) = ^ (BOOL finished) {
+            
+            weakSelf.stackedLayout.overwriteContentOffset = NO;
+            
+            [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+        };
+        
+        [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+
+        if (animated) {
+            
+            [self.collectionView setCollectionViewLayout:self.stackedLayout animated:YES completion:completion];
+            
+        } else {
+            
+            self.collectionView.collectionViewLayout = self.stackedLayout;
+            
+            completion(YES);
+        }
+    }
+}
+
+- (void)resetExposedItemIndexPath {
+
+    // Set -exposedItemIndexPath to `nil` w/o triggering
+    // any layout updates as in the setters above
+    //
+    _exposedItemIndexPath = nil;
+}
+
 #pragma mark - Actions
 
 - (IBAction)handleMovePressGesture:(UILongPressGestureRecognizer *)recognizer {
@@ -255,11 +407,18 @@
 
                 if (finish) {
                     
+                    // We have a properly installed stacked layout here
+
                     [weakSelf removeCollapseGestureRecognizersFromView:exposedCell];
                     
                     weakSelf.stackedLayout.overwriteContentOffset = NO;
-                    weakSelf.exposedItemIndexPath = nil;
                     weakSelf.exposedLayout = nil;
+                    
+                    // Issue #37: Do not trigger layout update, since
+                    //            everthing is fine when interactive
+                    //            transition finished
+                    //
+                    [weakSelf resetExposedItemIndexPath];
                 }
                 
                 weakSelf.interactiveTransitionInProgress = NO;
@@ -335,18 +494,25 @@
 
                 if (finish) {
                     
+                    // We have a properly installed stacked layout here
+
                     UICollectionViewCell *exposedCell = [self.collectionView cellForItemAtIndexPath:weakSelf.exposedItemIndexPath];
                     
                     [weakSelf removeCollapseGestureRecognizersFromView:exposedCell];
                     
                     weakSelf.stackedLayout.overwriteContentOffset = NO;
-                    weakSelf.exposedItemIndexPath = nil;
                     weakSelf.exposedLayout = nil;
+
+                    // Issue #37: Do not trigger layout update, since
+                    //            everthing is fine when interactive
+                    //            transition finished
+                    //
+                    [weakSelf resetExposedItemIndexPath];
                 }
                 
-                transitionLayout = nil;
-                
                 weakSelf.interactiveTransitionInProgress = NO;
+                
+                transitionLayout = nil;
             }];
             
             transitionMinThreshold = weakSelf.collapsePinchMinimumThreshold;
@@ -427,138 +593,6 @@
     if (self.exposedItemIndexPath && indexPath.item == self.exposedItemIndexPath.item) {
         
         [collectionView selectItemAtIndexPath:indexPath animated:NO scrollPosition:UICollectionViewScrollPositionNone];
-    }
-}
-
-- (void)setExposedItemIndexPath:(nullable NSIndexPath *)exposedItemIndexPath {
-    
-    [self setExposedItemIndexPath:exposedItemIndexPath animated:YES];
-}
-
-- (void)setExposedItemIndexPath:(nullable NSIndexPath *)exposedItemIndexPath animated:(BOOL)animated {
-
-    if (self.exposedItemIndexPath == nil && exposedItemIndexPath) {
-
-        // Exposed item while none is exposed yet
-        //
-        self.stackedLayout.contentOffset = self.collectionView.contentOffset;
-
-        TGLExposedLayout *exposedLayout = [[[self.class exposedLayoutClass] alloc] initWithExposedItemIndex:exposedItemIndexPath.item];
-        
-        exposedLayout.layoutMargin = self.exposedLayoutMargin;
-        exposedLayout.itemSize = self.exposedItemSize;
-        exposedLayout.topOverlap = self.exposedTopOverlap;
-        exposedLayout.bottomOverlap = self.exposedBottomOverlap;
-        exposedLayout.bottomOverlapCount = self.exposedBottomOverlapCount;
-        
-        exposedLayout.pinningMode = self.exposedPinningMode;
-        exposedLayout.topPinningCount = self.exposedTopPinningCount;
-        exposedLayout.bottomPinningCount = self.exposedBottomPinningCount;
-
-        __weak typeof(self) weakSelf = self;
-
-        void (^completion) (BOOL) = ^ (BOOL finished) {
-            
-            weakSelf.stackedLayout.overwriteContentOffset = YES;
-            weakSelf.exposedLayout = exposedLayout;
-            
-            _exposedItemIndexPath = exposedItemIndexPath;
-            
-            UICollectionViewCell *exposedCell = [weakSelf.collectionView cellForItemAtIndexPath:weakSelf.exposedItemIndexPath];
-            
-            [weakSelf addCollapseGestureRecognizerToView:exposedCell];
-        };
-
-        if (animated) {
-            
-            [self.collectionView setCollectionViewLayout:exposedLayout animated:YES completion:completion];
-            
-        } else {
-            
-            self.collectionView.collectionViewLayout = exposedLayout;
-            
-            completion(YES);
-        }
-        
-        
-    } else if (self.exposedItemIndexPath && exposedItemIndexPath && (exposedItemIndexPath.item != self.exposedItemIndexPath.item || self.unexposedItemsAreSelectable)) {
-        
-        // We have another exposed item and we expose the new one instead
-        //
-        UICollectionViewCell *exposedCell = [self.collectionView cellForItemAtIndexPath:self.exposedItemIndexPath];
-        
-        [self removeCollapseGestureRecognizersFromView:exposedCell];
-        
-        TGLExposedLayout *exposedLayout = [[TGLExposedLayout alloc] initWithExposedItemIndex:exposedItemIndexPath.item];
-        
-        exposedLayout.layoutMargin = self.exposedLayout.layoutMargin;
-        exposedLayout.itemSize = self.exposedLayout.itemSize;
-        exposedLayout.topOverlap = self.exposedLayout.topOverlap;
-        exposedLayout.bottomOverlap = self.exposedLayout.bottomOverlap;
-        exposedLayout.bottomOverlapCount = self.exposedLayout.bottomOverlapCount;
-        
-        exposedLayout.pinningMode = self.exposedLayout.pinningMode;
-        exposedLayout.topPinningCount = self.exposedLayout.topPinningCount;
-        exposedLayout.bottomPinningCount = self.exposedLayout.bottomPinningCount;
-        
-        __weak typeof(self) weakSelf = self;
-        
-        void (^completion) (BOOL) = ^ (BOOL finished) {
-            
-            weakSelf.exposedLayout = exposedLayout;
-            
-            _exposedItemIndexPath = exposedItemIndexPath;
-            
-            UICollectionViewCell *exposedCell = [weakSelf.collectionView cellForItemAtIndexPath:weakSelf.exposedItemIndexPath];
-            
-            [weakSelf addCollapseGestureRecognizerToView:exposedCell];
-        };
-
-        if (animated) {
-            
-            [self.collectionView setCollectionViewLayout:exposedLayout animated:YES completion:completion];
-            
-        } else {
-            
-            self.collectionView.collectionViewLayout = exposedLayout;
-            
-            completion(YES);
-        }
-        
-    } else if (self.exposedItemIndexPath) {
-        
-        // We collapse the currently exposed item because
-        //
-        // 1. -exposedItemIndexPath has been set to nil or
-        // 2. we're not allowed to collapse by selecting a new item
-        //
-        [self.collectionView deselectItemAtIndexPath:self.exposedItemIndexPath animated:YES];
-        
-        UICollectionViewCell *exposedCell = [self.collectionView cellForItemAtIndexPath:self.exposedItemIndexPath];
-        
-        [self removeCollapseGestureRecognizersFromView:exposedCell];
-        
-        self.exposedLayout = nil;
-
-        _exposedItemIndexPath = nil;
-        
-        __weak typeof(self) weakSelf = self;
-        
-        void (^completion) (BOOL) = ^ (BOOL finished) {
-            
-            weakSelf.stackedLayout.overwriteContentOffset = NO;
-        };
-
-        if (animated) {
-            
-            [self.collectionView setCollectionViewLayout:self.stackedLayout animated:YES completion:completion];
-
-        } else {
-
-            self.collectionView.collectionViewLayout = self.stackedLayout;
-            
-            completion(YES);
-        }
     }
 }
 
