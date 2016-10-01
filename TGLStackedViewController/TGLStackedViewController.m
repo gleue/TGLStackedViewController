@@ -29,6 +29,7 @@
 
 @property (nonatomic, strong) TGLStackedLayout *stackedLayout;
 @property (nonatomic, strong) TGLExposedLayout *exposedLayout;
+@property (nonatomic, weak) UICollectionViewTransitionLayout *transitionLayout;
 
 @property (nonatomic, strong) UILongPressGestureRecognizer *moveGestureRecognizer;
 @property (nonatomic, strong) NSIndexPath *movingIndexPath;
@@ -37,7 +38,7 @@
 @property (nonatomic, readonly) UIPanGestureRecognizer *collapsePanGestureRecognizer;
 @property (nonatomic, readonly) UIPinchGestureRecognizer *collapsePinchGestureRecognizer;
 
-@property (nonatomic, assign) BOOL interactiveTransitionInProgress;
+@property (nonatomic, assign, getter=isFinishingInteractiveTransition) BOOL finishingInteractiveTransition;
 
 @end
 
@@ -391,7 +392,6 @@
 
 - (IBAction)handleCollapsePanGesture:(UIPanGestureRecognizer *)recognizer {
     
-    static UICollectionViewTransitionLayout *transitionLayout;
     static CGFloat transitionMaxThreshold;
     static CGFloat transitionMinThreshold;
     
@@ -399,50 +399,54 @@
             
         case UIGestureRecognizerStateBegan: {
             
-            UICollectionViewCell *exposedCell = [self.collectionView cellForItemAtIndexPath:self.exposedItemIndexPath];
-            
-            __weak typeof(self) weakSelf = self;
-
-            transitionLayout = [self.collectionView startInteractiveTransitionToCollectionViewLayout:self.stackedLayout completion:^ (BOOL completed, BOOL finish) {
-
-                if (finish) {
+            if (self.transitionLayout == nil) {
+                
+                UICollectionViewCell *exposedCell = [self.collectionView cellForItemAtIndexPath:self.exposedItemIndexPath];
+                
+                __weak typeof(self) weakSelf = self;
+                
+                self.transitionLayout = [self.collectionView startInteractiveTransitionToCollectionViewLayout:self.stackedLayout completion:^ (BOOL completed, BOOL finish) {
                     
-                    // We have a properly installed stacked layout here
-
-                    [weakSelf removeCollapseGestureRecognizersFromView:exposedCell];
+                    if (finish) {
+                        
+                        // We have a properly installed stacked layout here
+                        
+                        [weakSelf removeCollapseGestureRecognizersFromView:exposedCell];
+                        
+                        weakSelf.stackedLayout.overwriteContentOffset = NO;
+                        weakSelf.exposedLayout = nil;
+                        
+                        // Issue #37: Do not trigger layout update, since
+                        //            everthing is fine when interactive
+                        //            transition finished
+                        //
+                        [weakSelf resetExposedItemIndexPath];
+                    }
                     
-                    weakSelf.stackedLayout.overwriteContentOffset = NO;
-                    weakSelf.exposedLayout = nil;
-                    
-                    // Issue #37: Do not trigger layout update, since
-                    //            everthing is fine when interactive
-                    //            transition finished
+                    // Issue #37: Re-allow item interaction when
+                    //            interactive transition is done
                     //
-                    [weakSelf resetExposedItemIndexPath];
-                }
+                    weakSelf.transitionLayout = nil;
+                    weakSelf.finishingInteractiveTransition = NO;
+                }];
                 
-                weakSelf.interactiveTransitionInProgress = NO;
-                
-                transitionLayout = nil;
-            }];
-            
-            transitionMaxThreshold = (self.collapsePanMaximumThreshold > 0.0) ? self.collapsePanMaximumThreshold : CGRectGetHeight(exposedCell.bounds);
-            transitionMinThreshold = MAX(self.collapsePanMinimumThreshold, 0.0);
-            
-            // Issue #37: Prevent item selection while interactive transition in progress
-            //
-            self.interactiveTransitionInProgress = YES;
+                transitionMaxThreshold = (self.collapsePanMaximumThreshold > 0.0) ? self.collapsePanMaximumThreshold : CGRectGetHeight(exposedCell.bounds);
+                transitionMinThreshold = MAX(self.collapsePanMinimumThreshold, 0.0);
+            }
 
             break;
         }
             
         case UIGestureRecognizerStateChanged: {
             
-            CGPoint currentOffset = [recognizer translationInView:self.collectionView];
+            if (self.transitionLayout && self.collectionView.collectionViewLayout == self.transitionLayout && !self.isFinishingInteractiveTransition) {
+            
+                CGPoint currentOffset = [recognizer translationInView:self.collectionView];
 
-            if (currentOffset.y >= 0.0) {
-                
-                transitionLayout.transitionProgress = MIN(currentOffset.y, transitionMaxThreshold) / transitionMaxThreshold;
+                if (currentOffset.y >= 0.0) {
+                    
+                    self.transitionLayout.transitionProgress = MIN(currentOffset.y, transitionMaxThreshold) / transitionMaxThreshold;
+                }
             }
 
             break;
@@ -450,25 +454,41 @@
             
         case UIGestureRecognizerStateEnded: {
             
-            CGPoint currentOffset = [recognizer translationInView:self.collectionView];
-            CGPoint currentSpeed = [recognizer velocityInView:self.collectionView];
-            
-            if (currentOffset.y >= transitionMinThreshold && currentSpeed.y >= 0.0) {
+            if (self.transitionLayout && self.collectionView.collectionViewLayout == self.transitionLayout && !self.isFinishingInteractiveTransition) {
                 
-                [self.collectionView deselectItemAtIndexPath:self.exposedItemIndexPath animated:YES];
-                [self.collectionView finishInteractiveTransition];
-
-            } else {
+                // Issue #37: Prevent item interaction while
+                //            interactive transition is finishing
+                //
+                self.finishingInteractiveTransition = YES;
                 
-                [self.collectionView cancelInteractiveTransition];
+                CGPoint currentOffset = [recognizer translationInView:self.collectionView];
+                CGPoint currentSpeed = [recognizer velocityInView:self.collectionView];
+                
+                if (currentOffset.y >= transitionMinThreshold && currentSpeed.y >= 0.0) {
+                    
+                    [self.collectionView deselectItemAtIndexPath:self.exposedItemIndexPath animated:YES];
+                    [self.collectionView finishInteractiveTransition];
+                    
+                } else {
+                    
+                    [self.collectionView cancelInteractiveTransition];
+                }
             }
             
             break;
         }
             
         case UIGestureRecognizerStateCancelled: {
+            
+            if (self.transitionLayout && self.collectionView.collectionViewLayout == self.transitionLayout && !self.isFinishingInteractiveTransition) {
+                
+                // Issue #37: Prevent item interaction while
+                //            interactive transition is finishing
+                //
+                self.finishingInteractiveTransition = YES;
 
-            [self.collectionView cancelInteractiveTransition];
+                [self.collectionView cancelInteractiveTransition];
+            }
             
             break;
         }
@@ -481,60 +501,63 @@
 
 - (IBAction)handleCollapsePinchGesture:(UIPinchGestureRecognizer *)recognizer {
     
-    static UICollectionViewTransitionLayout *transitionLayout;
     static CGFloat transitionMinThreshold;
 
     switch (recognizer.state) {
             
         case UIGestureRecognizerStateBegan: {
             
-            __weak typeof(self) weakSelf = self;
+            if (self.transitionLayout == nil) {
+
+                __weak typeof(self) weakSelf = self;
             
-            transitionLayout = [self.collectionView startInteractiveTransitionToCollectionViewLayout:self.stackedLayout completion:^ (BOOL completed, BOOL finish) {
+                self.transitionLayout = [self.collectionView startInteractiveTransitionToCollectionViewLayout:self.stackedLayout completion:^ (BOOL completed, BOOL finish) {
 
-                if (finish) {
-                    
-                    // We have a properly installed stacked layout here
+                    if (finish) {
+                        
+                        // We have a properly installed stacked layout here
 
-                    UICollectionViewCell *exposedCell = [self.collectionView cellForItemAtIndexPath:weakSelf.exposedItemIndexPath];
-                    
-                    [weakSelf removeCollapseGestureRecognizersFromView:exposedCell];
-                    
-                    weakSelf.stackedLayout.overwriteContentOffset = NO;
-                    weakSelf.exposedLayout = nil;
+                        UICollectionViewCell *exposedCell = [self.collectionView cellForItemAtIndexPath:weakSelf.exposedItemIndexPath];
+                        
+                        [weakSelf removeCollapseGestureRecognizersFromView:exposedCell];
+                        
+                        weakSelf.stackedLayout.overwriteContentOffset = NO;
+                        weakSelf.exposedLayout = nil;
 
-                    // Issue #37: Do not trigger layout update, since
-                    //            everthing is fine when interactive
-                    //            transition finished
+                        // Issue #37: Do not trigger layout update, since
+                        //            everthing is fine when interactive
+                        //            transition finished
+                        //
+                        [weakSelf resetExposedItemIndexPath];
+                    }
+                    
+                    // Issue #37: Re-allow item selection when
+                    //            interactive transition is done
                     //
-                    [weakSelf resetExposedItemIndexPath];
-                }
+                    weakSelf.transitionLayout = nil;
+                    weakSelf.finishingInteractiveTransition = NO;
+                }];
                 
-                weakSelf.interactiveTransitionInProgress = NO;
+                transitionMinThreshold = weakSelf.collapsePinchMinimumThreshold;
                 
-                transitionLayout = nil;
-            }];
-            
-            transitionMinThreshold = weakSelf.collapsePinchMinimumThreshold;
-            
-            if (transitionMinThreshold < 0.0) transitionMinThreshold = 0.0; else if (transitionMinThreshold > 1.0) transitionMinThreshold = 1.0;
+                if (transitionMinThreshold < 0.0) transitionMinThreshold = 0.0; else if (transitionMinThreshold > 1.0) transitionMinThreshold = 1.0;
 
-            transitionMinThreshold = 1.0 - transitionMinThreshold;
-            
-            // Issue #37: Prevent item selection while interactive transition in progress
-            //
-            self.interactiveTransitionInProgress = YES;
-            
+                transitionMinThreshold = 1.0 - transitionMinThreshold;
+            }
+
             break;
         }
             
         case UIGestureRecognizerStateChanged: {
             
-            CGFloat currentScale = recognizer.scale;
-
-            if (currentScale >= 0.0 && currentScale <= 1.0) {
+            if (self.transitionLayout && self.collectionView.collectionViewLayout == self.transitionLayout && !self.isFinishingInteractiveTransition) {
                 
-                transitionLayout.transitionProgress = 1.0 - currentScale;
+                CGFloat currentScale = recognizer.scale;
+
+                if (currentScale >= 0.0 && currentScale <= 1.0) {
+                    
+                    self.transitionLayout.transitionProgress = 1.0 - currentScale;
+                }
             }
             
             break;
@@ -542,17 +565,25 @@
             
         case UIGestureRecognizerStateEnded: {
             
-            CGFloat currentScale = recognizer.scale;
-            CGFloat currentSpeed = recognizer.velocity;
+            if (self.transitionLayout && self.collectionView.collectionViewLayout == self.transitionLayout && !self.isFinishingInteractiveTransition) {
+                
+                // Issue #37: Prevent item interaction while
+                //            interactive transition is finishing
+                //
+                self.finishingInteractiveTransition = YES;
 
-            if (currentScale <= transitionMinThreshold && currentSpeed <= 0.0) {
-            
-                [self.collectionView deselectItemAtIndexPath:self.exposedItemIndexPath animated:YES];
-                [self.collectionView finishInteractiveTransition];
+                CGFloat currentScale = recognizer.scale;
+                CGFloat currentSpeed = recognizer.velocity;
+
+                if (currentScale <= transitionMinThreshold && currentSpeed <= 0.0) {
                 
-            } else {
-                
-                [self.collectionView cancelInteractiveTransition];
+                    [self.collectionView deselectItemAtIndexPath:self.exposedItemIndexPath animated:YES];
+                    [self.collectionView finishInteractiveTransition];
+                    
+                } else {
+                    
+                    [self.collectionView cancelInteractiveTransition];
+                }
             }
             
             break;
@@ -560,8 +591,16 @@
             
         case UIGestureRecognizerStateCancelled: {
             
-            [self.collectionView cancelInteractiveTransition];
-            
+            if (self.transitionLayout && self.collectionView.collectionViewLayout == self.transitionLayout && !self.isFinishingInteractiveTransition) {
+                
+                // Issue #37: Prevent item interaction while
+                //            interactive transition is finishing
+                //
+                self.finishingInteractiveTransition = YES;
+
+                [self.collectionView cancelInteractiveTransition];
+            }
+
             break;
         }
             
@@ -581,7 +620,7 @@
     //
     // Issue #37: Prevent selection, too, while interactive transition is still in progress.
     //
-    return (self.exposedItemIndexPath == nil || indexPath.item == self.exposedItemIndexPath.item || self.unexposedItemsAreSelectable) && !self.interactiveTransitionInProgress;
+    return (self.exposedItemIndexPath == nil || indexPath.item == self.exposedItemIndexPath.item || self.unexposedItemsAreSelectable) && self.transitionLayout == nil;
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
