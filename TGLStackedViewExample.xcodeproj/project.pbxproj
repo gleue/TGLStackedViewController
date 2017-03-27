@@ -27,9 +27,6 @@
 		D1FC7DBF1E85A8B1003FB98A /* TGLStackedViewControllerFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = D1FC7DBD1E85A8B1003FB98A /* TGLStackedViewControllerFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D1FC7DC21E85A8B1003FB98A /* TGLStackedViewController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1FC7DBB1E85A8B1003FB98A /* TGLStackedViewController.framework */; };
 		D1FC7DC31E85A8B1003FB98A /* TGLStackedViewController.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D1FC7DBB1E85A8B1003FB98A /* TGLStackedViewController.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		D1FC7DC81E85A8C5003FB98A /* TGLExposedLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DBF89AD190019980041CB92 /* TGLExposedLayout.m */; };
-		D1FC7DC91E85A8C5003FB98A /* TGLStackedLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DBF89AF190019980041CB92 /* TGLStackedLayout.m */; };
-		D1FC7DCA1E85A8C5003FB98A /* TGLStackedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DBF89B1190019980041CB92 /* TGLStackedViewController.m */; };
 		D1FC7DCB1E85A92C003FB98A /* TGLExposedLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DBF89AC190019980041CB92 /* TGLExposedLayout.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D1FC7DCC1E85A92E003FB98A /* TGLStackedLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DBF89AE190019980041CB92 /* TGLStackedLayout.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D1FC7DCD1E85A930003FB98A /* TGLStackedViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DBF89B0190019980041CB92 /* TGLStackedViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -326,9 +323,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D1FC7DCA1E85A8C5003FB98A /* TGLStackedViewController.m in Sources */,
-				D1FC7DC81E85A8C5003FB98A /* TGLExposedLayout.m in Sources */,
-				D1FC7DC91E85A8C5003FB98A /* TGLStackedLayout.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
