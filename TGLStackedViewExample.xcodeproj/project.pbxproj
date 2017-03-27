@@ -24,11 +24,10 @@
 		3DF68F1618F31B0C00387458 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3DF68F1518F31B0C00387458 /* Images.xcassets */; };
 		3DF68F3418F31C1300387458 /* TGLCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DF68F3318F31C1300387458 /* TGLCollectionViewCell.m */; };
 		3DFACA4F1D195E8C005C8F3F /* TGLBackgroundProxyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DFACA4E1D195E8C005C8F3F /* TGLBackgroundProxyView.m */; };
-		D1FC7DBF1E85A8B1003FB98A /* TGLStackedViewControllerFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = D1FC7DBD1E85A8B1003FB98A /* TGLStackedViewControllerFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D1AE4A2C1E89198A006C8E16 /* TGLExposedLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DBF89AC190019980041CB92 /* TGLExposedLayout.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D1AE4A2D1E89198E006C8E16 /* TGLStackedLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DBF89AE190019980041CB92 /* TGLStackedLayout.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D1FC7DC21E85A8B1003FB98A /* TGLStackedViewController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1FC7DBB1E85A8B1003FB98A /* TGLStackedViewController.framework */; };
 		D1FC7DC31E85A8B1003FB98A /* TGLStackedViewController.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D1FC7DBB1E85A8B1003FB98A /* TGLStackedViewController.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		D1FC7DCB1E85A92C003FB98A /* TGLExposedLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DBF89AC190019980041CB92 /* TGLExposedLayout.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D1FC7DCC1E85A92E003FB98A /* TGLStackedLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DBF89AE190019980041CB92 /* TGLStackedLayout.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D1FC7DCD1E85A930003FB98A /* TGLStackedViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DBF89B0190019980041CB92 /* TGLStackedViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
@@ -87,7 +86,6 @@
 		3DFACA4D1D195E8C005C8F3F /* TGLBackgroundProxyView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGLBackgroundProxyView.h; sourceTree = "<group>"; };
 		3DFACA4E1D195E8C005C8F3F /* TGLBackgroundProxyView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGLBackgroundProxyView.m; sourceTree = "<group>"; };
 		D1FC7DBB1E85A8B1003FB98A /* TGLStackedViewController.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TGLStackedViewController.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		D1FC7DBD1E85A8B1003FB98A /* TGLStackedViewControllerFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TGLStackedViewControllerFramework.h; sourceTree = "<group>"; };
 		D1FC7DBE1E85A8B1003FB98A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -117,7 +115,6 @@
 			isa = PBXGroup;
 			children = (
 				D1FC7DBE1E85A8B1003FB98A /* Info.plist */,
-				D1FC7DBD1E85A8B1003FB98A /* TGLStackedViewControllerFramework.h */,
 				3DBF89AC190019980041CB92 /* TGLExposedLayout.h */,
 				3DBF89AD190019980041CB92 /* TGLExposedLayout.m */,
 				3DBF89AE190019980041CB92 /* TGLStackedLayout.h */,
@@ -198,10 +195,9 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D1FC7DBF1E85A8B1003FB98A /* TGLStackedViewControllerFramework.h in Headers */,
 				D1FC7DCD1E85A930003FB98A /* TGLStackedViewController.h in Headers */,
-				D1FC7DCB1E85A92C003FB98A /* TGLExposedLayout.h in Headers */,
-				D1FC7DCC1E85A92E003FB98A /* TGLStackedLayout.h in Headers */,
+				D1AE4A2C1E89198A006C8E16 /* TGLExposedLayout.h in Headers */,
+				D1AE4A2D1E89198E006C8E16 /* TGLStackedLayout.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

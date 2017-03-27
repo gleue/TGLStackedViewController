@@ -25,6 +25,9 @@
 
 #import <UIKit/UIKit.h>
 
+FOUNDATION_EXPORT double TGLStackedViewControllerVersionNumber;
+FOUNDATION_EXPORT const unsigned char TGLStackedViewControllerVersionString[];
+
 #import "TGLStackedLayout.h"
 #import "TGLExposedLayout.h"
 
