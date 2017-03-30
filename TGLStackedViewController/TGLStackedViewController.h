@@ -229,8 +229,30 @@
  *
  * The exposed item's selected state is `YES`.
  *
+ * @param exposedItemIndexPath The index path of the item to be exposed.
+ * @param animated If `YES` the layout transition will be animated.
+ *
  * @see -exposedItemIndexPath
+ * @see -setExposedItemIndexPath:animated:completion:
  */
 - (void)setExposedItemIndexPath:(nullable NSIndexPath *)exposedItemIndexPath animated:(BOOL)animated;
+
+/** Sets the currently exposed item.
+ *
+ * Expose the item at a valid index path location
+ * instead of the current one, or pass to `nil`
+ * to collapse all items.
+ *
+ * The resulting layout transition may be animated.
+ *
+ * The exposed item's selected state is `YES`.
+ *
+ * @param exposedItemIndexPath The index path of the item to be exposed.
+ * @param animated If `YES` the layout transition will be animated.
+ * @param completion The block to execute after the transition finishes.
+ *
+ * @see -exposedItemIndexPath
+ */
+- (void)setExposedItemIndexPath:(nullable NSIndexPath *)exposedItemIndexPath animated:(BOOL)animated completion:(nullable void (^)(void))completion;
 
 @end
