@@ -1,9 +1,8 @@
-[![Platform](https://img.shields.io/cocoapods/p/TGLStackedViewController.svg?maxAge=86400)]()
-[![Tag](https://img.shields.io/github/tag/gleue/TGLStackedViewController.svg?maxAge=86400)]()
-[![Version](https://img.shields.io/cocoapods/v/TGLStackedViewController.svg?style=flat)](http://cocoadocs.org/docsets/TGLStackedViewController)
+[![Platform](https://img.shields.io/cocoapods/p/TGLStackedViewController.svg?maxAge=86400)](http://cocoadocs.org/docsets/TGLStackedViewController)
+[![Tag](https://img.shields.io/github/tag/gleue/TGLStackedViewController.svg?maxAge=86400)](https://github.com/gleue/TGLStackedViewController/tags)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
-[![License](https://img.shields.io/github/license/gleue/TGLStackedViewController.svg?maxAge=86400)]()
-[![Downloads](https://img.shields.io/cocoapods/dt/TGLStackedViewController.svg?maxAge=86400)]()
+[![License](https://img.shields.io/github/license/gleue/TGLStackedViewController.svg?maxAge=86400)](https://opensource.org/licenses/MIT)
+[![Downloads](https://img.shields.io/cocoapods/dt/TGLStackedViewController.svg?maxAge=86400)](https://cocoapods.org/pods/TGLStackedViewController)
 
 TGLStackedViewController
 ========================

@@ -161,10 +161,15 @@
 
 - (void)setExposedItemIndexPath:(nullable NSIndexPath *)exposedItemIndexPath {
     
-    [self setExposedItemIndexPath:exposedItemIndexPath animated:YES];
+    [self setExposedItemIndexPath:exposedItemIndexPath animated:YES completion:nil];
 }
 
 - (void)setExposedItemIndexPath:(nullable NSIndexPath *)exposedItemIndexPath animated:(BOOL)animated {
+    
+    [self setExposedItemIndexPath:exposedItemIndexPath animated:animated completion:nil];
+}
+
+- (void)setExposedItemIndexPath:(nullable NSIndexPath *)exposedItemIndexPath animated:(BOOL)animated completion:(void (^)(void))completion {
 
     if (self.exposedItemIndexPath == nil && exposedItemIndexPath) {
         
@@ -186,7 +191,7 @@
         
         __weak typeof(self) weakSelf = self;
         
-        void (^completion) (BOOL) = ^ (BOOL finished) {
+        void (^layoutcompletion) (BOOL) = ^ (BOOL finished) {
             
             weakSelf.stackedLayout.overwriteContentOffset = YES;
             weakSelf.exposedLayout = exposedLayout;
@@ -198,19 +203,21 @@
             [weakSelf addCollapseGestureRecognizerToView:exposedCell];
             
             [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+            
+            if (completion) completion();
         };
         
         [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
 
         if (animated) {
             
-            [self.collectionView setCollectionViewLayout:exposedLayout animated:YES completion:completion];
+            [self.collectionView setCollectionViewLayout:exposedLayout animated:YES completion:layoutcompletion];
             
         } else {
             
             self.collectionView.collectionViewLayout = exposedLayout;
             
-            completion(YES);
+            layoutcompletion(YES);
         }
         
         
@@ -236,7 +243,7 @@
         
         __weak typeof(self) weakSelf = self;
         
-        void (^completion) (BOOL) = ^ (BOOL finished) {
+        void (^layoutcompletion) (BOOL) = ^ (BOOL finished) {
             
             weakSelf.exposedLayout = exposedLayout;
             
@@ -247,19 +254,21 @@
             [weakSelf addCollapseGestureRecognizerToView:exposedCell];
             
             [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+            
+            if (completion) completion();
         };
         
         [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
 
         if (animated) {
             
-            [self.collectionView setCollectionViewLayout:exposedLayout animated:YES completion:completion];
+            [self.collectionView setCollectionViewLayout:exposedLayout animated:YES completion:layoutcompletion];
             
         } else {
             
             self.collectionView.collectionViewLayout = exposedLayout;
             
-            completion(YES);
+            layoutcompletion(YES);
         }
         
     } else if (self.exposedItemIndexPath) {
@@ -281,24 +290,26 @@
         
         __weak typeof(self) weakSelf = self;
         
-        void (^completion) (BOOL) = ^ (BOOL finished) {
+        void (^layoutcompletion) (BOOL) = ^ (BOOL finished) {
             
             weakSelf.stackedLayout.overwriteContentOffset = NO;
             
             [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+            
+            if (completion) completion();
         };
         
         [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
 
         if (animated) {
             
-            [self.collectionView setCollectionViewLayout:self.stackedLayout animated:YES completion:completion];
+            [self.collectionView setCollectionViewLayout:self.stackedLayout animated:YES completion:layoutcompletion];
             
         } else {
             
             self.collectionView.collectionViewLayout = self.stackedLayout;
             
-            completion(YES);
+            layoutcompletion(YES);
         }
     }
 }
