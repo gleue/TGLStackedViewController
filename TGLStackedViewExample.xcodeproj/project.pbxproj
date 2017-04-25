@@ -8,9 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		3D4FB8341D0AE5EA001F5270 /* TGLSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D4FB8331D0AE5EA001F5270 /* TGLSettingsViewController.m */; };
-		3DBF89B2190019980041CB92 /* TGLExposedLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DBF89AD190019980041CB92 /* TGLExposedLayout.m */; };
-		3DBF89B3190019980041CB92 /* TGLStackedLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DBF89AF190019980041CB92 /* TGLStackedLayout.m */; };
-		3DBF89B4190019980041CB92 /* TGLStackedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DBF89B1190019980041CB92 /* TGLStackedViewController.m */; };
 		3DCA5E9A1A121D7D0079EDC9 /* Launch Screen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3DCA5E991A121D7D0079EDC9 /* Launch Screen.xib */; };
 		3DE7BA111D0DEE7E0035A3FD /* TGLSettingOptionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DE7BA101D0DEE7E0035A3FD /* TGLSettingOptionsViewController.m */; };
 		3DF68EFE18F31B0C00387458 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DF68EFD18F31B0C00387458 /* Foundation.framework */; };
@@ -24,7 +21,39 @@
 		3DF68F1618F31B0C00387458 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3DF68F1518F31B0C00387458 /* Images.xcassets */; };
 		3DF68F3418F31C1300387458 /* TGLCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DF68F3318F31C1300387458 /* TGLCollectionViewCell.m */; };
 		3DFACA4F1D195E8C005C8F3F /* TGLBackgroundProxyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DFACA4E1D195E8C005C8F3F /* TGLBackgroundProxyView.m */; };
+		D1AE4A2C1E89198A006C8E16 /* TGLExposedLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DBF89AC190019980041CB92 /* TGLExposedLayout.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D1AE4A2D1E89198E006C8E16 /* TGLStackedLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DBF89AE190019980041CB92 /* TGLStackedLayout.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D1C2B1F71E8927B600BBB75B /* TGLExposedLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DBF89AD190019980041CB92 /* TGLExposedLayout.m */; };
+		D1C2B1F81E8927B600BBB75B /* TGLStackedLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DBF89AF190019980041CB92 /* TGLStackedLayout.m */; };
+		D1C2B1F91E8927B600BBB75B /* TGLStackedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DBF89B1190019980041CB92 /* TGLStackedViewController.m */; };
+		D1FC7DC21E85A8B1003FB98A /* TGLStackedViewController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1FC7DBB1E85A8B1003FB98A /* TGLStackedViewController.framework */; };
+		D1FC7DC31E85A8B1003FB98A /* TGLStackedViewController.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D1FC7DBB1E85A8B1003FB98A /* TGLStackedViewController.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D1FC7DCD1E85A930003FB98A /* TGLStackedViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DBF89B0190019980041CB92 /* TGLStackedViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		D1FC7DC01E85A8B1003FB98A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3DF68EF218F31B0C00387458 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D1FC7DBA1E85A8B1003FB98A;
+			remoteInfo = TGLStackedViewController;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		D1FC7DC71E85A8B1003FB98A /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				D1FC7DC31E85A8B1003FB98A /* TGLStackedViewController.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		3D4FB8321D0AE5EA001F5270 /* TGLSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGLSettingsViewController.h; sourceTree = "<group>"; };
@@ -56,6 +85,8 @@
 		3DF68F3318F31C1300387458 /* TGLCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGLCollectionViewCell.m; sourceTree = "<group>"; };
 		3DFACA4D1D195E8C005C8F3F /* TGLBackgroundProxyView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGLBackgroundProxyView.h; sourceTree = "<group>"; };
 		3DFACA4E1D195E8C005C8F3F /* TGLBackgroundProxyView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGLBackgroundProxyView.m; sourceTree = "<group>"; };
+		D1FC7DBB1E85A8B1003FB98A /* TGLStackedViewController.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TGLStackedViewController.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D1FC7DBE1E85A8B1003FB98A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +97,14 @@
 				3DF68F0018F31B0C00387458 /* CoreGraphics.framework in Frameworks */,
 				3DF68F0218F31B0C00387458 /* UIKit.framework in Frameworks */,
 				3DF68EFE18F31B0C00387458 /* Foundation.framework in Frameworks */,
+				D1FC7DC21E85A8B1003FB98A /* TGLStackedViewController.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D1FC7DB71E85A8B1003FB98A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -75,6 +114,7 @@
 		3DBF89AB190019980041CB92 /* TGLStackedViewController */ = {
 			isa = PBXGroup;
 			children = (
+				D1FC7DBE1E85A8B1003FB98A /* Info.plist */,
 				3DBF89AC190019980041CB92 /* TGLExposedLayout.h */,
 				3DBF89AD190019980041CB92 /* TGLExposedLayout.m */,
 				3DBF89AE190019980041CB92 /* TGLStackedLayout.h */,
@@ -99,6 +139,7 @@
 			isa = PBXGroup;
 			children = (
 				3DF68EFA18F31B0C00387458 /* TGLStackedViewExample.app */,
+				D1FC7DBB1E85A8B1003FB98A /* TGLStackedViewController.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -149,6 +190,19 @@
 		};
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+		D1FC7DB81E85A8B1003FB98A /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D1FC7DCD1E85A930003FB98A /* TGLStackedViewController.h in Headers */,
+				D1AE4A2C1E89198A006C8E16 /* TGLExposedLayout.h in Headers */,
+				D1AE4A2D1E89198E006C8E16 /* TGLStackedLayout.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXNativeTarget section */
 		3DF68EF918F31B0C00387458 /* TGLStackedViewExample */ = {
 			isa = PBXNativeTarget;
@@ -157,15 +211,35 @@
 				3DF68EF618F31B0C00387458 /* Sources */,
 				3DF68EF718F31B0C00387458 /* Frameworks */,
 				3DF68EF818F31B0C00387458 /* Resources */,
+				D1FC7DC71E85A8B1003FB98A /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				D1FC7DC11E85A8B1003FB98A /* PBXTargetDependency */,
 			);
 			name = TGLStackedViewExample;
 			productName = CollectionTest;
 			productReference = 3DF68EFA18F31B0C00387458 /* TGLStackedViewExample.app */;
 			productType = "com.apple.product-type.application";
+		};
+		D1FC7DBA1E85A8B1003FB98A /* TGLStackedViewController */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D1FC7DC61E85A8B1003FB98A /* Build configuration list for PBXNativeTarget "TGLStackedViewController" */;
+			buildPhases = (
+				D1FC7DB61E85A8B1003FB98A /* Sources */,
+				D1FC7DB71E85A8B1003FB98A /* Frameworks */,
+				D1FC7DB81E85A8B1003FB98A /* Headers */,
+				D1FC7DB91E85A8B1003FB98A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TGLStackedViewController;
+			productName = TGLStackedViewController;
+			productReference = D1FC7DBB1E85A8B1003FB98A /* TGLStackedViewController.framework */;
+			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
 
@@ -176,6 +250,12 @@
 				CLASSPREFIX = TGL;
 				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = "Tim Gleue • interactive software";
+				TargetAttributes = {
+					D1FC7DBA1E85A8B1003FB98A = {
+						CreatedOnToolsVersion = 8.2.1;
+						ProvisioningStyle = Automatic;
+					};
+				};
 			};
 			buildConfigurationList = 3DF68EF518F31B0C00387458 /* Build configuration list for PBXProject "TGLStackedViewExample" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -191,6 +271,7 @@
 			projectRoot = "";
 			targets = (
 				3DF68EF918F31B0C00387458 /* TGLStackedViewExample */,
+				D1FC7DBA1E85A8B1003FB98A /* TGLStackedViewController */,
 			);
 		};
 /* End PBXProject section */
@@ -207,6 +288,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D1FC7DB91E85A8B1003FB98A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -214,20 +302,35 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3DBF89B4190019980041CB92 /* TGLStackedViewController.m in Sources */,
 				3DFACA4F1D195E8C005C8F3F /* TGLBackgroundProxyView.m in Sources */,
 				3DE7BA111D0DEE7E0035A3FD /* TGLSettingOptionsViewController.m in Sources */,
 				3DF68F0A18F31B0C00387458 /* main.m in Sources */,
-				3DBF89B2190019980041CB92 /* TGLExposedLayout.m in Sources */,
 				3DF68F3418F31C1300387458 /* TGLCollectionViewCell.m in Sources */,
-				3DBF89B3190019980041CB92 /* TGLStackedLayout.m in Sources */,
 				3DF68F0E18F31B0C00387458 /* TGLAppDelegate.m in Sources */,
 				3D4FB8341D0AE5EA001F5270 /* TGLSettingsViewController.m in Sources */,
 				3DF68F1418F31B0C00387458 /* TGLViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D1FC7DB61E85A8B1003FB98A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D1C2B1F91E8927B600BBB75B /* TGLStackedViewController.m in Sources */,
+				D1C2B1F71E8927B600BBB75B /* TGLExposedLayout.m in Sources */,
+				D1C2B1F81E8927B600BBB75B /* TGLStackedLayout.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D1FC7DC11E85A8B1003FB98A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D1FC7DBA1E85A8B1003FB98A /* TGLStackedViewController */;
+			targetProxy = D1FC7DC01E85A8B1003FB98A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		3DF68F0618F31B0C00387458 /* InfoPlist.strings */ = {
@@ -340,6 +443,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TGLStackedViewExample/TGLStackedViewExample-Prefix.pch";
 				INFOPLIST_FILE = "$(SRCROOT)/TGLStackedViewExample/TGLStackedViewExample-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.gleue-interactive.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = TGLStackedViewExample;
 				PROVISIONING_PROFILE = "";
@@ -357,10 +461,66 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TGLStackedViewExample/TGLStackedViewExample-Prefix.pch";
 				INFOPLIST_FILE = "$(SRCROOT)/TGLStackedViewExample/TGLStackedViewExample-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.gleue-interactive.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = TGLStackedViewExample;
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		D1FC7DC41E85A8B1003FB98A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = TGLStackedViewController/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.gleue-interactive.TGLStackedViewController";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		D1FC7DC51E85A8B1003FB98A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = TGLStackedViewController/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.gleue-interactive.TGLStackedViewController";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
 			};
 			name = Release;
 		};
@@ -381,6 +541,15 @@
 			buildConfigurations = (
 				3DF68F2D18F31B0C00387458 /* Debug */,
 				3DF68F2E18F31B0C00387458 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D1FC7DC61E85A8B1003FB98A /* Build configuration list for PBXNativeTarget "TGLStackedViewController" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D1FC7DC41E85A8B1003FB98A /* Debug */,
+				D1FC7DC51E85A8B1003FB98A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
