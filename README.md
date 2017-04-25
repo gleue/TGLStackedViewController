@@ -1,6 +1,7 @@
 [![Platform](https://img.shields.io/cocoapods/p/TGLStackedViewController.svg?maxAge=86400)](http://cocoadocs.org/docsets/TGLStackedViewController)
 [![Tag](https://img.shields.io/github/tag/gleue/TGLStackedViewController.svg?maxAge=86400)](https://github.com/gleue/TGLStackedViewController/tags)
-[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+[![CocoaPods](https://img.shields.io/badge/CocoaPods-compatible-4BC51D.svg?style=flat)](https://cocoapods.org)
+[![Carthage](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 [![License](https://img.shields.io/github/license/gleue/TGLStackedViewController.svg?maxAge=86400)](https://opensource.org/licenses/MIT)
 [![Downloads](https://img.shields.io/cocoapods/dt/TGLStackedViewController.svg?maxAge=86400)](https://cocoapods.org/pods/TGLStackedViewController)
 
@@ -37,7 +38,7 @@ Via [CocoaPods](http://cocoapods.org):
 
 Via [Carthage](https://github.com/Carthage/Carthage):
 
-* Add `github "gleue/TGLStackedViewController", ~> 2.1.3` to your project's `Cartfile`
+* Add `github "gleue/TGLStackedViewController", ~> 2.1.5` to your project's `Cartfile`
 
 Or the "classic" way:
 
