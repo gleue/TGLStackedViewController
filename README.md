@@ -72,6 +72,7 @@ Credits
 
 - Reordering in 1.x based on [LXReorderableCollectionViewFlowLayout](https://github.com/lxcid/LXReorderableCollectionViewFlowLayout)
 - Original `Podspec` by [Pierre Dulac](https://github.com/dulaccc)
+- Carthage support by [Hannes Oud](https://github.com/hannesoid)
 
 License
 =======
