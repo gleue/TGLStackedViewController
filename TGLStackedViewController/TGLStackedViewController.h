@@ -31,7 +31,7 @@ FOUNDATION_EXPORT const unsigned char TGLStackedViewControllerVersionString[];
 #import "TGLStackedLayout.h"
 #import "TGLExposedLayout.h"
 
-@interface TGLStackedViewController : UICollectionViewController
+@interface TGLStackedViewController : UICollectionViewController <UICollectionViewDragDelegate>
 
 /** The collection view layout object used when all items are collapsed.
  *

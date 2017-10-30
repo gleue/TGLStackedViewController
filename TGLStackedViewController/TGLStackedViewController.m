@@ -25,7 +25,7 @@
 
 #import "TGLStackedViewController.h"
 
-@interface TGLStackedViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UIGestureRecognizerDelegate>
+@interface TGLStackedViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDropDelegate,UIGestureRecognizerDelegate>
 
 @property (nonatomic, strong) TGLStackedLayout *stackedLayout;
 @property (nonatomic, strong) TGLExposedLayout *exposedLayout;
@@ -33,6 +33,7 @@
 
 @property (nonatomic, strong) UILongPressGestureRecognizer *moveGestureRecognizer;
 @property (nonatomic, strong) NSIndexPath *movingIndexPath;
+@property (nonatomic, strong) NSIndexPath *dragSourceIndexPath;
 
 @property (nonatomic, readonly) UIGestureRecognizer *collapseGestureRecognizer;
 @property (nonatomic, readonly) UIPanGestureRecognizer *collapsePanGestureRecognizer;
@@ -115,10 +116,25 @@
     
     self.stackedLayout = (TGLStackedLayout *)self.collectionViewLayout;
 
-    self.moveGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleMovePressGesture:)];
-    self.moveGestureRecognizer.delegate = self;
+    if (@available(iOS 11, *)) {
 
-    [self.collectionView addGestureRecognizer:self.moveGestureRecognizer];
+        // Issue #45: Use UIKit's new drag and drop API for
+        //            reordering, since interactive movement
+        //            layout attributes are not applied
+        //            correctly breaking z ordering.
+        //
+        self.collectionView.dragDelegate = self;
+        self.collectionView.dragInteractionEnabled = YES;
+
+        self.collectionView.dropDelegate = self;
+
+    } else {
+
+        self.moveGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleMovePressGesture:)];
+        self.moveGestureRecognizer.delegate = self;
+
+        [self.collectionView addGestureRecognizer:self.moveGestureRecognizer];
+    }
 }
 
 #pragma mark - Accessors
@@ -337,15 +353,15 @@
 
             NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:startLocation];
 
+            self.stackedLayout.movingItemScaleFactor = self.movingItemScaleFactor;
+            self.stackedLayout.movingItemOnTop = self.movingItemOnTop;
+
             if (indexPath && [self.collectionView beginInteractiveMovementForItemAtIndexPath:indexPath]) {
-                
-                self.stackedLayout.movingItemScaleFactor = self.movingItemScaleFactor;
-                self.stackedLayout.movingItemOnTop = self.movingItemOnTop;
 
                 UICollectionViewCell *movingCell = [self.collectionView cellForItemAtIndexPath:indexPath];
                 
                 targetPosition = movingCell.center;
-                
+
                 [self.collectionView updateInteractiveMovementTargetPosition:targetPosition];
                 
                 self.movingIndexPath = indexPath;
@@ -355,7 +371,7 @@
         }
 
         case UIGestureRecognizerStateChanged: {
-            
+
             if (self.movingIndexPath) {
 
                 CGPoint currentLocation = [recognizer locationInView:self.collectionView];
@@ -372,7 +388,7 @@
         case UIGestureRecognizerStateEnded: {
 
             if (self.movingIndexPath) {
-                
+
                 [self.collectionView endInteractiveMovement];
                 [self.stackedLayout invalidateLayout];
                 
@@ -383,9 +399,9 @@
         }
             
         case UIGestureRecognizerStateCancelled: {
-            
+
             if (self.movingIndexPath) {
-                
+
                 [self.collectionView cancelInteractiveMovement];
                 [self.stackedLayout invalidateLayout];
                 
@@ -671,6 +687,80 @@
 - (BOOL)collectionView:(UICollectionView *)collectionView canMoveItemAtIndexPath:(NSIndexPath *)indexPath {
 
     return (self.exposedLayout == nil && [self collectionView:self.collectionView numberOfItemsInSection:0] > 1);
+}
+
+#pragma mark - UICollectionViewDragDelegate protocol
+
+- (NSArray<UIDragItem *> *)collectionView:(UICollectionView *)collectionView itemsForBeginningDragSession:(id<UIDragSession>)session atIndexPath:(NSIndexPath *)indexPath NS_AVAILABLE_IOS(11) {
+
+    if (self.exposedLayout == nil && [self collectionView:self.collectionView numberOfItemsInSection:0] > 1) {
+
+        self.dragSourceIndexPath = indexPath;
+
+        NSItemProvider *provider = [NSItemProvider new];
+        UIDragItem *item = [[UIDragItem alloc] initWithItemProvider:provider];
+
+        return @[item];
+
+    } else {
+
+        return @[];
+    }
+}
+
+#pragma mark - UICollectionViewDropDelegate protocol
+
+- (UICollectionViewDropProposal *)collectionView:(UICollectionView *)collectionView dropSessionDidUpdate:(id<UIDropSession>)session withDestinationIndexPath:(NSIndexPath *)destinationIndexPath NS_AVAILABLE_IOS(11) {
+
+    UIDropOperation operation = session.localDragSession ? UIDropOperationMove : UIDropOperationCopy;
+
+    return [[UICollectionViewDropProposal alloc] initWithDropOperation:operation intent:UICollectionViewDropIntentInsertAtDestinationIndexPath];
+}
+
+- (void)collectionView:(UICollectionView *)collectionView performDropWithCoordinator:(id<UICollectionViewDropCoordinator>)coordinator NS_AVAILABLE_IOS(11) {
+
+    // NOTE: We handle only move interactions within
+    //       this collection view here.
+    //
+    // Any other drop interactions, e.g. from other view
+    // within same app or from other app, must be handled
+    // in a subclass since they's require customized data
+    // source updates.
+    //
+    for (id<UICollectionViewDropItem> item in coordinator.items) {
+
+        if (item.sourceIndexPath) {
+
+            [self.collectionView performBatchUpdates:^() {
+
+                [self.collectionView deleteItemsAtIndexPaths:@[item.sourceIndexPath]];
+                [self collectionView:collectionView moveItemAtIndexPath:item.sourceIndexPath toIndexPath:coordinator.destinationIndexPath];
+                [self.collectionView insertItemsAtIndexPaths:@[coordinator.destinationIndexPath]];
+
+                self.dragSourceIndexPath = nil;
+
+            } completion:^ (BOOL finished) {
+
+                [coordinator dropItem:item.dragItem toItemAtIndexPath:coordinator.destinationIndexPath];
+            }];
+        }
+    }
+}
+
+- (void)collectionView:(UICollectionView *)collectionView dropSessionDidEnd:(id<UIDropSession>)session NS_AVAILABLE_IOS(11) {
+
+    // When drop is at original index path, method
+    // `-collectionView:performDropWithCoordinator:`
+    // is not called.
+    //
+    if (self.dragSourceIndexPath != nil) {
+
+        // KLUDGE: Reload item to force correct layout
+        //         -- esp. regarding zIndex
+        //
+        [self.collectionView reloadItemsAtIndexPaths:@[self.dragSourceIndexPath]];
+        self.dragSourceIndexPath = nil;
+    }
 }
 
 #pragma mark - Helpers

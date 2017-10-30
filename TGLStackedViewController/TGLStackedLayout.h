@@ -46,7 +46,7 @@
 @property (nonatomic, assign) IBInspectable CGFloat bounceFactor;
 
 /** Scale factor for moving item. Default is 0.95 */
-@property (nonatomic, assign) IBInspectable CGFloat movingItemScaleFactor;
+@property (nonatomic, assign) IBInspectable CGFloat movingItemScaleFactor NS_DEPRECATED_IOS(7, 11);
 
 /** Allow moving item to float above of all other items. Default value is `YES` */
 @property (nonatomic, assign) IBInspectable BOOL movingItemOnTop;

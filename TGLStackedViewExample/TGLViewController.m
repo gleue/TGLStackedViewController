@@ -325,13 +325,55 @@
 }
 
 - (void)collectionView:(UICollectionView *)collectionView moveItemAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath {
-    
+
     // Update data source when moving cards around
     //
     NSDictionary *card = self.cards[sourceIndexPath.item];
     
     [self.cards removeObjectAtIndex:sourceIndexPath.item];
     [self.cards insertObject:card atIndex:destinationIndexPath.item];
+}
+
+#pragma mark - UICollectionViewDragDelegate protocol
+
+- (NSArray<UIDragItem *> *)collectionView:(UICollectionView *)collectionView itemsForBeginningDragSession:(id<UIDragSession>)session atIndexPath:(NSIndexPath *)indexPath NS_AVAILABLE_IOS(11) {
+
+    NSArray<UIDragItem *> *dragItems = [super collectionView:collectionView itemsForBeginningDragSession:session atIndexPath:indexPath];
+
+    // Attach custom drag previews preserving
+    // cards' rounded corners
+    //
+    for (UIDragItem *item in dragItems) {
+
+        item.previewProvider = ^UIDragPreview * {
+
+            UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
+
+            UIDragPreviewParameters *parameters = [[UIDragPreviewParameters alloc] init];
+            UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:cell.bounds cornerRadius:10.0];
+
+            parameters.visiblePath = path;
+
+            return [[UIDragPreview alloc] initWithView:cell parameters:parameters];
+        };
+    }
+
+    return dragItems;
+}
+
+- (UIDragPreviewParameters *)collectionView:(UICollectionView *)collectionView dragPreviewParametersForItemAtIndexPath:(NSIndexPath *)indexPath NS_AVAILABLE_IOS(11) {
+
+    // This seems to be necessary, to preserve
+    // cards' rounded corners during lift animation
+    //
+    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
+
+    UIDragPreviewParameters *parameters = [[UIDragPreviewParameters alloc] init];
+    UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:cell.bounds cornerRadius:10.0];
+
+    parameters.visiblePath = path;
+
+    return parameters;
 }
 
 #pragma mark - Helpers
