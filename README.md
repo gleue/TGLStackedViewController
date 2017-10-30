@@ -10,6 +10,11 @@ TGLStackedViewController
 
 A stack layout with gesture-based reordering using UICollectionView -- inspired by Passbook and Reminders apps.
 
+What's new in 2.2
+------------------
+
+* Reimplementation of item reordering using UIKit drag and drop on iOS 11.0
+
 What's new in 2.0
 ------------------
 
@@ -34,11 +39,11 @@ Usage
 
 Via [CocoaPods](http://cocoapods.org):
 
-* Add `pod 'TGLStackedViewController', '~> 2.0'` to your project's `Podfile`
+* Add `pod 'TGLStackedViewController', '~> 2.2'`  to your project's `Podfile`
 
 Via [Carthage](https://github.com/Carthage/Carthage):
 
-* Add `github "gleue/TGLStackedViewController", ~> 2.1.5` to your project's `Cartfile`
+* Add `github "gleue/TGLStackedViewController", ~> 2.2`  to your project's `Cartfile`
 
 Or the "classic" way:
 
@@ -66,7 +71,7 @@ Requirements
 
 * ARC
 * iOS >= 9.0
-* Xcode 7.3
+* Xcode 9.0
 
 Credits
 =======
@@ -80,7 +85,7 @@ License
 
 TGLStackedViewController is available under the MIT License (MIT)
 
-Copyright (c) 2016 Tim Gleue (http://gleue-interactive.com)
+Copyright (c) 2014-2017 Tim Gleue (http://gleue-interactive.com)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
