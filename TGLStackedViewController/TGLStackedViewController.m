@@ -40,6 +40,7 @@
 @property (nonatomic, readonly) UIPinchGestureRecognizer *collapsePinchGestureRecognizer;
 
 @property (nonatomic, assign, getter=isFinishingInteractiveTransition) BOOL finishingInteractiveTransition;
+@property (nonatomic, assign, getter=isDragging) BOOL dragging;
 
 @end
 
@@ -647,7 +648,9 @@
     //
     // Issue #37: Prevent selection, too, while interactive transition is still in progress.
     //
-    return (self.exposedItemIndexPath == nil || indexPath.item == self.exposedItemIndexPath.item || self.unexposedItemsAreSelectable) && self.transitionLayout == nil;
+    //      NOTE: Prevent selection while drag is in progress, too.
+    //
+    return (self.exposedItemIndexPath == nil || indexPath.item == self.exposedItemIndexPath.item || self.unexposedItemsAreSelectable) && self.transitionLayout == nil && !self.isDragging;
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -706,6 +709,16 @@
 
         return @[];
     }
+}
+
+- (void)collectionView:(UICollectionView *)collectionView dragSessionWillBegin:(id<UIDragSession>)session NS_AVAILABLE_IOS(11) {
+
+    self.dragging = YES;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView dragSessionDidEnd:(id<UIDragSession>)session NS_AVAILABLE_IOS(11) {
+
+    self.dragging = NO;
 }
 
 #pragma mark - UICollectionViewDropDelegate protocol
