@@ -740,23 +740,33 @@
     // in a subclass since they's require customized data
     // source updates.
     //
-    for (id<UICollectionViewDropItem> item in coordinator.items) {
+    id<UICollectionViewDropItem> item = coordinator.items.firstObject;
 
-        if (item.sourceIndexPath) {
+    if (item.sourceIndexPath) {
 
-            [self.collectionView performBatchUpdates:^() {
+        // KLUDGE: On the very first drag when dropping
+        //         item at last position `destinationIndexPath`
+        //         is (0, count) instead of (0, count -1)
+        //
+        NSIndexPath *destinationIndexPath = coordinator.destinationIndexPath;
 
-                [self.collectionView deleteItemsAtIndexPaths:@[item.sourceIndexPath]];
-                [self collectionView:collectionView moveItemAtIndexPath:item.sourceIndexPath toIndexPath:coordinator.destinationIndexPath];
-                [self.collectionView insertItemsAtIndexPaths:@[coordinator.destinationIndexPath]];
+        if (destinationIndexPath.item >= [collectionView numberOfItemsInSection:destinationIndexPath.section]) {
 
-                self.dragSourceIndexPath = nil;
-
-            } completion:^ (BOOL finished) {
-
-                [coordinator dropItem:item.dragItem toItemAtIndexPath:coordinator.destinationIndexPath];
-            }];
+            destinationIndexPath = [NSIndexPath indexPathForItem:([collectionView numberOfItemsInSection:destinationIndexPath.section] - 1) inSection:destinationIndexPath.section];
         }
+
+        [collectionView performBatchUpdates:^() {
+
+            [collectionView deleteItemsAtIndexPaths:@[item.sourceIndexPath]];
+            [self collectionView:collectionView moveItemAtIndexPath:item.sourceIndexPath toIndexPath:destinationIndexPath];
+            [collectionView insertItemsAtIndexPaths:@[destinationIndexPath]];
+
+            self.dragSourceIndexPath = nil;
+
+        } completion:^ (BOOL finished) {
+
+            [coordinator dropItem:item.dragItem toItemAtIndexPath:destinationIndexPath];
+        }];
     }
 }
 
