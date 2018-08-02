@@ -206,21 +206,22 @@
         exposedLayout.topPinningCount = self.exposedTopPinningCount;
         exposedLayout.bottomPinningCount = self.exposedBottomPinningCount;
         
-        __weak typeof(self) weakSelf = self;
-        
         void (^layoutcompletion) (BOOL) = ^ (BOOL finished) {
-            
-            weakSelf.stackedLayout.overwriteContentOffset = YES;
-            weakSelf.exposedLayout = exposedLayout;
-            
-            _exposedItemIndexPath = exposedItemIndexPath;
-            
-            UICollectionViewCell *exposedCell = [weakSelf.collectionView cellForItemAtIndexPath:weakSelf.exposedItemIndexPath];
-            
-            [weakSelf addCollapseGestureRecognizerToView:exposedCell];
-            
+
+            // NOTE: We can use strong self references here since
+            //       the cycle is broken as soon as local variable
+            //       `layoutcompletion` goes out of scope.
+            self.stackedLayout.overwriteContentOffset = YES;
+            self.exposedLayout = exposedLayout;
+
+            self->_exposedItemIndexPath = exposedItemIndexPath;
+
+            UICollectionViewCell *exposedCell = [self.collectionView cellForItemAtIndexPath:self.exposedItemIndexPath];
+
+            [self addCollapseGestureRecognizerToView:exposedCell];
+
             [[UIApplication sharedApplication] endIgnoringInteractionEvents];
-            
+
             if (completion) completion();
         };
         
@@ -236,7 +237,6 @@
             
             layoutcompletion(YES);
         }
-        
         
     } else if (self.exposedItemIndexPath && exposedItemIndexPath && (exposedItemIndexPath.item != self.exposedItemIndexPath.item || self.unexposedItemsAreSelectable)) {
         
@@ -258,17 +258,19 @@
         exposedLayout.topPinningCount = self.exposedLayout.topPinningCount;
         exposedLayout.bottomPinningCount = self.exposedLayout.bottomPinningCount;
         
-        __weak typeof(self) weakSelf = self;
-        
         void (^layoutcompletion) (BOOL) = ^ (BOOL finished) {
+
+            // NOTE: We can use strong self references here since
+            //       the cycle is broken as soon as local variable
+            //       `layoutcompletion` goes out of scope.
+            self.exposedLayout = exposedLayout;
+
+            // Mention self explicitly here to get rid of compiler warning
+            self->_exposedItemIndexPath = exposedItemIndexPath;
             
-            weakSelf.exposedLayout = exposedLayout;
+            UICollectionViewCell *exposedCell = [self.collectionView cellForItemAtIndexPath:self.exposedItemIndexPath];
             
-            _exposedItemIndexPath = exposedItemIndexPath;
-            
-            UICollectionViewCell *exposedCell = [weakSelf.collectionView cellForItemAtIndexPath:weakSelf.exposedItemIndexPath];
-            
-            [weakSelf addCollapseGestureRecognizerToView:exposedCell];
+            [self addCollapseGestureRecognizerToView:exposedCell];
             
             [[UIApplication sharedApplication] endIgnoringInteractionEvents];
             
@@ -305,11 +307,12 @@
         
         _exposedItemIndexPath = nil;
         
-        __weak typeof(self) weakSelf = self;
-        
         void (^layoutcompletion) (BOOL) = ^ (BOOL finished) {
             
-            weakSelf.stackedLayout.overwriteContentOffset = NO;
+            // NOTE: We can use strong self references here since
+            //       the cycle is broken as soon as local variable
+            //       `layoutcompletion` goes out of scope.
+            self.stackedLayout.overwriteContentOffset = NO;
             
             [[UIApplication sharedApplication] endIgnoringInteractionEvents];
             
