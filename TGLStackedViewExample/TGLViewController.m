@@ -105,7 +105,12 @@
     //         wrapper view.
     //
     self.collectionViewBackground.hidden = !self.showsBackgroundView;
+    self.collectionViewBackground.translatesAutoresizingMaskIntoConstraints = NO;
+
     [self.view insertSubview:self.collectionViewBackground belowSubview:self.collectionView];
+
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[background]-0-|" options:0 metrics:nil views:@{ @"background": self.collectionViewBackground }]];
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[background]-0-|" options:0 metrics:nil views:@{ @"background": self.collectionViewBackground }]];
 
     // KLUDGE: Since our background is below the collection
     //         view it won't receive any touch events.
