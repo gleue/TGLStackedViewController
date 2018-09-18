@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES" initialViewController="wFD-wR-aUb">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="wFD-wR-aUb">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -27,13 +27,13 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Switch Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Eo-gc-KID">
-                                            <rect key="frame" x="16" y="11" width="89" height="21"/>
+                                            <rect key="frame" x="16" y="11.5" width="89" height="21"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="I1e-g2-5HN">
-                                            <rect key="frame" x="310" y="6" width="51" height="31"/>
+                                            <rect key="frame" x="310" y="6.5" width="51" height="31"/>
                                             <connections>
                                                 <action selector="switchValueChanged:" destination="MSy-RO-jUb" eventType="valueChanged" id="Eyn-xf-tQ3"/>
                                             </connections>
@@ -60,13 +60,13 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Stepper Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Sf5-O9-h14">
-                                            <rect key="frame" x="16" y="11" width="99" height="21"/>
+                                            <rect key="frame" x="16" y="11.5" width="99" height="21"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="Nbh-KE-6DQ">
-                                            <rect key="frame" x="265" y="7" width="94" height="29"/>
+                                            <rect key="frame" x="265" y="7.5" width="94" height="29"/>
                                             <connections>
                                                 <action selector="stepperValueChanged:" destination="9bp-09-6Gx" eventType="valueChanged" id="pvH-ea-pRP"/>
                                             </connections>
@@ -135,7 +135,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Gkb-gb-fLD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-977" y="74"/>
+            <point key="canvasLocation" x="-1563.2" y="66.566716641679164"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Efj-cC-XaH">
@@ -151,7 +151,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hki-xf-9lE" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1509" y="74"/>
+            <point key="canvasLocation" x="-2414.4000000000001" y="66.566716641679164"/>
         </scene>
         <!--Example-->
         <scene sceneID="9GN-4B-AdM">
@@ -161,6 +161,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <gestureRecognizers/>
+                        <viewLayoutGuide key="safeArea" id="vHo-id-BDh"/>
                         <collectionViewLayout key="collectionViewLayout" id="xYK-TF-mui" customClass="TGLStackedLayout"/>
                         <cells>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CardCell" id="brs-Q3-DM1" customClass="TGLCollectionViewCell">
@@ -225,21 +226,21 @@
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gj3-Av-Q7P">
-                            <rect key="frame" x="133" y="20" width="55" height="30"/>
+                            <rect key="frame" x="132.5" y="20" width="55" height="30"/>
                             <state key="normal" title="Tap me!"/>
                             <connections>
                                 <action selector="backgroundButtonTapped:" destination="LGt-Wb-o9x" eventType="touchUpInside" id="pZ1-O8-aZS"/>
                             </connections>
                         </button>
                     </subviews>
-                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
-                        <constraint firstItem="Gj3-Av-Q7P" firstAttribute="top" secondItem="Wbh-91-NYz" secondAttribute="top" constant="20" id="SGV-uZ-DcZ"/>
+                        <constraint firstItem="Gj3-Av-Q7P" firstAttribute="top" secondItem="RkA-wU-0m7" secondAttribute="top" constant="20" id="SGV-uZ-DcZ"/>
                         <constraint firstItem="Gj3-Av-Q7P" firstAttribute="centerX" secondItem="Wbh-91-NYz" secondAttribute="centerX" id="bCq-lu-kma"/>
                     </constraints>
+                    <viewLayoutGuide key="safeArea" id="RkA-wU-0m7"/>
                 </view>
             </objects>
-            <point key="canvasLocation" x="111" y="74"/>
+            <point key="canvasLocation" x="177.59999999999999" y="66.566716641679164"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="hvp-pl-HIo">
@@ -255,7 +256,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KRb-9P-hPW" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-434" y="74"/>
+            <point key="canvasLocation" x="-694.39999999999998" y="66.566716641679164"/>
         </scene>
         <!--Options-->
         <scene sceneID="G5e-1l-5sq">
@@ -295,7 +296,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XSA-lt-nud" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-978" y="976"/>
+            <point key="canvasLocation" x="-1564.8" y="877.9610194902549"/>
         </scene>
     </scenes>
     <resources>
