@@ -331,6 +331,8 @@
             
             layoutcompletion(YES);
         }
+    } else {
+        if (completion) completion();
     }
 }
 
