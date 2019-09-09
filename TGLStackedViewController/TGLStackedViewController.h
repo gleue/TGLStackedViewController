@@ -158,6 +158,14 @@ FOUNDATION_EXPORT const unsigned char TGLStackedViewControllerVersionString[];
  */
 @property (nonatomic, strong, nullable) NSIndexPath *exposedItemIndexPath;
 
+/**
+ * exposedItemIndexPath change handler
+ * @param oldVal The old value of exposedItemIndexPath. Can be Null - was stackedLayout
+ * @param newVal New value of exposedItemIndexPath. Can be Null - will be stackedLayout
+ */
+@property (nonatomic, copy) void (^ _Nullable exposedItemIndexPathHandler)(NSIndexPath * _Nullable oldVal, NSIndexPath * _Nullable newVal);
+
+
 /** Allow exposed items to be interactively collapsed by a gesture.
  *
  * If `-exposedPinningMode` is set to `TGLExposedLayoutPinningModeNone`

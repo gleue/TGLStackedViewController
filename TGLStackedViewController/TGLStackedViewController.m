@@ -214,6 +214,10 @@
             self.stackedLayout.overwriteContentOffset = YES;
             self.exposedLayout = exposedLayout;
 
+            if (self.exposedItemIndexPathHandler != NULL) {
+                self.exposedItemIndexPathHandler(self->_exposedItemIndexPath, exposedItemIndexPath);
+            }
+            // Mention self explicitly here to get rid of compiler warning
             self->_exposedItemIndexPath = exposedItemIndexPath;
 
             UICollectionViewCell *exposedCell = [self.collectionView cellForItemAtIndexPath:self.exposedItemIndexPath];
@@ -265,6 +269,9 @@
             //       `layoutcompletion` goes out of scope.
             self.exposedLayout = exposedLayout;
 
+            if (self.exposedItemIndexPathHandler != NULL) {
+                self.exposedItemIndexPathHandler(self->_exposedItemIndexPath, exposedItemIndexPath);
+            }
             // Mention self explicitly here to get rid of compiler warning
             self->_exposedItemIndexPath = exposedItemIndexPath;
             
@@ -305,6 +312,9 @@
         
         self.exposedLayout = nil;
         
+        if (self.exposedItemIndexPathHandler != NULL) {
+            self.exposedItemIndexPathHandler(_exposedItemIndexPath, exposedItemIndexPath);
+        }
         _exposedItemIndexPath = nil;
         
         void (^layoutcompletion) (BOOL) = ^ (BOOL finished) {
@@ -340,8 +350,12 @@
 
     // Set -exposedItemIndexPath to `nil` w/o triggering
     // any layout updates as in the setters above
-    //
-    _exposedItemIndexPath = nil;
+    
+    if (self.exposedItemIndexPathHandler != NULL) {
+        self.exposedItemIndexPathHandler(self.exposedItemIndexPath, nil);
+    }
+     _exposedItemIndexPath = nil;
+    
 }
 
 #pragma mark - Actions
