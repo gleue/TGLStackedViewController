@@ -3,7 +3,7 @@
 //  TGLStackedViewExample
 //
 //  Created by Tim Gleue on 12.06.16.
-//  Copyright © 2016 Tim Gleue • interactive software. All rights reserved.
+//  Copyright © 2016-2019 Tim Gleue • interactive software. All rights reserved.
 //
 
 #import "TGLSettingOptionsViewController.h"
