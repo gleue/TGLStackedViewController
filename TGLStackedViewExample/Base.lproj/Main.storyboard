@@ -126,7 +126,7 @@
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Show" style="done" id="4lk-UA-JBk">
                             <connections>
-                                <segue destination="jLO-rS-bzV" kind="modal" identifier="ShowExample" id="4fT-7s-tVR"/>
+                                <segue destination="jLO-rS-bzV" kind="modal" identifier="ShowExample" modalPresentationStyle="fullScreen" id="4fT-7s-tVR"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
