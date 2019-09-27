@@ -458,6 +458,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 2.2.4;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TGLStackedViewExample/TGLStackedViewExample-Prefix.pch";
 				INFOPLIST_FILE = "$(SRCROOT)/TGLStackedViewExample/TGLStackedViewExample-Info.plist";
@@ -476,6 +477,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 2.2.4;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TGLStackedViewExample/TGLStackedViewExample-Prefix.pch";
 				INFOPLIST_FILE = "$(SRCROOT)/TGLStackedViewExample/TGLStackedViewExample-Info.plist";
